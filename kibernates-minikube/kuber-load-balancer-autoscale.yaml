@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-k8s-app
+  labels:
+    project: k8s-test-spring-project
+spec:
+  selector:
+    matchLabels:
+      project: k8s-test-spring-project
+  template:
+    metadata:
+      labels:
+        project: k8s-test-spring-project #Service will look for those PODs
+    spec:
+      containers:
+        - name:  test-spring-container
+          image: dkapriz/test-spring-app:0.0.2 #link on docker image
+          ports:
+          - containerPort: 8080 #Port on POD
+
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: my-autoscaling
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v2v1
+    kind: Deployment
+    name: test-k8s-app
+  minReplicas: 3
+  maxReplicas: 5
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 80
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 80
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: test-k8s-app-service
+  labels:
+    project: k8s-test-spring-project
+spec:
+  type: LoadBalancer
+  selector:
+    project: k8s-test-spring-project #Selecting PODs with those Labels
+  ports:
+    - name: app-listner
+      protocol: TCP
+      port: 8000 #Port on Load Balanser
+      targetPort: 8080 #Port on POD

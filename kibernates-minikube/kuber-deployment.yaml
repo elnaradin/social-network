@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-k8s-app
+  labels:
+    project: k8s-test-spring-project
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      project: k8s-test-spring-project
+  template:
+    metadata:
+      labels:
+        project: k8s-test-spring-project
+    spec:
+      containers:
+        - name:  test-spring-container
+          image: dkapriz/test-spring-app:0.0.2 #link on docker image
+          ports:
+          - containerPort: 8080 #Port on POD
