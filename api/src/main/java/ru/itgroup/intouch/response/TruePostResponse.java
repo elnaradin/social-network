@@ -3,14 +3,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import ru.itgroup.intouch.dto.PostDto;
 
-@AllArgsConstructor
 @Getter
-public class TruePostResponse implements PostResponse{
-
-    private boolean result;
-    private PostDto postDto;
-    private String message;
-
-
+public class TruePostResponse extends AbstractResponse implements PostResponse{
+    private final PostDto postDto;
+    public TruePostResponse(boolean b, String message, PostDto postDto) {
+        super(b, message);
+        this.postDto = postDto;
+    }
 
 }

@@ -2,11 +2,10 @@ package ru.itgroup.intouch.response;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-@AllArgsConstructor
+
 @Getter
-public class FalsePostResponse implements PostResponse{
-
-    private boolean result;
-    private String message;
-
+public class FalsePostResponse extends AbstractResponse implements PostResponse {
+    public FalsePostResponse(boolean result, String message) {
+        super(result, message);
+    }
 }
