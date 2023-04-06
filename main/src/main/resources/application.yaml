@@ -1,5 +1,5 @@
 server:
-  port: 8045
+  port: 8050
 
 spring:
   datasource:
@@ -20,3 +20,7 @@ spring:
         classpath:/sql-scripts/post_tags.sql, classpath:/sql-scripts/post_type.sql,
         classpath:/sql-scripts/posts.sql, classpath:/sql-scripts/post2tags.sql
       mode: never
+
+  liquibase:
+    enabled: true
+    change-log: classpath:/dbchangelog-master.xml
