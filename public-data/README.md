@@ -1,7 +1,7 @@
 <h4> Модуль public-data. Порядок установки.
 </h4>
 <div>
-Модуль public-data - один из модулей многомодульного проекта socialnetwork. Содержит общую логику проекта (model и config базы данных).
+Модуль public-data - библиотека многомодульного проекта socialnetwork (версия 0.1.0). Содержит общую логику проекта (необходимые Entity и общий config для микросервисов).
 </div>
 <br>
 <div>
@@ -14,7 +14,7 @@
  < dependency> <br>
             < groupId>ru.itgroup.intouch< /groupId> <br>
             < artifactId>ru.itgroup.intouch.public-data< /artifactId> <br>
-            < version>${revision}${sha1}${changelist}< /version> <br>
+            < version>${ver}< /version> <br>
         < /dependency> <br>
 <br>
 После обновления Mavena все переменные и классы public-data станут доступны в проекте для использования.

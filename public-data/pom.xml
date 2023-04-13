@@ -4,40 +4,41 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>ru.itgroup.intouch</groupId>
-        <artifactId>socialnetwork</artifactId>
-        <version>${revision}${sha1}${changelist}</version>
-    </parent>
-
     <name>ITGroup_Intouch :: SocialNetwork :: public-data</name>
+    <groupId>ru.itgroup.intouch</groupId>
     <artifactId>ru.itgroup.intouch.public-data</artifactId>
+    <version>${revision}${sha1}${changelist}</version>
 
+    <properties>
+        <lombok.ver>1.18.26</lombok.ver>
+        <spring.ver>6.0.6</spring.ver>
+        <jak.persist.ver>2.2.3</jak.persist.ver>
+    </properties>
     <dependencies>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.26</version>
+            <version>${lombok.ver}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-beans</artifactId>
-            <version>6.0.6</version>
+            <version>${spring.ver}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
-            <version>6.0.6</version>
+            <version>${spring.ver}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-jdbc</artifactId>
-            <version>6.0.6</version>
+            <version>${spring.ver}</version>
         </dependency>
         <dependency>
             <groupId>jakarta.persistence</groupId>
             <artifactId>jakarta.persistence-api</artifactId>
-            <version>2.2.3</version>
+            <version>${jak.persist.ver}</version>
         </dependency>
     </dependencies>
 
