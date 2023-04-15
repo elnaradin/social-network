@@ -11,14 +11,11 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.itgroup.intouch.dto.PostDto;
 import ru.itgroup.intouch.service.PostService;
-
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.BDDMockito.given;
-
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -64,7 +61,6 @@ class PostControllerTest {
                 .andExpect(jsonPath("$.result", is(false)))
                 .andExpect(jsonPath("$.message", is("Пост не найден")));
     }
-
     @Test
     void createPost() throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();

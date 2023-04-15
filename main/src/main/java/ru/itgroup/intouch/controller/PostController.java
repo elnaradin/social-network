@@ -1,5 +1,4 @@
 package ru.itgroup.intouch.controller;
-
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,9 +14,7 @@ import ru.itgroup.intouch.service.PostService;
 @RequestMapping("/api/v1/post")
 @AllArgsConstructor
 public class PostController {
-
     private final PostService postService;
-
     @GetMapping("/{id}")
     public ResponseEntity<PostResponse> getPost(@PathVariable Long id) {
         PostDto postDto = postService.getPostById(id);
@@ -34,7 +31,13 @@ public class PostController {
         }
         return new ResponseEntity<>(new FalsePostResponse(false, "Пост не создан"), HttpStatus.NOT_FOUND);
     }
-
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deletePost(@PathVariable Long id) {
+        if (postService.deletePostById(id)) {
+            return new ResponseEntity<>("Пост удален", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Посты не найден", HttpStatus.NOT_FOUND);
+    }
     @ExceptionHandler(MissingPathVariableException.class)
     public ResponseEntity<FalsePostResponse> handleMissingServletParameterException(Exception exception) {
         return new ResponseEntity<>(new FalsePostResponse(false, exception.getLocalizedMessage()), HttpStatus.BAD_REQUEST);

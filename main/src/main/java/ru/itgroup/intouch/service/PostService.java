@@ -46,5 +46,12 @@ public class PostService {
         postsRepository.save(post);
         return mapperToPostDto.getPostDto(post);
     }
-
+    public boolean deletePostById(Long id) {
+        Optional<PostEntity> postEntity = postsRepository.findById(id);
+        if (postEntity.isEmpty()) {
+            return false;
+        }
+        postEntity.get().setDeleted(true);
+        return true;
+    }
 }
