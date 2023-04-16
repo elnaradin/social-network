@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project version="4">
-  <component name="ProjectModuleManager">
-    <modules>
-      <module fileurl="file://$PROJECT_DIR$/public-data/ru.itgroup.intouch.public-data.iml" filepath="$PROJECT_DIR$/public-data/ru.itgroup.intouch.public-data.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/social-network.iml" filepath="$PROJECT_DIR$/.idea/social-network.iml" />
-    </modules>
-  </component>
-</project>
