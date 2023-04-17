@@ -1,0 +1,70 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet author="tkachsta (generated)" id="1680716889121-1">
+        <createTable tableName="post_tags">
+            <column autoIncrement="true" name="id" startWith="21" type="INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="post_tags_pkey"/>
+            </column>
+            <column name="name" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="tkachsta (generated)" id="1680716889121-2">
+        <createTable tableName="post_type">
+            <column autoIncrement="true" name="id" startWith="3" type="INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="post_type_pkey"/>
+            </column>
+            <column name="code" type="VARCHAR(255)"/>
+            <column name="name" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="tkachsta (generated)" id="1680716889121-3">
+        <createTable tableName="posts">
+            <column autoIncrement="true" name="id" startWith="201" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="posts_pkey"/>
+            </column>
+            <column name="author_id" type="INTEGER"/>
+            <column name="created_date" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="image_path" type="VARCHAR(255)"/>
+            <column name="is_deleted" type="BOOLEAN"/>
+            <column name="like_amount" type="INTEGER"/>
+            <column name="my_like" type="BOOLEAN"/>
+            <column name="post_text" type="TEXT"/>
+            <column name="publish_date" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="time_changed" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="title" type="VARCHAR(255)"/>
+            <column name="type_id" type="INTEGER"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="tkachsta (generated)" id="1680716889121-4">
+        <addUniqueConstraint columnNames="name" constraintName="uk_phcqyre2ird8vkhom0uphhv5e" tableName="post_tags"/>
+    </changeSet>
+    <changeSet author="tkachsta (generated)" id="1680716889121-5">
+        <addUniqueConstraint columnNames="code" constraintName="uk_lj9dwbrao4nv91pmxgwbystpb" tableName="post_type"/>
+    </changeSet>
+    <changeSet author="tkachsta (generated)" id="1680716889121-6">
+        <createTable tableName="post2tags">
+            <column name="post_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="post2tags_pkey"/>
+            </column>
+            <column name="tag_id" type="INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="post2tags_pkey"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="tkachsta (generated)" id="1680716889121-7">
+        <createTable tableName="users">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="users_pkey"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="tkachsta (generated)" id="1680716889121-8">
+        <addForeignKeyConstraint baseColumnNames="type_id" baseTableName="posts" constraintName="fkanssbwx4vx9s71qiv7b62v482" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="post_type" validate="true"/>
+    </changeSet>
+    <changeSet author="tkachsta (generated)" id="1680716889121-9">
+        <addForeignKeyConstraint baseColumnNames="post_id" baseTableName="post2tags" constraintName="fkefjmq3ebm6sh211ssiv9fp24w" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="posts" validate="true"/>
+    </changeSet>
+    <changeSet author="tkachsta (generated)" id="1680716889121-10">
+        <addForeignKeyConstraint baseColumnNames="tag_id" baseTableName="post2tags" constraintName="fkjb6r1bwaf2v83pp137erv6g0t" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="post_tags" validate="true"/>
+    </changeSet>
+</databaseChangeLog>
