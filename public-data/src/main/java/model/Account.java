@@ -1,8 +1,10 @@
 package model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import lombok.Data;
+import model.enums.Status;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Data

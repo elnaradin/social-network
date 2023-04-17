@@ -1,9 +1,12 @@
 package model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.Data;
+import model.enums.NotificationType;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
 import java.time.LocalDateTime;
 
 @Data
@@ -12,6 +15,8 @@ public class Notification {
     @Id
     private int id;
 
+    @ManyToOne
+    @JoinColumn(name = "author_id")
     private Account author;
 
     private String content;

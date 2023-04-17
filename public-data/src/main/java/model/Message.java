@@ -1,12 +1,15 @@
 package model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import model.enums.MessageStatus;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
 import java.time.LocalDateTime;
 
 @Data
+@NoArgsConstructor
 @Entity
 public class Message {
     @Id
