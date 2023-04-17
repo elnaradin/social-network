@@ -7,12 +7,13 @@
     <name>ITGroup_Intouch :: SocialNetwork :: public-data</name>
     <groupId>ru.itgroup.intouch</groupId>
     <artifactId>ru.itgroup.intouch.public-data</artifactId>
-    <version>${revision}${sha1}${changelist}</version>
+    <version>0.1.1</version>
 
     <properties>
         <lombok.ver>1.18.26</lombok.ver>
         <spring.ver>6.0.6</spring.ver>
-        <jak.persist.ver>2.2.3</jak.persist.ver>
+        <jak.persist.ver>3.1.0</jak.persist.ver>
+        <maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
     </properties>
     <dependencies>
         <dependency>
@@ -41,5 +42,17 @@
             <version>${jak.persist.ver}</version>
         </dependency>
     </dependencies>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${maven-compiler-plugin.version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 
 </project>

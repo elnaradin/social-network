@@ -1,10 +1,10 @@
 package model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.Data;
-import model.Account;
-
-import javax.persistence.Entity;
-import javax.persistence.Id;
 
 @Data
 @Entity
@@ -17,6 +17,8 @@ public class Dialog {
 
     private int unreadCount;
 
+    @ManyToOne
+    @JoinColumn(name = "conversation_partner_id")
     private Account conversationPartner;
 
     private Message lastMessage;

@@ -1,10 +1,11 @@
 package model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import lombok.Data;
+import model.enums.PostType;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -30,7 +31,7 @@ public class Post {
 
     private int commentsCount;
 
-    @OneToMany (mappedBy = "Post")
+    @OneToMany(mappedBy = "id")
     private List<Tag> tags;
 
     private int likeAmount;

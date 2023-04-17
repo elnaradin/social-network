@@ -1,11 +1,9 @@
 package model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import lombok.Data;
-import model.City;
-
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import java.util.List;
 
 @Data
@@ -19,6 +17,6 @@ public class Country {
 
     private String title;
 
-    @OneToMany (mappedBy = "Country")
+    @OneToMany(mappedBy = "countryId")
     private List<City> cities;
 }
