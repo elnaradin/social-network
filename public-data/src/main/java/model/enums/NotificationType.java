@@ -1,7 +1,6 @@
 package model.enums;
 
 public enum NotificationType {
-
     POST,
     POST_COMMENT,
     COMMENT_COMMENT,

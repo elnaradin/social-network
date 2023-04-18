@@ -1,27 +1,48 @@
 package model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import model.enums.NotificationType;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
+@Table(name = "notifications")
 public class Notification {
     @Id
-    private int id;
-
-    @ManyToOne
-    @JoinColumn(name = "author_id")
-    private Account author;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     private String content;
 
-    private NotificationType notificationType;
+    @Column(name = "notification_type")
+    private String notificationType;
 
-    private LocalDateTime sentTime;
+    @Column(name = "created_at")
+    private final LocalDateTime createdAt = LocalDateTime.now();
+
+    @Column(name = "read_at")
+    private LocalDateTime readAt;
+
+    @OneToOne
+    @JoinColumn(name = "author_id", referencedColumnName = "id")
+    private User author;
+
+    @OneToOne
+    @JoinColumn(name = "receiver_id", referencedColumnName = "id")
+    private User receiver;
+
 }

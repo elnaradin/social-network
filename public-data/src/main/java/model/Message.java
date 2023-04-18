@@ -2,6 +2,8 @@ package model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import model.enums.MessageStatus;
@@ -9,11 +11,13 @@ import model.enums.MessageStatus;
 import java.time.LocalDateTime;
 
 @Data
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 public class Message {
     @Id
-    private int id;
+    private Long id;
 
     private boolean isDeleted;
 
@@ -29,8 +33,7 @@ public class Message {
 
     private int dialogId;
 
-
-    public Message(int id, boolean isDeleted, LocalDateTime time, int authorId, String messageText) {
+    public Message(Long id, boolean isDeleted, LocalDateTime time, int authorId, String messageText) {
         this.id = id;
         this.isDeleted = isDeleted;
         this.time = time;
