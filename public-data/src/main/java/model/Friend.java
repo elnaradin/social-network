@@ -1,47 +1,64 @@
 package model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 import model.enums.Status;
 
 import java.time.LocalDateTime;
 
-@Data
-@Builder
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Entity
+@Table(name = "friends")
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Friend {
     @Id
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long id;
 
-    private boolean isDeleted;
+    @ManyToOne
+    @JoinColumn(name = "user_id_from", columnDefinition = "BIGINT", nullable = false)
+    Account userIdFrom;
 
-    private String photo;
+    @ManyToOne
+    @JoinColumn(name = "user_id_to", columnDefinition = "BIGINT", nullable = false)
+    Account userIdTo;
 
-    private Status statusCode;
+    @Column(name = "is_deleted", columnDefinition = "BOOLEAN", nullable = false)
+    Boolean isDeleted;
 
-    private String firstName;
+    @Column(name = "status_code", columnDefinition = "VARCHAR(255)", nullable = false)
+    String statusCode;
 
-    private String lastName;
+    public Status getEnumStatusCode() {
+        return Status.valueOf(statusCode);
+    }
 
-    private String city;
+    public void setEnumStatusCode(Status status) {
+        statusCode = status.getStatus();
+    }
 
-    private String country;
-
-    private LocalDateTime birthDate;
-
-    private boolean isOnline;
-
-    private int accountFromId;
-
-    private int accountToId;
-
-    private Status prevStatus;
-
-    private int rating;
+    public static class FriendBuilder {
+        public FriendBuilder statusCodeE(Status statusCode) {
+            this.statusCode = statusCode.getStatus();
+            return this;
+        }
+    }
 }
