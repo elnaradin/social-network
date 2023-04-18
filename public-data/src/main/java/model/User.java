@@ -2,16 +2,19 @@ package model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-
-
+import lombok.NoArgsConstructor;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 public class User {
     @Id
-
-    private int id;
+    private Long id;
 
     private boolean isDeleted;
 
@@ -22,5 +25,4 @@ public class User {
     private String email;
 
     private String password;
-
 }
