@@ -1,7 +1,7 @@
 package ru.itgroup.intouch.service;
 import lombok.AllArgsConstructor;
+import model.post.PostTag;
 import org.springframework.stereotype.Service;
-import ru.itgroup.intouch.model.PostTagEntity;
 import ru.itgroup.intouch.repository.PostTagRepository;
 
 import java.util.HashSet;
@@ -12,21 +12,20 @@ import java.util.Set;
 @Service
 @AllArgsConstructor
 public class TagService {
-
     private final PostTagRepository postTagRepository;
-    public Set<PostTagEntity> getTags(List<String> tags) {
-        Set<PostTagEntity> tagEntities = new HashSet<>();
+    public Set<PostTag> getTags(List<String> tags) {
+        Set<PostTag> tagEntities = new HashSet<>();
         tags.forEach(tag ->{
             tagEntities.add(getTag(tag));
         });
         return tagEntities;
     }
-    private PostTagEntity getTag(String name) {
-        Optional<PostTagEntity> optionalPostTag = postTagRepository.findByName(name);
+    private PostTag getTag(String name) {
+        Optional<PostTag> optionalPostTag = postTagRepository.findByName(name);
         if (optionalPostTag.isPresent()) {
             return optionalPostTag.get();
         }
-        PostTagEntity tagEntity = new PostTagEntity();
+        PostTag tagEntity = new PostTag();
         tagEntity.setName(name);
         postTagRepository.save(tagEntity);
         return tagEntity;
