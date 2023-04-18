@@ -1,0 +1,40 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet author="fenris" id="2">
+        <createTable tableName="notifications">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="notifications_pkey"/>
+            </column>
+            <column name="receiver_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="author_id" type="BIGINT"/>
+            <column name="content" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="notification_type" type="VARCHAR">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="read_at" type="TIMESTAMP"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseColumnNames="author_id" baseTableName="notifications"
+                                 constraintName="notifications_users_author_id_fk" deferrable="false"
+                                 initiallyDeferred="false" onDelete="CASCADE" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="users" validate="true"/>
+
+        <addForeignKeyConstraint baseColumnNames="receiver_id" baseTableName="notifications"
+                                 constraintName="notifications_users_receiver_id_fk" deferrable="false"
+                                 initiallyDeferred="false" onDelete="CASCADE" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="users" validate="true"/>
+
+        <sql>ALTER TABLE notifications
+            ADD CONSTRAINT notification_type_check CHECK
+                (notification_type::text = ANY (ARRAY['POST':: character varying, 'POST_COMMENT':: character varying, 'COMMENT_COMMENT':: character varying, 'MESSAGE':: character varying, 'FRIEND_REQUEST':: character varying, 'FRIEND_BIRTHDAY':: character varying, 'SEND_EMAIL_MESSAGE':: character varying]::text[]));</sql>
+    </changeSet>
+</databaseChangeLog>
