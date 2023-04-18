@@ -2,6 +2,7 @@ package model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,19 +16,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Account {
-    @Id
-    private Long id;
-
-    private boolean isDeleted;
-
-    private String firstname;
-
-    private String lastName;
-
-    private String email;
-
-    private String password;
+@Table(name = "accounts")
+public class Account extends User{
 
     private String phone;
 
