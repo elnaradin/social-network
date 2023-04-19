@@ -11,13 +11,13 @@ import model.enums.Status;
 
 import java.time.LocalDateTime;
 
-@Data
-@Builder
+//@Data
+//@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "accounts")
-public class Account extends User{
+public class Account extends User {
 
     private String phone;
 

@@ -1,15 +1,14 @@
-package ru.itgroup.intouch.model;
+package model.post;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import java.time.LocalDateTime;
 import java.util.Set;
 
-@Setter
 @Getter
+@Setter
 @Table
 @Entity(name = "posts")
-public class PostEntity {
+public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -26,7 +25,7 @@ public class PostEntity {
     private Integer authorId; //TODO: connection to PersonaEntity
     @ManyToOne
     @JoinColumn(name = "type_id")
-    private PostTypeEntity type;
+    private PostType type;
     @Column(name = "post_text", columnDefinition = "TEXT")
     private String postText;
     @ManyToMany(fetch = FetchType.LAZY)
@@ -35,13 +34,11 @@ public class PostEntity {
             joinColumns = @JoinColumn(name = "post_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
-    private Set<PostTagEntity> tags;
+    private Set<PostTag> tags;
     @Column(name = "like_amount")
     private Integer likeAmount;
     @Column(name = "my_like")
     private boolean myLike;
     @Column(name = "image_path")
     private String imagePath; //TODO: connection to StorageService
-
-
 }
