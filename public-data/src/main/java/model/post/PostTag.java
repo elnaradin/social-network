@@ -1,13 +1,12 @@
-package ru.itgroup.intouch.model;
+package model.post;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@Setter
 @Getter
+@Setter
 @Entity
 @Table(name = "post_tags")
-public class PostTagEntity {
+public class PostTag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
