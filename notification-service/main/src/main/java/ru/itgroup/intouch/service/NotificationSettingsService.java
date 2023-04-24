@@ -3,6 +3,7 @@ package ru.itgroup.intouch.service;
 import lombok.RequiredArgsConstructor;
 import model.NotificationSettings;
 import model.User;
+import model.enums.NotificationType;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import ru.itgroup.intouch.dto.request.NotificationSettingsDto;
@@ -13,7 +14,6 @@ import ru.itgroup.intouch.repository.UserRepository;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
-import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
@@ -30,7 +30,8 @@ public class NotificationSettingsService {
 
     public void updateSettings(@NotNull NotificationSettingsDto notificationSettingsDto) {
         NotificationSettings notificationSettings = getNotificationSettingsModel();
-        switch (notificationSettingsDto.getNotificationType()) {
+        NotificationType notificationType = NotificationType.valueOf(notificationSettingsDto.getNotificationType());
+        switch (notificationType) {
             case POST -> notificationSettings.setPost(notificationSettingsDto.isEnable());
             case POST_COMMENT -> notificationSettings.setPostComment(notificationSettingsDto.isEnable());
             case COMMENT_COMMENT -> notificationSettings.setCommentComment(notificationSettingsDto.isEnable());
@@ -44,7 +45,7 @@ public class NotificationSettingsService {
     }
 
     private @NotNull NotificationSettings getNotificationSettingsModel() {
-        User user = userRepository.findById(new Random().nextInt(1 + 100) + 1);
+        User user = userRepository.findById(1);
         NotificationSettings notificationSettings = notificationSettingsRepository.findByUser(user);
         if (notificationSettings == null) {
             notificationSettings = new NotificationSettings();

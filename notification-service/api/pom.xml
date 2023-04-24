@@ -10,13 +10,18 @@
         <version>${revision}${sha1}${changelist}</version>
     </parent>
 
-    <name>ITGroup_Intouch :: SocialNetwork :: api</name>
-    <artifactId>ru.itgroup.intouch.api</artifactId>
+    <name>ITGroup_Intouch :: SocialNetwork :: NotificationService :: api</name>
+    <artifactId>ru.itgroup.intouch.notification-service.api</artifactId>
 
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+            <version>${org.springframework.boot.version}</version>
         </dependency>
 
         <dependency>

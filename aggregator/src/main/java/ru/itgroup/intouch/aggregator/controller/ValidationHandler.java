@@ -1,4 +1,4 @@
-package ru.itgroup.intouch.controller;
+package ru.itgroup.intouch.aggregator.controller;
 
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpHeaders;

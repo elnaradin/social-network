@@ -1,6 +1,5 @@
 package ru.itgroup.intouch.controller;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,12 +11,12 @@ import ru.itgroup.intouch.service.NotificationCreatorService;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/notifications")
 public class CreateNotificationController {
     private final NotificationCreatorService notificationCreatorService;
 
-    @PostMapping("/notifications/add")
-    public ResponseEntity<?> createNotification(@RequestBody @Valid NotificationRequestDto notificationRequestDto) {
+    @PostMapping("/add")
+    public ResponseEntity<?> createNotification(@RequestBody NotificationRequestDto notificationRequestDto) {
         notificationCreatorService.createNotification(notificationRequestDto);
         return ResponseEntity.ok("");
     }
