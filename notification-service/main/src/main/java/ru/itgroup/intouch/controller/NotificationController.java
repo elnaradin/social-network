@@ -7,24 +7,25 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.itgroup.intouch.dto.response.ResponseDto;
+import ru.itgroup.intouch.dto.response.notifications.NotificationCountDto;
+import ru.itgroup.intouch.dto.response.notifications.NotificationListDto;
 import ru.itgroup.intouch.service.NotificationService;
 
-@RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1")
+@RequiredArgsConstructor
+@RequestMapping("/api/v1/notifications")
 public class NotificationController {
     private static final Logger log = LoggerFactory.getLogger(Main.class);
     private final NotificationService notificationService;
 
-    @GetMapping("/notifications")
-    public ResponseDto getNotifications() {
+    @GetMapping("")
+    public NotificationListDto getNotifications() {
         log.info("Method getNotifications is executing");
         return notificationService.getNotifications();
     }
 
-    @GetMapping("/notifications/count")
-    public ResponseDto getNotificationsCount() {
+    @GetMapping("/count")
+    public NotificationCountDto getNotificationsCount() {
         return notificationService.countNewNotifications();
     }
 }

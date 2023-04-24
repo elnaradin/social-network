@@ -68,7 +68,7 @@ class NotificationSettingsControllerTest {
     @DisplayName("Эндпоинт изменения настроек уведомлений")
     void updateSettings() throws Exception {
         NotificationSettingsDto notificationSettingsDto = new NotificationSettingsDto();
-        notificationSettingsDto.setNotificationType(NotificationType.POST);
+        notificationSettingsDto.setNotificationType(String.valueOf(NotificationType.POST));
         notificationSettingsDto.setEnable(false);
 
         mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/notifications/settings")

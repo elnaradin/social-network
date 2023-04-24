@@ -8,7 +8,7 @@
     <artifactId>notification-service</artifactId>
     <version>${revision}${sha1}${changelist}</version>
     <packaging>pom</packaging>
-    <name>ITGroup_Intouch :: SocialNetwork</name>
+    <name>ITGroup_Intouch :: SocialNetwork :: NotificationService</name>
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -34,6 +34,11 @@
     </modules>
 
     <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -97,5 +102,4 @@
             </plugins>
         </pluginManagement>
     </build>
-
 </project>
