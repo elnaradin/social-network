@@ -11,14 +11,12 @@ import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+import model.account.Account;
 import model.enums.Status;
-
-import java.time.LocalDateTime;
 
 @Getter
 @Setter

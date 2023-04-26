@@ -1,17 +1,15 @@
-package model;
+package model.account;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import model.enums.Status;
 
 import java.time.LocalDateTime;
 
-//@Data
+@Data
 //@Builder
 @NoArgsConstructor
 @AllArgsConstructor

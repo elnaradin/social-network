@@ -1,4 +1,4 @@
-package model;
+package model.account;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -32,4 +32,5 @@ public class User {
     private String email;
 
     private String password;
+    private String hashcode;
 }
