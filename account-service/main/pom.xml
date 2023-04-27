@@ -5,23 +5,34 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>ru.itgroup.intouch</groupId>
-        <artifactId>socialnetwork</artifactId>
+        <groupId>ru.itgroup.intouch.as</groupId>
+        <artifactId>account-service</artifactId>
         <version>${revision}${sha1}${changelist}</version>
     </parent>
-    <name>ITGroup_Intouch :: SocialNetwork :: main</name>
-    <artifactId>ru.itgroup.intouch.main</artifactId>
+    <name>ITGroup_Intouch :: Account-serv :: main</name>
+    <artifactId>ru.itgroup.intouch.as.main</artifactId>
+    <version>${revision}${sha1}${changelist}</version>
 
     <dependencies>
         <dependency>
-            <groupId>ru.itgroup.intouch</groupId>
-            <artifactId>ru.itgroup.intouch.api</artifactId>
-            <version>${revision}${sha1}${changelist}</version>
+            <groupId>ru.itgroup.intouch.as</groupId>
+            <artifactId>ru.itgroup.intouch.as.api</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>ru.itgroup.intouch.as</groupId>
+            <artifactId>ru.itgroup.intouch.as.db</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>ru.itgroup.intouch</groupId>
-            <artifactId>ru.itgroup.intouch.db</artifactId>
-            <version>${revision}${sha1}${changelist}</version>
+            <artifactId>ru.itgroup.intouch.public-data</artifactId>
+            <version>0.1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>ru.itgroup.intouch</groupId>
+            <artifactId>ru.itgroup.intouch.search-engine</artifactId>
+            <version>0.1.0</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -36,6 +47,10 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
@@ -90,6 +105,30 @@
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
             <version>${org.mapstruct.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ru.itgroup.intouch</groupId>
+            <artifactId>ru.itgroup.intouch.api</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>ru.itgroup.intouch</groupId>
+            <artifactId>ru.itgroup.intouch.api</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>ru.itgroup.intouch</groupId>
+            <artifactId>ru.itgroup.intouch.api</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>ru.itgroup.intouch</groupId>
+            <artifactId>ru.itgroup.intouch.api</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 
