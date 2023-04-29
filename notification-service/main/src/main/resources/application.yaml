@@ -3,3 +3,15 @@ server:
 spring:
   profiles:
     active: local
+
+  datasource:
+    url: jdbc:postgresql://${SN_DB_HOST}:${SN_DB_PORT}/${SN_DB_NAME}
+    username: ${SN_DB_USER}
+    password: ${SN_DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate.ddl-auto: none
+    defer-datasource-initialization: false
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: false

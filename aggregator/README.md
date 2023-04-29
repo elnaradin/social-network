@@ -23,11 +23,6 @@
    
        <dependency>
            <groupId>ru.itgroup.intouch</groupId>
-           <artifactId>ru.itgroup.intouch.{microservice}.main</artifactId>
-           <version>1.0.0-SNAPSHOT</version>
-       </dependency>
-       <dependency>
-           <groupId>ru.itgroup.intouch</groupId>
            <artifactId>ru.itgroup.intouch.{microservice}.api</artifactId>
            <version>1.0.0-SNAPSHOT</version>
        </dependency>
