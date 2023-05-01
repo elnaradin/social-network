@@ -14,6 +14,20 @@ services:
     networks:
       - server
 
+  aggregator:
+    image: 'intouchgroup/aggregator'
+    ports:
+      - '${SN_AGGREGATOR_PORT}:${SN_AGGREGATOR_PORT}'
+    environment:
+      SN_AGGREGATOR_PORT: ${SN_AGGREGATOR_PORT}
+      SN_NOTIFICATIONS_PORT: ${SN_NOTIFICATIONS_PORT}
+      SN_NOTIFICATIONS_HOST: notifications
+    depends_on:
+      - pgsql
+      - notifications
+    networks:
+      - server
+
   notifications:
     image: 'intouchgroup/notification-serv'
     ports:
@@ -29,6 +43,7 @@ services:
       SN_DB_HOST: pgsql
       SN_DB_PORT: ${SN_DB_PORT}
       SN_NOTIFICATIONS_PORT: ${SN_NOTIFICATIONS_PORT}
+      SN_NOTIFICATIONS_HOST: notifications
 
 #  front:
 #    image: 'typuctroot/front36'

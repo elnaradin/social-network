@@ -2,7 +2,7 @@ package ru.itgroup.intouch.service;
 
 import lombok.RequiredArgsConstructor;
 import model.Notification;
-import model.User;
+import model.account.User;
 import org.springframework.stereotype.Service;
 import ru.itgroup.intouch.dto.response.CountDto;
 import ru.itgroup.intouch.dto.response.notifications.NotificationCountDto;

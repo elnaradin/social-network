@@ -2,7 +2,7 @@ package ru.itgroup.intouch.service;
 
 import lombok.RequiredArgsConstructor;
 import model.NotificationSettings;
-import model.User;
+import model.account.User;
 import model.enums.NotificationType;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
