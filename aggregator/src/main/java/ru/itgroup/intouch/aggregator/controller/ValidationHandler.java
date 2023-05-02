@@ -1,6 +1,6 @@
 package ru.itgroup.intouch.aggregator.controller;
 
-import org.jetbrains.annotations.NotNull;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -33,4 +33,5 @@ public class ValidationHandler extends ResponseEntityExceptionHandler {
         String message = error.getDefaultMessage();
         errors.put(fieldName, message);
     }
+
 }
