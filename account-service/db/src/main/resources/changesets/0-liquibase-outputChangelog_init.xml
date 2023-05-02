@@ -32,14 +32,14 @@
             <column name="reg_date" type="TIMESTAMP WITHOUT TIME ZONE"/>
             <column name="status_code" type="SMALLINT"/>
             <column name="update_on" type="TIMESTAMP WITHOUT TIME ZONE"/>
-            <column name="id" type="INTEGER">
+            <column name="id" type="bigint">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="accounts_pkey"/>
             </column>
         </createTable>
     </changeSet>
     <changeSet author="user (generated)" id="1681060161919-4">
         <createTable tableName="users">
-            <column name="id" type="INTEGER">
+            <column name="id" type="bigint">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="users_pkey"/>
             </column>
             <column name="email" type="VARCHAR(255)"/>

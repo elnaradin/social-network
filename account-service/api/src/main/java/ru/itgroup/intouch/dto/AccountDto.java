@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class AccountDto extends AbstractUser{
+public class AccountDto extends AbstractUser {
     private int id;
     private boolean isDeleted;
     private String password;
@@ -26,5 +26,5 @@ public class AccountDto extends AbstractUser{
     private String photoId;
     private String photoName;
     private String createdOn;
-    private String updatedOn;
+    private String updateOn;
 }
