@@ -17,15 +17,14 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import ru.itgroup.intouch.service.security.SocialNetworkUserDetailsService;
 import ru.itgroup.intouch.config.jwt.JWTRequestFilter;
+import ru.itgroup.intouch.service.security.UserDetailsServiceImpl;
 
 
 @Configuration
 @EnableWebMvc
 @RequiredArgsConstructor
 public class SecurityConfig {
-
 
     private final JWTRequestFilter jwtRequestFilter;
 
@@ -39,7 +38,7 @@ public class SecurityConfig {
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http,
                                                        PasswordEncoder passwordEncoder,
-                                                       SocialNetworkUserDetailsService userDetailsService)
+                                                       UserDetailsServiceImpl userDetailsService)
             throws Exception {
         return http.getSharedObject(AuthenticationManagerBuilder.class)
                 .userDetailsService(userDetailsService)
@@ -52,7 +51,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .cors().and().csrf().disable()
+                .csrf().and().cors().disable()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
@@ -65,18 +64,21 @@ public class SecurityConfig {
                 )
                 .and()
                 .authorizeHttpRequests(requests -> {
+
                     try {
                         requests
+                                .requestMatchers("/api/v1/account/me").hasRole("USER")
+                                .requestMatchers("/api/v1/auth/logout").hasRole("USER")
                                 .requestMatchers("/**").permitAll()
-                                .and().formLogin().loginPage("/login")
-                                .and().logout().logoutUrl("/api/v1/auth/logout")
-                                .deleteCookies("refreshToken", "accessToken");
+                                .and();
+//                                .logout().logoutUrl("/api/v1/auth/logout").deleteCookies("jwt");
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
+
                 });
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
-        return http.build();
+        return http.csrf().disable().build();
     }
 
     @Bean

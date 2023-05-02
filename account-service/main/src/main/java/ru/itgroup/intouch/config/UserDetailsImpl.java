@@ -1,6 +1,5 @@
 package ru.itgroup.intouch.config;
 
-import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,12 +8,8 @@ import ru.itgroup.intouch.dto.UserDto;
 import java.util.Collection;
 import java.util.List;
 
-@Getter
-public class SocialNetworkUserDetails implements UserDetails {
-    private final UserDto userDto;
-    public SocialNetworkUserDetails(UserDto userDto) {
-        this.userDto = userDto;
-    }
+
+public record UserDetailsImpl(UserDto userDto) implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -48,6 +43,6 @@ public class SocialNetworkUserDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return !userDto.isDeleted();
     }
 }

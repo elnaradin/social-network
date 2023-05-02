@@ -1,17 +1,11 @@
+
+
 jwt:
   secret: skillbox
-
 spring:
   security:
     filter:
       order: 10
-
-  datasource:
-    url: ${DB_URL}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
-    driver-class-name: org.postgresql.Driver
-
   jpa:
     hibernate:
       ddl-auto: none
@@ -22,9 +16,9 @@ spring:
     enabled: true
     change-log: classpath:/dbchangelog-master.xml
 
-
-
-
+email:
+  subject: Восстановление пароля
+  message: "Чтобы восстановить пароль, перейдите по ссылке: http://localhost:80/change-password/"
 
 
 
