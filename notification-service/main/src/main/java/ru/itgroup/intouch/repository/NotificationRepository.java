@@ -1,7 +1,7 @@
 package ru.itgroup.intouch.repository;
 
 import model.Notification;
-import model.User;
+import model.account.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

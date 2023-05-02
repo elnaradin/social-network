@@ -1,3 +1,8 @@
+# Docker образ
+
+Докер образ создан по гайду из `notification-service`. Сам образ
+находится [тут](https://hub.docker.com/repository/docker/intouchgroup/aggregator/general)
+
 # Подключение микросервиса к агрегатору
 
 1. Добавить зависимость в api модуль своего микросервиса

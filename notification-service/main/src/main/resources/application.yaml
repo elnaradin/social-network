@@ -1,5 +1,5 @@
 server:
-  port: 8888
+  port: ${SN_NOTIFICATIONS_PORT}
 spring:
   profiles:
     active: local

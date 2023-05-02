@@ -1,7 +1,7 @@
 package ru.itgroup.intouch.service;
 
 import model.Notification;
-import model.User;
+import model.account.User;
 import model.enums.NotificationType;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;

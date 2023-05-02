@@ -1,7 +1,7 @@
 package ru.itgroup.intouch.mapper;
 
 import com.googlecode.jmapper.JMapper;
-import model.User;
+import model.account.User;
 import org.springframework.stereotype.Component;
 import ru.itgroup.intouch.dto.response.notifications.AuthorDto;
 

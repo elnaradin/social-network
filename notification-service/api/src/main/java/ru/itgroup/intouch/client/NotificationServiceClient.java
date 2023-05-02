@@ -12,7 +12,7 @@ import ru.itgroup.intouch.dto.response.notifications.NotificationListDto;
 
 import java.util.List;
 
-@FeignClient(name = "notification-service", url = "localhost:8888", path = "/api/v1/notifications")
+@FeignClient(name = "notification-service", url = "${SN_NOTIFICATIONS_HOST}:${SN_NOTIFICATIONS_PORT}", path = "/api/v1/notifications")
 public interface NotificationServiceClient {
     @GetMapping("")
     NotificationListDto feignGetNotifications();
