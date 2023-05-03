@@ -1,8 +1,8 @@
-package acountSpecification;
+package searchUtils;
 import model.Account;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
-import searchUtils.Filter;
+
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
@@ -10,9 +10,9 @@ import java.util.List;
 import static org.springframework.data.jpa.domain.Specification.where;
 
 @Component
-public class AccountSpecificationBuilder {
+public class SpecificationBuilder {
 
-    public Specification<Account> getSpecificationFromFilters(List<Filter> filter) {
+    public Specification<?> getSpecificationFromFilters(List<Filter> filter) {
 
         Specification<Account> specification =
                 where(createSpecification(filter.remove(0)));
@@ -39,17 +39,23 @@ public class AccountSpecificationBuilder {
                             (Number) castToRequiredType(
                                     root.get(input.getField()).getJavaType(),
                                     input.getValue()));
-            case GREATER_THAN_DATE -> (root, query, criteriaBuilder) ->
+            case GREATER_THAN_AGE -> (root, query, criteriaBuilder) ->
                     criteriaBuilder.greaterThanOrEqualTo(root.get(input.getField()),
                             Period.between(LocalDate.parse(input.getValue()), LocalDate.now()).getYears());
+            case GREATER_THAN_DATE -> (root, query, criteriaBuilder) ->
+                    criteriaBuilder.greaterThanOrEqualTo(root.get(input.getField()),
+                            (input.getValue()));
             case LESS_THAN -> (root, query, criteriaBuilder) ->
                     criteriaBuilder.lt(root.get(input.getField()),
                             (Number) castToRequiredType(
                                     root.get(input.getField()).getJavaType(),
                                     input.getValue()));
-            case LESS_THAN_DATE -> (root, query, criteriaBuilder) ->
+            case LESS_THAN_AGE -> (root, query, criteriaBuilder) ->
                     criteriaBuilder.lessThanOrEqualTo(root.get(input.getField()),
                             Period.between(LocalDate.parse(input.getValue()), LocalDate.now()).getYears());
+            case LESS_THAN_DATE -> (root, query, criteriaBuilder) ->
+                    criteriaBuilder.lessThanOrEqualTo(root.get(input.getField()),
+                            input.getValue());
             case LIKE -> (root, query, criteriaBuilder) ->
                     criteriaBuilder.like(root.get(input.getField()),
                             "%" + input.getValue() + "%");

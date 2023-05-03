@@ -5,23 +5,23 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>ru.itgroup.intouch.as</groupId>
+        <groupId>ru.itgroup.intouch</groupId>
         <artifactId>account-service</artifactId>
         <version>${revision}${sha1}${changelist}</version>
     </parent>
     <name>ITGroup_Intouch :: Account-serv :: main</name>
-    <artifactId>ru.itgroup.intouch.as.main</artifactId>
+    <artifactId>account-service.main</artifactId>
     <version>${revision}${sha1}${changelist}</version>
 
     <dependencies>
         <dependency>
-            <groupId>ru.itgroup.intouch.as</groupId>
-            <artifactId>ru.itgroup.intouch.as.api</artifactId>
+            <groupId>ru.itgroup.intouch</groupId>
+            <artifactId>account-service.api</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>ru.itgroup.intouch.as</groupId>
-            <artifactId>ru.itgroup.intouch.as.db</artifactId>
+            <groupId>ru.itgroup.intouch</groupId>
+            <artifactId>account-service.db</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>

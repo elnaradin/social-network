@@ -1,6 +1,7 @@
 package ru.itgroup.intouch.service.security;
 
 import lombok.RequiredArgsConstructor;
+import model.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,7 +22,7 @@ public class SocialNetworkUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<UserEntity> userDto = userRepository.findFirstByEmail(username);
+        Optional<User> userDto = userRepository.findFirstByEmail(username);
         if (userDto.isPresent()) {
             return new SocialNetworkUserDetails(mapper.userEntity2UserDto(userDto.get()));
         } else {

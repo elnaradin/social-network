@@ -6,12 +6,12 @@
 
     <parent>
         <groupId>ru.itgroup.intouch</groupId>
-        <artifactId>socialnetwork</artifactId>
-        <version>${revision}${sha1}${changelist}</version>
+        <artifactId>account-service</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
     </parent>
 
     <name>ITGroup_Intouch :: SocialNetwork :: api</name>
-    <artifactId>ru.itgroup.intouch.api</artifactId>
+    <artifactId>account-service.api</artifactId>
 
     <dependencies>
         <dependency>

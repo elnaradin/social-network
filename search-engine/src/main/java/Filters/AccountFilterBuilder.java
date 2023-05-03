@@ -1,9 +1,10 @@
-package acountSpecification;
+package Filters;
 
 import dto.AccountSearchDto;
 import org.springframework.stereotype.Component;
 import searchUtils.Filter;
 import searchUtils.QueryOperator;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +15,7 @@ public class AccountFilterBuilder {
 
         List<Filter> filterList = new ArrayList<>();
 
-          /* создание фильтра поиска по ИМЕНИ */
+        /* создание фильтра поиска по ИМЕНИ */
         if (accountSearchDto.getFirstName() != null) {
             filterList.add(Filter.builder().field("firstname").operator(QueryOperator.LIKE).value(accountSearchDto.getFirstName()).build());
         }
@@ -32,12 +33,12 @@ public class AccountFilterBuilder {
         }
         /*                     по ВОЗРАСТУ МЛАДШЕ */
         if (accountSearchDto.getAgeFrom() != 0) {
-                      filterList.add(Filter.builder().field("birthday").operator(QueryOperator.LESS_THAN_DATE).value(String.valueOf(accountSearchDto.getAgeFrom())).build());
+            filterList.add(Filter.builder().field("birthday").operator(QueryOperator.LESS_THAN_AGE).value(String.valueOf(accountSearchDto.getAgeFrom())).build());
         }
         /*                     по ВОЗРАСТУ СТАРШЕ */
         if (accountSearchDto.getAgeTo() != 0) {
 
-            filterList.add(Filter.builder().field("birthday").operator(QueryOperator.GREATER_THAN_DATE).value(String.valueOf(accountSearchDto.getAgeTo())).build());
+            filterList.add(Filter.builder().field("birthday").operator(QueryOperator.GREATER_THAN_AGE).value(String.valueOf(accountSearchDto.getAgeTo())).build());
 
         }
 

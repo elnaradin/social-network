@@ -1,6 +1,7 @@
 package ru.itgroup.intouch.service.registration;
 
 import lombok.RequiredArgsConstructor;
+import model.Account;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -22,14 +23,14 @@ public class RegistrationService {
     private final PasswordEncoder passwordEncoder;
 
     public void registerNewUser(RegistrationDto registrationDto) {
-        AccountEntity accountEntity = userMapper.registrationDto2AccountEntity(registrationDto);
+        Account accountEntity = userMapper.registrationDto2AccountEntity(registrationDto);
         accountEntity.setPassword(passwordEncoder.encode(accountEntity.getPassword()));
         accountRepository.save(accountEntity);
     }
 
     public AccountDto getUserInfo() {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Optional<AccountEntity> account = accountRepository.findFirstByEmail(userDetails.getUsername());
+        Optional<Account> account = accountRepository.findFirstByEmail(userDetails.getUsername());
         if (account.isPresent()) {
             return userMapper.accountEntityToAccountDto(account.get());
         } else {

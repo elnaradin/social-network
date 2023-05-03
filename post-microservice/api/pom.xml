@@ -11,7 +11,7 @@
     </parent>
 
     <name>ITGroup_Intouch :: SocialNetwork :: api</name>
-    <artifactId>ru.itgroup.intouch.api</artifactId>
+    <artifactId>post-service.api</artifactId>
 
     <dependencies>
         <dependency>

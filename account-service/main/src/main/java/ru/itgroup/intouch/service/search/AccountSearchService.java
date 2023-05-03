@@ -1,7 +1,7 @@
 package ru.itgroup.intouch.service.search;
 
-import acountSpecification.AccountFilterBuilder;
-import acountSpecification.AccountSpecificationBuilder;
+import Filters.AccountFilterBuilder;
+import searchUtils.SpecificationBuilder;
 import dto.AccountSearchDto;
 import lombok.RequiredArgsConstructor;
 import model.Account;
@@ -21,14 +21,14 @@ public class AccountSearchService {
 
     private final AccountRepository accountRepository;
     private final AccountFilterBuilder filterBuilder;
-    private final AccountSpecificationBuilder specificationBuilder;
+    private final SpecificationBuilder specificationBuilder;
     public List<Account> getAccountResponse(AccountSearchDto dto, Pageable pageable) {
 
         List<Filter> filter = filterBuilder.createFilter(dto);
 
         if (filter.isEmpty()) { return new ArrayList<>(); }
 
-        Specification<Account> specification = specificationBuilder.getSpecificationFromFilters(filter);
+        Specification<Account> specification = (Specification<Account>) specificationBuilder.getSpecificationFromFilters(filter);
 
         Page<Account> pageResult = accountRepository.findAll(specification, pageable);
 
