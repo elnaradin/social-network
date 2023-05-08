@@ -10,28 +10,30 @@
         <version>${revision}${sha1}${changelist}</version>
     </parent>
     <name>ITGroup_Intouch :: SocialNetwork :: main</name>
-    <artifactId>post-service.main</artifactId>
+    <artifactId>ru.itgroup.intouch.main</artifactId>
 
     <dependencies>
         <dependency>
             <groupId>ru.itgroup.intouch</groupId>
-            <artifactId>post-service.api</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <artifactId>ru.itgroup.intouch.public-data</artifactId>
+            <version>0.1.2</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>ru.itgroup.intouch</groupId>
+            <artifactId>ru.itgroup.intouch.api</artifactId>
+            <version>${revision}${sha1}${changelist}</version>
         </dependency>
         <dependency>
             <groupId>ru.itgroup.intouch</groupId>
-            <artifactId>post-service.db</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <artifactId>ru.itgroup.intouch.db</artifactId>
+            <version>${revision}${sha1}${changelist}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>
             <version>3.0.4</version>
-        </dependency>
-        <dependency>
-            <groupId>ru.itgroup.intouch</groupId>
-            <artifactId>ru.itgroup.intouch.search-engine</artifactId>
-            <version>0.1.0</version>
         </dependency>
 
         <dependency>

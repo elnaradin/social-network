@@ -8,12 +8,12 @@
     <artifactId>account-service</artifactId>
     <version>${revision}${sha1}${changelist}</version>
     <packaging>pom</packaging>
-    <name>ITGroup_Intouch :: Account-serv</name>
+    <name>ITGroup_Intouch :: Account_serv</name>
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>3.0.2</version>
-        <relativePath/>
+        <relativePath/> 
     </parent>
 
     <properties>
@@ -31,7 +31,6 @@
     </modules>
 
     <dependencies>
-
     </dependencies>
 
     <build>

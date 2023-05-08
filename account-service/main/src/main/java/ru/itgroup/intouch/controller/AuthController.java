@@ -1,40 +1,76 @@
 package ru.itgroup.intouch.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.itgroup.intouch.dto.AuthenticateDto;
 import ru.itgroup.intouch.dto.AuthenticateResponseDto;
+import ru.itgroup.intouch.dto.CaptchaDto;
+import ru.itgroup.intouch.dto.EmailDto;
+import ru.itgroup.intouch.dto.PasswordDto;
 import ru.itgroup.intouch.dto.RegistrationDto;
-import ru.itgroup.intouch.service.registration.RegistrationService;
-import ru.itgroup.intouch.service.security.AuthService;
+import ru.itgroup.intouch.exceptions.CaptchaNotValidException;
+import ru.itgroup.intouch.exceptions.UserAlreadyExistsException;
+import ru.itgroup.intouch.service.account.AuthService;
+import ru.itgroup.intouch.service.account.PasswordRecoveryService;
+import ru.itgroup.intouch.service.account.RegistrationService;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/auth")
+@Slf4j
 public class AuthController {
     private final RegistrationService registrationService;
     private final AuthService authService;
+    private final PasswordRecoveryService passwordRecoveryService;
+
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody AuthenticateDto authenticateDto) {
-        try {
-            AuthenticateResponseDto authenticateResponseDto = authService.login(authenticateDto);
-            return ResponseEntity.ok().body(authenticateResponseDto);
-        } catch (BadCredentialsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
+    public AuthenticateResponseDto login(@RequestBody AuthenticateDto authenticateDto,
+                                         HttpServletRequest request) {
+        log.warn("../auth/login AUTHORIZATION request header value: "
+                + request.getHeader("AUTHORIZATION"));
+        return authService.login(authenticateDto);
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegistrationDto registrationDto) {
+    public void register(@RequestBody RegistrationDto registrationDto)
+            throws UserAlreadyExistsException, CaptchaNotValidException {
         registrationService.registerNewUser(registrationDto);
-        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/password/recovery/")
+    public void recoverPassword(@RequestBody EmailDto emailDto) {
+        passwordRecoveryService.sendLetter(emailDto.getEmail());
 
     }
 
+    @PostMapping("/password/recovery/{linkId}")
+    public void setNewPassword(@PathVariable String linkId,
+                               @RequestBody PasswordDto passwordDto) {
+        passwordRecoveryService.setNewPassword(linkId, passwordDto.getPassword());
+    }
+
+    @PostMapping("/logout")
+    public void logout() {
+        log.info("logging out");
+    }
+
+    // TODO: 22.04.2023 finish captcha
+    @GetMapping("/captcha")
+    public CaptchaDto captcha() {
+        CaptchaDto captchaDto = new CaptchaDto("smwm",
+                "https://www.researchgate.net/publication/220459388/figure/fig1/AS:" +
+                        "305672878084096@1449889501199/Example-of-a-graphical-CAPTCHA-a-Com-" +
+                        "pletely-Automated-Public-Turing-Test-to-Tell.png");
+        log.warn("captcha returned");
+        return captchaDto;
+    }
+
 }
+

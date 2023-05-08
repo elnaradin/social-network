@@ -1,16 +1,4 @@
 spring:
-  datasource:
-    url: jdbc:postgresql://localhost:5432/social_network
-    username: user
-    password: password
-    driver-class-name: org.postgresql.Driver
-
-  jpa:
-    hibernate.ddl-auto: none
-    defer-datasource-initialization: false
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
-    show-sql: false
-
   liquibase:
     enabled: true
     change-log: classpath:/dbchangelog-master.xml

@@ -1,21 +1,23 @@
 package ru.itgroup.intouch.config.jwt;
 
 
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import ru.itgroup.intouch.service.security.SocialNetworkUserDetailsService;
-
+import ru.itgroup.intouch.config.UserDetailsImpl;
+import ru.itgroup.intouch.service.security.UserDetailsServiceImpl;
 
 import java.io.IOException;
 
@@ -25,11 +27,13 @@ import static org.springframework.util.ObjectUtils.isEmpty;
 @RequiredArgsConstructor
 public class JWTRequestFilter extends OncePerRequestFilter {
 
-    private final SocialNetworkUserDetailsService socialNetworkDetailsService;
+    private final UserDetailsServiceImpl userDetailsService;
     private final JWTUtil jwtUtil;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
-                                    FilterChain chain) throws ServletException, IOException, UsernameNotFoundException {
+                                    FilterChain chain) throws ServletException, IOException,
+            UsernameNotFoundException, JwtException {
         final String header = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (isEmpty(header) || !header.startsWith("Bearer ")) {
             chain.doFilter(request, response);
@@ -37,24 +41,36 @@ public class JWTRequestFilter extends OncePerRequestFilter {
         }
 
         final String token = header.split(" ")[1].trim();
-        UserDetails userDetails = socialNetworkDetailsService.loadUserByUsername(jwtUtil.extractUsername(token));
-        if (!jwtUtil.validateToken(token, userDetails)) {
-            chain.doFilter(request, response);
+        try {
+            if (jwtUtil.isTokenExpired(token)) {
+                chain.doFilter(request, response);
+                return;
+            }
+
+            UserDetailsImpl userDetails = (UserDetailsImpl) userDetailsService
+                    .loadUserByUsername(jwtUtil.extractUsername(token));
+
+
+            UsernamePasswordAuthenticationToken
+                    authentication = new UsernamePasswordAuthenticationToken(
+                    userDetails, null,
+                    userDetails.getAuthorities()
+            );
+
+
+            authentication.setDetails(
+                    new WebAuthenticationDetailsSource().buildDetails(request)
+            );
+
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+        } catch (ExpiredJwtException e) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write(e.getMessage());
+            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             return;
         }
-
-        UsernamePasswordAuthenticationToken
-                authentication = new UsernamePasswordAuthenticationToken(
-                userDetails, null,
-                userDetails.getAuthorities()
-        );
-
-        authentication.setDetails(
-                new WebAuthenticationDetailsSource().buildDetails(request)
-        );
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
         chain.doFilter(request, response);
+
     }
 
 }
