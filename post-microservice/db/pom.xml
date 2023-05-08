@@ -10,7 +10,7 @@
         <version>${revision}${sha1}${changelist}</version>
     </parent>
     <name>ITGroup_Intouch :: SocialNetwork :: db</name>
-    <artifactId>ru.itgroup.intouch.db</artifactId>
+    <artifactId>post-service.db</artifactId>
 
     <dependencies>
         <dependency>

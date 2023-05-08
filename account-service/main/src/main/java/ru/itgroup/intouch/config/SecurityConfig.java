@@ -1,6 +1,8 @@
 package ru.itgroup.intouch.config;
 
 
+import Filters.AccountFilterBuilder;
+import searchUtils.SpecificationBuilder;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -17,14 +19,15 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import ru.itgroup.intouch.service.security.SocialNetworkUserDetailsService;
 import ru.itgroup.intouch.config.jwt.JWTRequestFilter;
-import ru.itgroup.intouch.service.security.UserDetailsServiceImpl;
 
 
 @Configuration
 @EnableWebMvc
 @RequiredArgsConstructor
 public class SecurityConfig {
+
 
     private final JWTRequestFilter jwtRequestFilter;
 
@@ -38,7 +41,7 @@ public class SecurityConfig {
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http,
                                                        PasswordEncoder passwordEncoder,
-                                                       UserDetailsServiceImpl userDetailsService)
+                                                       SocialNetworkUserDetailsService userDetailsService)
             throws Exception {
         return http.getSharedObject(AuthenticationManagerBuilder.class)
                 .userDetailsService(userDetailsService)
@@ -51,7 +54,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf().and().cors().disable()
+                .cors().and().csrf().disable()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
@@ -64,21 +67,18 @@ public class SecurityConfig {
                 )
                 .and()
                 .authorizeHttpRequests(requests -> {
-
                     try {
                         requests
-                                .requestMatchers("/api/v1/account/me").hasRole("USER")
-                                .requestMatchers("/api/v1/auth/logout").hasRole("USER")
                                 .requestMatchers("/**").permitAll()
-                                .and();
-//                                .logout().logoutUrl("/api/v1/auth/logout").deleteCookies("jwt");
+                                .and().formLogin().loginPage("/login")
+                                .and().logout().logoutUrl("/api/v1/auth/logout")
+                                .deleteCookies("refreshToken", "accessToken");
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
-
                 });
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
-        return http.csrf().disable().build();
+        return http.build();
     }
 
     @Bean
@@ -92,4 +92,15 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", configuration);
         return new CorsFilter(source);
     }
+
+    @Bean
+    public AccountFilterBuilder accountFilterBuilder() {
+        return new AccountFilterBuilder();
+    }
+
+    @Bean
+    public SpecificationBuilder accountSpecificationBuilder() {
+        return new SpecificationBuilder();
+    }
+
 }
