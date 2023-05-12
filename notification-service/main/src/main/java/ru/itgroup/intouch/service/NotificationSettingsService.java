@@ -2,15 +2,15 @@ package ru.itgroup.intouch.service;
 
 import lombok.RequiredArgsConstructor;
 import model.NotificationSettings;
-import model.account.User;
+import model.account.Account;
 import model.enums.NotificationType;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import ru.itgroup.intouch.dto.request.NotificationSettingsDto;
 import ru.itgroup.intouch.dto.response.settings.SettingsItemDto;
 import ru.itgroup.intouch.mapper.NotificationSettingsMapper;
+import ru.itgroup.intouch.repository.AccountRepository;
 import ru.itgroup.intouch.repository.NotificationSettingsRepository;
-import ru.itgroup.intouch.repository.UserRepository;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -19,7 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class NotificationSettingsService {
     private final NotificationSettingsRepository notificationSettingsRepository;
-    private final UserRepository userRepository;
+    private final AccountRepository accountRepository;
     private final NotificationSettingsMapper notificationSettingsMapper;
 
     public List<SettingsItemDto> getSettings()
@@ -38,18 +38,17 @@ public class NotificationSettingsService {
             case MESSAGE -> notificationSettings.setMessage(notificationSettingsDto.isEnable());
             case FRIEND_REQUEST -> notificationSettings.setFriendRequest(notificationSettingsDto.isEnable());
             case FRIEND_BIRTHDAY -> notificationSettings.setFriendBirthday(notificationSettingsDto.isEnable());
-            case SEND_EMAIL_MESSAGE -> notificationSettings.setSendEmailMessage(notificationSettingsDto.isEnable());
         }
 
         notificationSettingsRepository.save(notificationSettings);
     }
 
     private @NotNull NotificationSettings getNotificationSettingsModel() {
-        User user = userRepository.findById(1);
-        NotificationSettings notificationSettings = notificationSettingsRepository.findByUser(user);
+        Account account = accountRepository.findById(1);
+        NotificationSettings notificationSettings = notificationSettingsRepository.findByUser(account);
         if (notificationSettings == null) {
             notificationSettings = new NotificationSettings();
-            notificationSettings.setUser(user);
+            notificationSettings.setUser(account);
             notificationSettingsRepository.save(notificationSettings);
         }
 

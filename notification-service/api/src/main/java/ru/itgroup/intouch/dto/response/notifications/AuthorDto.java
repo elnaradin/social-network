@@ -14,6 +14,12 @@ public class AuthorDto {
     @JMap
     private Long id;
 
-    @JMap("firstName")
-    private String name;
+    @JMap
+    private String firstName;
+
+    @JMap
+    private String lastName;
+
+    @JMap
+    private String photo;
 }
