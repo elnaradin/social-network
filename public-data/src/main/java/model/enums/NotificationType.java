@@ -8,8 +8,7 @@ public enum NotificationType {
     COMMENT_COMMENT("commentComment"),
     MESSAGE("message"),
     FRIEND_REQUEST("friendRequest"),
-    FRIEND_BIRTHDAY("friendBirthday"),
-    SEND_EMAIL_MESSAGE("sendEmailMessage");
+    FRIEND_BIRTHDAY("friendBirthday");
 
     @Getter
     private final String label;

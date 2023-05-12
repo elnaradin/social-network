@@ -18,9 +18,9 @@ import ru.itgroup.intouch.dto.response.notifications.AuthorDto;
 import ru.itgroup.intouch.dto.response.notifications.NotificationCountDto;
 import ru.itgroup.intouch.dto.response.notifications.NotificationDto;
 import ru.itgroup.intouch.dto.response.notifications.NotificationListDto;
+import ru.itgroup.intouch.mapper.AccountMapper;
 import ru.itgroup.intouch.mapper.NotificationListMapper;
 import ru.itgroup.intouch.mapper.NotificationMapper;
-import ru.itgroup.intouch.mapper.UserMapper;
 import ru.itgroup.intouch.service.NotificationService;
 
 import java.time.LocalDateTime;
@@ -57,7 +57,7 @@ class NotificationControllerTest {
     private NotificationMapper notificationMapper;
 
     @MockBean
-    private UserMapper userMapper;
+    private AccountMapper accountMapper;
 
     @MockBean
     private NotificationService notificationService;
@@ -122,7 +122,7 @@ class NotificationControllerTest {
     }
 
     private @NotNull List<NotificationDto> getNotificationDtoList() {
-        AuthorDto authorDto = AuthorDto.builder().id(1L).name("Mr. Test").build();
+        AuthorDto authorDto = AuthorDto.builder().id(1L).firstName("Mr. Test").build();
         NotificationDto notificationDto = NotificationDto.builder()
                 .id(1L)
                 .author(authorDto)

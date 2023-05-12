@@ -12,7 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import model.account.User;
+import model.account.Account;
 
 import java.time.LocalDateTime;
 
@@ -40,10 +40,9 @@ public class Notification {
 
     @OneToOne
     @JoinColumn(name = "author_id", referencedColumnName = "id")
-    private User author;
+    private Account author;
 
     @OneToOne
     @JoinColumn(name = "receiver_id", referencedColumnName = "id")
-    private User receiver;
-
+    private Account receiver;
 }

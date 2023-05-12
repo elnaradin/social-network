@@ -59,8 +59,8 @@ class NotificationSettingsControllerTest {
             assertTrue(element.isObject());
             assertTrue(element.has("enable"));
             assertTrue(element.get("enable").isBoolean());
-            assertTrue(element.has("notificationType"));
-            assertTrue(element.get("notificationType").isTextual());
+            assertTrue(element.has("notification_type"));
+            assertTrue(element.get("notification_type").isTextual());
         }
     }
 
