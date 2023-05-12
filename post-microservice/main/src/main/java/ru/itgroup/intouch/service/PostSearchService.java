@@ -1,11 +1,10 @@
 package ru.itgroup.intouch.service;
 
 import Filters.PostFilterBuilder;
-import dto.PostSearchDto;
+import dto.PostSearchDtoPageable;
 import lombok.RequiredArgsConstructor;
 import model.Post;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import ru.itgroup.intouch.repository.PostRepository;
@@ -26,12 +25,12 @@ public class PostSearchService {
     private final SpecificationBuilder specificationBuilder;
     private final UserRepository userRepository;
 
-    public List<Post> getAccountResponse(PostSearchDto dto, Pageable pageable) {
+    public List<Post> getAccountResponse(PostSearchDtoPageable dtoPageable) {
 
-        List<String> authorIds = !dto.getAuthor().isEmpty() ? userRepository.findUserIdByName(dto.getAuthor()).stream().
+        List<String> authorIds = !dtoPageable.getDto().getAuthor().isEmpty() ? userRepository.findUserIdByLastName(dtoPageable.getDto().getAuthor()).stream().
                 map(Object::toString).collect(Collectors.toList()) : new ArrayList<>();
 
-        List<Filter> filter = filterBuilder.createFilter(dto, authorIds);
+        List<Filter> filter = filterBuilder.createFilter(dtoPageable.getDto(), authorIds);
 
         if (filter.isEmpty()) {
             return new ArrayList<>();
@@ -39,7 +38,7 @@ public class PostSearchService {
 
         Specification<Post> specification = (Specification<Post>) specificationBuilder.getSpecificationFromFilters(filter);
 
-        Page<Post> pageResult = postRepository.findAll(specification, pageable);
+        Page<Post> pageResult = postRepository.findAll(specification, dtoPageable.getPageable());
 
         if (pageResult.hasContent()) {
             return pageResult.getContent();

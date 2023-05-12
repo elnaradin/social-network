@@ -1,16 +1,20 @@
+server:
+  port: ${SN_POST_PORT}
 spring:
+  profiles:
+    active: local
 
   datasource:
-    url: ${DB_URL}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    url: jdbc:postgresql://${SN_DB_HOST}:${SN_DB_PORT}/${SN_DB_NAME}
+    username: ${SN_DB_USER}
+    password: ${SN_DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
 
   jpa:
-    hibernate:
-      ddl-auto: none
+    hibernate.ddl-auto: none
+    defer-datasource-initialization: false
     database-platform: org.hibernate.dialect.PostgreSQLDialect
-    show-sql: true
+    show-sql: false
 
   liquibase:
     enabled: true

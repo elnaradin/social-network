@@ -8,7 +8,7 @@
     <artifactId>post-service</artifactId>
     <version>${revision}${sha1}${changelist}</version>
     <packaging>pom</packaging>
-    <name>ITGroup_Intouch :: SocialNetwork</name>
+    <name>ITGroup_Intouch :: SocialNetwork :: post-service</name>
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>

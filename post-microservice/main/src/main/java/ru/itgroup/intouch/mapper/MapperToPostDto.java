@@ -8,8 +8,6 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
 import org.springframework.stereotype.Component;
 import ru.itgroup.intouch.dto.PostDto;
-import ru.itgroup.intouch.model.PostEntity;
-import ru.itgroup.intouch.model.PostTagEntity;
 
 import java.util.Collection;
 

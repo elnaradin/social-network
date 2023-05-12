@@ -1,0 +1,8 @@
+
+SN_POST_PORT <br>
+
+SN_DB_NAME <br>
+SN_DB_USER <br>
+SN_DB_PASSWORD <br>
+SN_DB_HOST <br>
+SN_DB_PORT

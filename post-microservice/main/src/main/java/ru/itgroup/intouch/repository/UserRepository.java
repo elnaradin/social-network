@@ -1,8 +1,14 @@
 package ru.itgroup.intouch.repository;
 
+import model.Post;
+import model.account.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
 import java.util.List;
 
-public interface UserRepository {
+@Repository
+public interface UserRepository extends JpaRepository<User, Long> {
 
-    List<Long> findUserIdByName(String name);
+    List<Long> findUserIdByLastName(String name);
 }
