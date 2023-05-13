@@ -39,9 +39,6 @@ public class Friend {
     @JoinColumn(name = "user_id_to", columnDefinition = "BIGINT", nullable = false)
     Account userIdTo;
 
-    @Column(name = "is_deleted", columnDefinition = "BOOLEAN", nullable = false)
-    Boolean isDeleted;
-
     @Column(name = "status_code", columnDefinition = "VARCHAR(255)", nullable = false)
     String statusCode;
 
