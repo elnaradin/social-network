@@ -1,7 +1,8 @@
 package ru.itgroup.intouch.controller;
 
-import model.Account;
+import model.account.Account;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,13 +10,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.itgroup.intouch.dto.FriendDto;
 import ru.itgroup.intouch.dto.FriendListDto;
 import ru.itgroup.intouch.dto.FriendSearchDto;
-import ru.itgroup.intouch.dto.Pageable;
-import ru.itgroup.intouch.response.ApiResponse;
+import ru.itgroup.intouch.dto.FriendSearchPageableDto;
+import ru.itgroup.intouch.dto.response.ApiResponse;
 import ru.itgroup.intouch.service.FriendsService;
 
 import java.util.List;
@@ -57,43 +57,8 @@ public class FriendsController {
 
     @GetMapping("/friends")
     public ResponseEntity<ApiResponse<FriendListDto>> getFriendsByRequestHandle(
-            @RequestParam(required = false) Long id,
-            @RequestParam(required = false) Boolean isDeleted,
-            @RequestParam(required = false) List<Long> ids,
-            @RequestParam(required = false) Long idFrom,
-            @RequestParam(required = false) String statusCode,
-            @RequestParam(required = false) Long idTo,
-            @RequestParam(required = false) String firstName,
-            @RequestParam(required = false) String birthDateFrom,
-            @RequestParam(required = false) String city,
-            @RequestParam(required = false) String country,
-            @RequestParam(required = false) Long ageFrom,
-            @RequestParam(required = false) Long ageTo,
-            @RequestParam(required = false) String previousStatusCode,
-            @RequestParam(defaultValue = "0", required = false) Integer page,
-            @RequestParam(defaultValue = "5", required = false) Integer size,
-            @RequestParam(required = false) List<String> sort) {
-        FriendSearchDto friendSearchDto = FriendSearchDto.builder()
-                .id(id)
-                .isDeleted(isDeleted)
-                .ids(ids)
-                .idFrom(idFrom)
-                .statusCode(statusCode)
-                .idTo(idTo)
-                .firstName(firstName)
-                .birthDateFrom(birthDateFrom)
-                .city(city)
-                .country(country)
-                .ageFrom(ageFrom)
-                .ageTo(ageTo)
-                .previousStatusCode(previousStatusCode)
-                .build();
-        Pageable pageable = Pageable.builder()
-                .page(page)
-                .size(size)
-                .sort(sort)
-                .build();
-        return getApiResponse(friendsService.getFriendsByRequest(friendSearchDto, pageable, new Account()));
+            @SpringQueryMap FriendSearchPageableDto friendSearchPageableDto) {
+        return getApiResponse(friendsService.getFriendsByRequest(friendSearchPageableDto, new Account()));
     }
 
     @GetMapping("/friends/{id}")
@@ -110,34 +75,7 @@ public class FriendsController {
 
     @GetMapping("/friends/recommendations")
     public ResponseEntity<ApiResponse<FriendListDto>> getRecommendationsHandle(
-            @RequestParam(required = false) Long id,
-            @RequestParam(required = false) Boolean isDeleted,
-            @RequestParam(required = false) List<Long> ids,
-            @RequestParam(required = false) Long idFrom,
-            @RequestParam(required = false) String statusCode,
-            @RequestParam(required = false) Long idTo,
-            @RequestParam(required = false) String firstName,
-            @RequestParam(required = false) String birthDateFrom,
-            @RequestParam(required = false) String city,
-            @RequestParam(required = false) String country,
-            @RequestParam(required = false) Long ageFrom,
-            @RequestParam(required = false) Long ageTo,
-            @RequestParam(required = false) String previousStatusCode) {
-        FriendSearchDto friendSearchDto = FriendSearchDto.builder()
-                .id(id)
-                .isDeleted(isDeleted)
-                .ids(ids)
-                .idFrom(idFrom)
-                .statusCode(statusCode)
-                .idTo(idTo)
-                .firstName(firstName)
-                .birthDateFrom(birthDateFrom)
-                .city(city)
-                .country(country)
-                .ageFrom(ageFrom)
-                .ageTo(ageTo)
-                .previousStatusCode(previousStatusCode)
-                .build();
+            @SpringQueryMap FriendSearchDto friendSearchDto) {
         return getApiResponse(friendsService.getRecommendations(friendSearchDto, new Account()));
     }
 
@@ -156,7 +94,7 @@ public class FriendsController {
         return getApiResponse(friendsService.getBlockFriendId(new Account()));
     }
 
-    private <T>ResponseEntity<ApiResponse<T>> getApiResponse(T data) {
+    private <T> ResponseEntity<ApiResponse<T>> getApiResponse(T data) {
         ApiResponse<T> response = new ApiResponse<>();
         response.setData(data);
         return ResponseEntity.ok(response);

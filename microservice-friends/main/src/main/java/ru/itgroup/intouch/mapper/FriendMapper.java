@@ -1,6 +1,6 @@
 package ru.itgroup.intouch.mapper;
 
-import model.Account;
+import model.account.Account;
 import model.Friend;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

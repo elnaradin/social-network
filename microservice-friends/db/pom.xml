@@ -9,8 +9,8 @@
         <artifactId>socialnetwork</artifactId>
         <version>${revision}${sha1}${changelist}</version>
     </parent>
-    <name>ITGroup_Intouch :: SocialNetwork :: db</name>
-    <artifactId>ru.itgroup.intouch.db</artifactId>
+    <name>ITGroup_Intouch :: SocialNetwork :: FriendsService :: db</name>
+    <artifactId>ru.itgroup.intouch.friends-service.db</artifactId>
 
     <dependencies>
         <dependency>
