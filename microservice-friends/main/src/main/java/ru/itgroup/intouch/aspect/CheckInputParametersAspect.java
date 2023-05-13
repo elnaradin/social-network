@@ -8,7 +8,7 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
 import ru.itgroup.intouch.dto.FriendSearchDto;
-import ru.itgroup.intouch.dto.Pageable;
+import ru.itgroup.intouch.dto.FriendSearchPageableDto;
 import ru.itgroup.intouch.exceptions.WrongParameterException;
 
 @Aspect
@@ -18,7 +18,7 @@ public class CheckInputParametersAspect {
 
     private static final String LOG_MSG_PARAM_IS_NULL = "Parameter value is null";
     private static final String LOG_MSG_BAD_LONG_VALUE = "Parameter of type Long is null or less than 0";
-    private static final String LOG_MSG_BAD_PAGEABLE = "Invalid value of one or more parameters of the Pageable object";
+    private static final String LOG_MSG_BAD_PAGEABLE = "Invalid value of one or more parameters of the FriendSearchPageableDto object";
     private static final String EX_MSG_WRONG_PARAM = "Invalid parameter value";
 
     @Pointcut(value = "@annotation(ru.itgroup.intouch.aspect.ValidateParams)")
@@ -36,8 +36,8 @@ public class CheckInputParametersAspect {
                 log.warn(LOG_MSG_BAD_LONG_VALUE);
                 throw new WrongParameterException(EX_MSG_WRONG_PARAM);
             }
-            if (o instanceof Pageable){
-                checkPageableDto((Pageable) o);
+            if (o instanceof FriendSearchPageableDto){
+                checkPageableDto((FriendSearchPageableDto) o);
             }
             if (o instanceof FriendSearchDto){
                 checkFriendSearchDto((FriendSearchDto) o);
@@ -45,9 +45,9 @@ public class CheckInputParametersAspect {
         }
     }
 
-    private void checkPageableDto(Pageable pageable) throws WrongParameterException {
-        if(pageable.getPage() == null || pageable.getPage() < 0 ||
-        pageable.getSize() == null || pageable.getSize() < 1){
+    private void checkPageableDto(FriendSearchPageableDto friendSearchPageableDto) throws WrongParameterException {
+        if(friendSearchPageableDto.getPage() == null || friendSearchPageableDto.getPage() < 0 ||
+        friendSearchPageableDto.getSize() == null || friendSearchPageableDto.getSize() < 1){
             log.warn(LOG_MSG_BAD_PAGEABLE);
             throw new WrongParameterException(EX_MSG_WRONG_PARAM);
         }
