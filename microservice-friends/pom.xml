@@ -8,12 +8,12 @@
     <artifactId>socialnetwork</artifactId>
     <version>${revision}${sha1}${changelist}</version>
     <packaging>pom</packaging>
-    <name>ITGroup_Intouch :: SocialNetwork</name>
+    <name>ITGroup_Intouch :: SocialNetwork :: FriendsService</name>
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>3.0.2</version>
-        <relativePath/> 
+        <relativePath/>
     </parent>
 
     <properties>

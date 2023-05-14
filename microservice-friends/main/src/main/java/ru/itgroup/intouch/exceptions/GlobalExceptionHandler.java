@@ -10,7 +10,7 @@ import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.util.WebUtils;
 import ru.itgroup.intouch.dto.FriendDto;
-import ru.itgroup.intouch.response.ApiResponse;
+import ru.itgroup.intouch.dto.response.ApiResponse;
 
 import javax.naming.AuthenticationException;
 import java.time.LocalDateTime;

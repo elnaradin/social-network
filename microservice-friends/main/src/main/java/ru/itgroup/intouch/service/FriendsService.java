@@ -1,10 +1,10 @@
 package ru.itgroup.intouch.service;
 
-import model.Account;
+import model.account.Account;
 import ru.itgroup.intouch.dto.FriendDto;
 import ru.itgroup.intouch.dto.FriendListDto;
 import ru.itgroup.intouch.dto.FriendSearchDto;
-import ru.itgroup.intouch.dto.Pageable;
+import ru.itgroup.intouch.dto.FriendSearchPageableDto;
 
 import java.util.List;
 
@@ -19,7 +19,7 @@ public interface FriendsService {
 
     FriendDto subscribeOnFriendById(Long id, Account account) throws Exception;
 
-    FriendListDto getFriendsByRequest(FriendSearchDto friendSearchDto, Pageable pageable, Account account);
+    FriendListDto getFriendsByRequest(FriendSearchPageableDto friendSearchPageableDto, Account account);
 
     FriendDto deleteFriendById(Long id, Account account) throws Exception;
 

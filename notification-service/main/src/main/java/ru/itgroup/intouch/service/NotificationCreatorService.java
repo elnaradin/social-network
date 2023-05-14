@@ -1,29 +1,31 @@
 package ru.itgroup.intouch.service;
 
 import model.Notification;
-import model.account.User;
+import model.account.Account;
 import model.enums.NotificationType;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.itgroup.intouch.dto.request.NotificationRequestDto;
+import ru.itgroup.intouch.repository.AccountRepository;
 import ru.itgroup.intouch.repository.NotificationRepository;
-import ru.itgroup.intouch.repository.UserRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class NotificationCreatorService {
-    private User receiver;
-    private User author;
+    private Account receiver;
+    private Account author;
 
-    private final UserRepository userRepository;
+    private final AccountRepository accountRepository;
     private final NotificationRepository notificationRepository;
 
     @Autowired
-    public NotificationCreatorService(UserRepository userRepository, NotificationRepository notificationRepository) {
-        this.userRepository = userRepository;
+    public NotificationCreatorService(
+            AccountRepository accountRepository, NotificationRepository notificationRepository
+    ) {
+        this.accountRepository = accountRepository;
         this.notificationRepository = notificationRepository;
     }
 
@@ -34,8 +36,8 @@ public class NotificationCreatorService {
     }
 
     private void setUserProperties(NotificationRequestDto notificationRequestDto) {
-        List<User> users = getUsers(notificationRequestDto);
-        for (User user : users) {
+        List<Account> users = getUsers(notificationRequestDto);
+        for (Account user : users) {
             if (user.getId().equals(notificationRequestDto.getReceiverId())) {
                 receiver = user;
                 continue;
@@ -45,12 +47,12 @@ public class NotificationCreatorService {
         }
     }
 
-    private @NotNull List<User> getUsers(@NotNull NotificationRequestDto notificationRequestDto) {
+    private @NotNull List<Account> getUsers(@NotNull NotificationRequestDto notificationRequestDto) {
         List<Long> userIds = new ArrayList<>();
         userIds.add(notificationRequestDto.getAuthorId());
         userIds.add(notificationRequestDto.getReceiverId());
 
-        return userRepository.findAllById(userIds);
+        return accountRepository.findAllById(userIds);
     }
 
     private Notification buildNotification(@NotNull NotificationRequestDto notificationRequestDto) {

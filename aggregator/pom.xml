@@ -47,10 +47,9 @@
         </dependency>
         <dependency>
             <groupId>ru.itgroup.intouch</groupId>
-            <artifactId>post-service.api</artifactId>
+            <artifactId>ru.itgroup.intouch.friends-service.api</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
-
 
     </dependencies>
 

@@ -1,8 +1,8 @@
 package ru.itgroup.intouch.service;
 
 import lombok.extern.slf4j.Slf4j;
-import model.Account;
 import model.Friend;
+import model.account.Account;
 import model.enums.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,7 +12,7 @@ import ru.itgroup.intouch.aspect.ValidateParams;
 import ru.itgroup.intouch.dto.FriendDto;
 import ru.itgroup.intouch.dto.FriendListDto;
 import ru.itgroup.intouch.dto.FriendSearchDto;
-import ru.itgroup.intouch.dto.Pageable;
+import ru.itgroup.intouch.dto.FriendSearchPageableDto;
 import ru.itgroup.intouch.exceptions.FriendServiceException;
 import ru.itgroup.intouch.exceptions.UserNotFoundException;
 import ru.itgroup.intouch.mapper.FriendMapper;
@@ -164,22 +164,21 @@ public class FriendsServiceImpl implements FriendsService {
      * Метод получения друзей по различным запросам.
      * !!! временно реализовано получение всех записей по Status с ограничением по Pagination.size !!!
      *
-     * @param friendSearchDto - параметры запроса
-     * @param pageable        - пагинация
+     * @param friendSearchPageableDto        - параметры запроса
      * @return List<FriendDto> - возвращается LIST FriendDto
      */
     @ValidateParams
     @CheckAndGetAuthUser
-    public FriendListDto getFriendsByRequest(FriendSearchDto friendSearchDto, Pageable pageable,
+    public FriendListDto getFriendsByRequest(FriendSearchPageableDto friendSearchPageableDto,
                                              Account accountFrom) {
 
         //TODO: добавить обработку всех полей запроса
 
         List<Friend> friends = friendRepository.getAllByUserIdFrom(accountFrom);
         return new FriendListDto(friends.stream()
-                .filter(friend -> friend.getStatusCode().equals(friendSearchDto.getStatusCode()))
+                .filter(friend -> friend.getStatusCode().equals(friendSearchPageableDto.getStatusCode()))
                 .map(friend -> friendMapper.toFriendDto(friend, friend.getUserIdTo(), Status.NONE.getStatus()))
-                .limit(pageable.getSize())
+                .limit(friendSearchPageableDto.getSize())
                 .collect(Collectors.toList()));
     }
 
@@ -286,7 +285,7 @@ public class FriendsServiceImpl implements FriendsService {
     @CheckAndGetAuthUser
     public List<Long> getBlockFriendId(Account accountFrom) {
         List<Friend> friends = friendRepository.getAllByUserIdToAndStatusCode(accountFrom, Status.BLOCKED.getStatus());
-        return friends.stream().map(Friend::getUserIdTo).map(Account::getId).collect(Collectors.toList());
+        return friends.stream().map(Friend::getUserIdFrom).map(Account::getId).collect(Collectors.toList());
     }
 
     public void saveFriendship(Friend friendFrom, Friend friendTo) {

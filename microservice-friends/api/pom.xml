@@ -10,13 +10,18 @@
         <version>${revision}${sha1}${changelist}</version>
     </parent>
 
-    <name>ITGroup_Intouch :: SocialNetwork :: api</name>
-    <artifactId>ru.itgroup.intouch.api</artifactId>
+    <name>ITGroup_Intouch :: SocialNetwork :: FriendsService :: api</name>
+    <artifactId>ru.itgroup.intouch.friends-service.api</artifactId>
 
     <dependencies>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+            <version>${org.springframework.boot.version}</version>
         </dependency>
     </dependencies>
 
