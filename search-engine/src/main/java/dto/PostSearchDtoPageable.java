@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 @Data
 public class PostSearchDtoPageable {
 
-    PostSearchDto dto;
-    Pageable pageable;
+    private PostSearchDto dto;
+    private Pageable pageable;
 
     public PostSearchDtoPageable(@RequestBody PostSearchDto dto, @RequestBody Pageable pageable) {
         this.dto = dto;

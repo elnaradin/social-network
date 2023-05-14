@@ -1,10 +1,10 @@
 package ru.itgroup.intouch.service.search;
 
 import Filters.AccountFilterBuilder;
+import model.account.Account;
 import searchUtils.SpecificationBuilder;
 import dto.AccountSearchDto;
 import lombok.RequiredArgsConstructor;
-import model.Account;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
