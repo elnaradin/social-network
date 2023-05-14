@@ -1,28 +1,30 @@
 package searchUtils;
-import model.Account;
+
+
 import org.springframework.data.jpa.domain.Specification;
+
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
 
-import static org.springframework.data.jpa.domain.Specification.where;
 
 @Component
-public class SpecificationBuilder {
+public class SpecificationBuilder<T> {
 
-    public Specification<?> getSpecificationFromFilters(List<Filter> filter) {
+    public Specification<T> getSpecificationFromFilters(List<Filter> filter) {
 
-        Specification<Account> specification =
-                where(createSpecification(filter.remove(0)));
+        Specification<T> specification =
+                Specification.where(createSpecification(filter.remove(0)));
         for (Filter input : filter) {
+
             specification = specification.and(createSpecification(input));
         }
         return specification;
     }
 
-    private Specification<Account> createSpecification(Filter input) {
+    private Specification<T> createSpecification(Filter input) {
         return switch (input.getOperator()) {
             /* создание спецификаций с выбранными условиями поиска */
             case EQUALS -> (root, query, criteriaBuilder) ->

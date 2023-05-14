@@ -3,7 +3,7 @@ package ru.itgroup.intouch.service;
 import lombok.AllArgsConstructor;
 import model.Tag;
 import org.springframework.stereotype.Service;
-import ru.itgroup.intouch.model.PostTagEntity;
+
 import ru.itgroup.intouch.repository.PostTagRepository;
 
 import java.util.HashSet;

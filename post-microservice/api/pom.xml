@@ -19,6 +19,19 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+            <version>4.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>ru.itgroup.intouch</groupId>
+            <artifactId>ru.itgroup.intouch.search-engine</artifactId>
+            <version>0.1.0</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
+
+
 
 </project>

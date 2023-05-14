@@ -1,9 +1,10 @@
 package ru.itgroup.intouch.controller;
-import dto.AccountSearchDto;
+
 import dto.PostSearchDto;
-import lombok.AllArgsConstructor;
+
+import dto.PostSearchDtoPageable;
 import lombok.RequiredArgsConstructor;
-import model.Account;
+
 import model.Post;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,7 @@ import java.util.List;
 public class PostController {
     private final PostService postService;
     private final PostSearchService postSearchService;
+
     @GetMapping("/api/v1/post/{id}")
     public ResponseEntity<PostResponse> getPost(@PathVariable Long id) {
         PostDto postDto = postService.getPostById(id);
@@ -32,6 +34,7 @@ public class PostController {
         }
         return new ResponseEntity<>(new FalsePostResponse(false, "Пост не найден"), HttpStatus.NOT_FOUND);
     }
+
     @PostMapping("/api/v1/post")
     public ResponseEntity<?> createPost(@RequestBody PostDto postDto) {
         PostDto post = postService.createNewPost(postDto);
@@ -40,6 +43,7 @@ public class PostController {
         }
         return new ResponseEntity<>(new FalsePostResponse(false, "Пост не создан"), HttpStatus.NOT_FOUND);
     }
+
     @DeleteMapping("/api/v1/post/{id}")
     public ResponseEntity<?> deletePost(@PathVariable Long id) {
         if (postService.deletePostById(id)) {
@@ -47,15 +51,18 @@ public class PostController {
         }
         return new ResponseEntity<>("Посты не найден", HttpStatus.NOT_FOUND);
     }
+
     @ExceptionHandler(MissingPathVariableException.class)
     public ResponseEntity<FalsePostResponse> handleMissingServletParameterException(Exception exception) {
         return new ResponseEntity<>(new FalsePostResponse(false, exception.getLocalizedMessage()), HttpStatus.BAD_REQUEST);
     }
 
     @GetMapping("/api/v1/post")
-    public ResponseEntity<List<Post>> search(PostSearchDto postSearchDto, Pageable pageable) {
-        List<Post> postList = postSearchService.getAccountResponse(postSearchDto, pageable);
-        if (postList.isEmpty()) { return new ResponseEntity<>(HttpStatus.BAD_REQUEST); }
+    public ResponseEntity<List<Post>> search(PostSearchDtoPageable dto) {
+        List<Post> postList = postSearchService.getAccountResponse(dto);
+        if (postList.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         return new ResponseEntity<List<Post>>(postList, HttpStatus.OK);
     }
 
