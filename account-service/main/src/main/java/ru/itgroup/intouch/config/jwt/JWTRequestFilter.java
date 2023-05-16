@@ -51,7 +51,6 @@ public class JWTRequestFilter extends OncePerRequestFilter {
                 log.warn("token is expired");
                 return;
             }
-
             UserDetailsImpl userDetails = (UserDetailsImpl) userDetailsService
                     .loadUserByUsername(jwtUtil.extractUsername(token));
 
@@ -63,7 +62,6 @@ public class JWTRequestFilter extends OncePerRequestFilter {
             authentication.setDetails(
                     new WebAuthenticationDetailsSource().buildDetails(request)
             );
-
             SecurityContextHolder.getContext().setAuthentication(authentication);
         } catch (ExpiredJwtException e) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

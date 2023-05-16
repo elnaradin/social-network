@@ -7,7 +7,7 @@ database:
 
 
 jwt:
-  secret: skillbox
+  secret: ${JWT_SIGNATURE}
 spring:
   security:
     filter:
