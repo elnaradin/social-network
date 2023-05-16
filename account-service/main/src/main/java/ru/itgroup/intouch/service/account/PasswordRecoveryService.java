@@ -19,7 +19,7 @@ public class PasswordRecoveryService {
     private String text;
     @Value("${email.subject}")
     private String subject;
-    @Value("${email.from}")
+    @Value("${EMAIL_FROM}")
     private String from;
     private final JavaMailSender mailSender;
     private final UserRepository userRepository;

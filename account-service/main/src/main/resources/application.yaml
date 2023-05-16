@@ -1,3 +1,9 @@
+server:
+  port: ${SN_ACCOUNT_PORT}
+database:
+  username: ${SN_DB_USER}
+  password: ${SN_DB_PASSWORD}
+  url: jdbc:postgresql://${SN_DB_HOST}:${SN_DB_PORT}/${SN_DB_NAME}
 
 
 jwt:
@@ -18,7 +24,7 @@ spring:
 
 email:
   subject: Восстановление пароля
-  message: "Чтобы восстановить пароль, перейдите по ссылке: http://localhost:80/change-password/"
+  message: "Чтобы восстановить пароль, перейдите по ссылке: http://${SN_ACCOUNT_HOST}:80/change-password/"
 
 
 

@@ -29,11 +29,11 @@ public class AuthController {
     private final RegistrationService registrationService;
     private final AuthService authService;
     private final PasswordRecoveryService passwordRecoveryService;
+    private final HttpServletRequest request;
 
     @PostMapping("/login")
-    public AuthenticateResponseDto login(@RequestBody AuthenticateDto authenticateDto,
-                                         HttpServletRequest request) {
-        log.warn("../auth/login AUTHORIZATION request header value: "
+    public AuthenticateResponseDto login(@RequestBody AuthenticateDto authenticateDto) {
+        log.warn("../auth/login AUTHORIZATION request header value (must be null): "
                 + request.getHeader("AUTHORIZATION"));
         return authService.login(authenticateDto);
     }
@@ -58,7 +58,7 @@ public class AuthController {
 
     @PostMapping("/logout")
     public void logout() {
-        log.info("logging out");
+        log.warn("logg out initiated");
     }
 
     // TODO: 22.04.2023 finish captcha
@@ -68,7 +68,7 @@ public class AuthController {
                 "https://www.researchgate.net/publication/220459388/figure/fig1/AS:" +
                         "305672878084096@1449889501199/Example-of-a-graphical-CAPTCHA-a-Com-" +
                         "pletely-Automated-Public-Turing-Test-to-Tell.png");
-        log.warn("captcha returned");
+        log.info("captcha returned");
         return captchaDto;
     }
 

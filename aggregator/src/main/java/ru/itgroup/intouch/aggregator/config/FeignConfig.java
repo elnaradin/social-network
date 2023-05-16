@@ -21,4 +21,5 @@ public class FeignConfig {
             requestTemplate.header(authHeader, request.getHeader(authHeader));
         };
     }
+
 }

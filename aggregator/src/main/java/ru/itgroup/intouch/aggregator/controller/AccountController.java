@@ -4,7 +4,6 @@ import dto.AccountSearchDtoPageable;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import model.account.Account;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,7 +26,7 @@ public class AccountController {
 
     @GetMapping("/me")
     @ResponseStatus(HttpStatus.OK)
-    AccountDto myAccount(HttpServletRequest request) {
+    public AccountDto myAccount(HttpServletRequest request) {
         log.info("../account/me (get method) AUTHORIZATION request header value: "
                 + request.getHeader("AUTHORIZATION"));
         return client.myAccount();
@@ -35,19 +34,19 @@ public class AccountController {
 
     @PutMapping("/me")
     @ResponseStatus(HttpStatus.OK)
-    AccountDto changeProfile(@RequestBody AccountDto accountDto) {
+    public AccountDto changeProfile(@RequestBody AccountDto accountDto) {
         return client.changeProfile(accountDto);
     }
 
     @DeleteMapping("/me")
     @ResponseStatus(HttpStatus.OK)
-    void deleteAccount() {
+    public void deleteAccount() {
         client.deleteAccount();
     }
 
     @GetMapping("/search")
     @ResponseStatus(HttpStatus.OK)
-    List<Account> search(AccountSearchDtoPageable dto) { return client.search(dto); }
+    public List<Account> search(AccountSearchDtoPageable dto) { return client.search(dto); }
 
 
 

@@ -25,43 +25,44 @@ import ru.itgroup.intouch.dto.RegistrationDto;
 @Slf4j
 public class AuthorizationController {
     private final AuthServiceClient client;
+    private final HttpServletRequest request;
 
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)
-    AuthenticateResponseDto login(@RequestBody AuthenticateDto authenticateDto, HttpServletRequest request) {
+    public AuthenticateResponseDto login(@RequestBody AuthenticateDto authenticateDto) {
         log.info("../auth/login AUTHORIZATION request header value: " + request.getHeader("AUTHORIZATION"));
         return client.login(authenticateDto);
     }
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.OK)
-    void register(@RequestBody RegistrationDto registrationDto) {
+    public void register(@RequestBody RegistrationDto registrationDto) {
         client.register(registrationDto);
     }
 
     @PostMapping("/password/recovery/")
     @ResponseStatus(HttpStatus.OK)
-    void recoverPassword(@RequestBody EmailDto emailDto) {
+    public void recoverPassword(@RequestBody EmailDto emailDto) {
         client.recoverPassword(emailDto);
     }
 
     @PostMapping("/password/recovery/{linkId}")
     @ResponseStatus(HttpStatus.OK)
-    void setNewPassword(@PathVariable String linkId,
+    public void setNewPassword(@PathVariable String linkId,
                         @RequestBody PasswordDto passwordDto) {
         client.setNewPassword(linkId, passwordDto);
     }
 
     @PostMapping("/logout")
     @ResponseStatus(HttpStatus.OK)
-    void logout() {
+    public void logout() {
         client.logout();
         log.info("logging out");
     }
 
     @GetMapping("/captcha")
     @ResponseStatus(HttpStatus.OK)
-    CaptchaDto captcha() {
+    public CaptchaDto captcha() {
         return client.captcha();
     }
 
