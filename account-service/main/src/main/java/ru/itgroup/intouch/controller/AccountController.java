@@ -1,16 +1,19 @@
 package ru.itgroup.intouch.controller;
 
-import dto.AccountSearchDtoPageable;
 import jakarta.servlet.http.HttpServletRequest;
+import dto.AccountSearchDtoPageable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 import model.account.Account;
 import org.springframework.web.bind.annotation.*;
 import ru.itgroup.intouch.dto.AccountDto;
 import ru.itgroup.intouch.exceptions.NoUserLoggedInException;
 import ru.itgroup.intouch.service.account.AccountService;
-
-
 import java.util.List;
 
 @RestController

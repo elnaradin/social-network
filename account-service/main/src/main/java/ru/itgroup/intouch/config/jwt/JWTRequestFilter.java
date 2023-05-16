@@ -8,6 +8,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,6 +26,7 @@ import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class JWTRequestFilter extends OncePerRequestFilter {
 
     private final UserDetailsServiceImpl userDetailsService;
@@ -35,7 +37,9 @@ public class JWTRequestFilter extends OncePerRequestFilter {
                                     FilterChain chain) throws ServletException, IOException,
             UsernameNotFoundException, JwtException {
         final String header = request.getHeader(HttpHeaders.AUTHORIZATION);
+
         if (isEmpty(header) || !header.startsWith("Bearer ")) {
+            logger.warn("no AUTHORIZATION header present");
             chain.doFilter(request, response);
             return;
         }
@@ -44,20 +48,18 @@ public class JWTRequestFilter extends OncePerRequestFilter {
         try {
             if (jwtUtil.isTokenExpired(token)) {
                 chain.doFilter(request, response);
+                log.warn("token is expired");
                 return;
             }
 
             UserDetailsImpl userDetails = (UserDetailsImpl) userDetailsService
                     .loadUserByUsername(jwtUtil.extractUsername(token));
 
-
             UsernamePasswordAuthenticationToken
                     authentication = new UsernamePasswordAuthenticationToken(
                     userDetails, null,
                     userDetails.getAuthorities()
             );
-
-
             authentication.setDetails(
                     new WebAuthenticationDetailsSource().buildDetails(request)
             );
@@ -67,10 +69,7 @@ public class JWTRequestFilter extends OncePerRequestFilter {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.getWriter().write(e.getMessage());
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-            return;
         }
         chain.doFilter(request, response);
-
     }
-
 }

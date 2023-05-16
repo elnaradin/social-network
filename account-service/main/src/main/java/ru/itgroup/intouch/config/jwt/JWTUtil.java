@@ -23,9 +23,10 @@ public class JWTUtil {
     @Value("${jwt.secret}")
     private String secret;
 
+
     public String generateAccessToken(UserDto userDto) {
         final LocalDateTime now = LocalDateTime.now();
-        final Instant accessExpirationInstant = now.plusMinutes(1)
+        final Instant accessExpirationInstant = now.plusDays(1) //jwt expiration made longer
                 .atZone(ZoneId.systemDefault()).toInstant();
         final Date accessExpiration = Date.from(accessExpirationInstant);
 

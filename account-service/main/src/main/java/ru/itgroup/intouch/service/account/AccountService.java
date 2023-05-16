@@ -2,6 +2,7 @@ package ru.itgroup.intouch.service.account;
 
 import lombok.RequiredArgsConstructor;
 import model.account.Account;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,14 +25,14 @@ public class AccountService {
 
     public AccountDto getUserInfo() throws NoUserLoggedInException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication.getPrincipal() instanceof String) {
-            throw new NoUserLoggedInException("no user logged in");
+        if (authentication instanceof AnonymousAuthenticationToken || authentication == null) {
+            throw new NoUserLoggedInException("No user logged in. Authorization failed");
         }
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
         Optional<Account> account = accountRepository.findFirstByEmail(userDetails.getUsername());
         if (account.isEmpty()) {
-            throw new UsernameNotFoundException("account not found");
+            throw new UsernameNotFoundException("Account not found. No such email in database");
         }
         return userMapper.accountEntityToAccountDto(account.get());
     }

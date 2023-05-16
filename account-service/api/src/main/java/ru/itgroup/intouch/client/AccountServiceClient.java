@@ -7,13 +7,12 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import ru.itgroup.intouch.config.FeignConfig;
 import ru.itgroup.intouch.dto.AccountDto;
 
 import java.util.List;
 
 
-@FeignClient(name = "account-service", url = "${IP}" + ":" + "${server.port}", path = "/api/v1/account", configuration = FeignConfig.class)
+@FeignClient(name = "account-service", url = "${SN_ACCOUNT_HOST}" + ":" + "${SN_ACCOUNT_PORT}", path = "/api/v1/account")
 public interface AccountServiceClient {
     @GetMapping("/me")
     AccountDto myAccount();

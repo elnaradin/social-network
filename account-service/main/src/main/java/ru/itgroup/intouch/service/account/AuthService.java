@@ -1,6 +1,8 @@
 package ru.itgroup.intouch.service.account;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
@@ -14,12 +16,15 @@ import ru.itgroup.intouch.service.security.UserDetailsServiceImpl;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final UserDetailsServiceImpl userDetailsService;
     private final JWTUtil jwtUtil;
+    private final HttpServletResponse response;
 
     public AuthenticateResponseDto login(AuthenticateDto authenticateDto) throws AuthenticationException {
+        log.info("login started");
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticateDto.getEmail(),
                 authenticateDto.getPassword()));
         UserDetailsImpl userDetails = (UserDetailsImpl)
@@ -29,6 +34,7 @@ public class AuthService {
         String jwtAccessToken = jwtUtil.generateAccessToken(userDetails.userDto());
         String jwtRefreshToken = jwtUtil.generateRefreshToken(userDetails.userDto());
 
+        log.info("JWTs generated successfully");
         responseDto.setAccessToken(jwtAccessToken);
         responseDto.setRefreshToken(jwtRefreshToken);
         return responseDto;

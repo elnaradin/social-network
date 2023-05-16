@@ -10,9 +10,9 @@ import java.util.Properties;
 
 @Configuration
 public class MailSenderConfig {
-    @Value("${email.username}")
+    @Value("${EMAIL_USERNAME}")
     private String username;
-    @Value("${email.password}")
+    @Value("${EMAIL_PASSWORD}")
     private String password;
 
     @Bean
