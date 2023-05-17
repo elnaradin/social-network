@@ -31,9 +31,14 @@ public class JWTUtil {
         final Date accessExpiration = Date.from(accessExpirationInstant);
 
         return Jwts.builder().setSubject(userDto.getEmail())
+                .claim("userId", userDto.getId())
                 .setExpiration(accessExpiration)
                 .signWith(SignatureAlgorithm.HS256, secret)
                 .compact();
+    }
+
+    public Integer extractUserId(String token) {
+        return extractClaim(token, (claims) -> (Integer) claims.get("userId"));
     }
 
     public String generateRefreshToken(UserDto user) {
@@ -60,6 +65,7 @@ public class JWTUtil {
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
+
 
     public Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
