@@ -1,5 +1,6 @@
 package ru.itgroup.intouch.aggregator.config;
 
+import feign.Logger;
 import feign.RequestInterceptor;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -22,4 +23,8 @@ public class FeignConfig {
         };
     }
 
+    @Bean
+    Logger.Level feignLoggerLevel() {
+        return Logger.Level.FULL;
+    }
 }
