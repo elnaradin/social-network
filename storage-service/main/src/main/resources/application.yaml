@@ -1,0 +1,29 @@
+server:
+  port: ${SN_STORAGE_PORT}
+
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: none
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+
+  datasource:
+    url: jdbc:postgresql://${SN_DB_HOST}:${SN_DB_PORT}/${SN_DB_NAME}
+    username: ${SN_DB_USERNAME}
+    password: ${SN_DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  liquibase:
+    enabled: true
+    change-log: classpath:/dbchangelog-master.xml
+
+cloudinary:
+  connection:
+    cloud_name: ${SN_CLOUD_NAME}
+    api_key: ${SN_API_KEY}
+    api_secret: ${SN_API_SECRET}
+
+logging:
+  level:
+    root: info
