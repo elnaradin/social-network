@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -64,6 +65,9 @@ class NotificationControllerTest {
 
     private final String DATE_REGEX = "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d{5,})?";
 
+    @Value("${server.api.prefix}")
+    private String apiPrefix;
+
     @Test
     @DisplayName("Эндпоинт получения количества новых уведомлений")
     void testGetNotificationsCount() throws Exception {
@@ -72,7 +76,7 @@ class NotificationControllerTest {
                 .build();
 
         given(notificationService.countNewNotifications()).willReturn(notificationCountDto);
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/notifications/count"))
+        mockMvc.perform(MockMvcRequestBuilders.get(apiPrefix + "/notifications/count"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
@@ -89,7 +93,7 @@ class NotificationControllerTest {
         NotificationListDto notificationListDto = NotificationListDto.builder().data(notificationDtoList).build();
 
         given(notificationService.getNotifications()).willReturn(notificationListDto);
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/notifications"))
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(apiPrefix + "/notifications"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
@@ -112,9 +116,9 @@ class NotificationControllerTest {
             assertTrue(element.has("notificationType"));
             assertTrue(element.get("notificationType").isTextual());
 
-            assertTrue(element.has("sentTime"));
-            assertTrue(element.get("sentTime").isTextual());
-            assertThat(element.get("sentTime").asText(), matchesPattern(DATE_REGEX));
+            assertTrue(element.has("timestamp"));
+            assertTrue(element.get("timestamp").isTextual());
+            assertThat(element.get("timestamp").asText(), matchesPattern(DATE_REGEX));
         }
 
         verify(notificationService, times(1)).getNotifications();
@@ -128,7 +132,7 @@ class NotificationControllerTest {
                 .author(authorDto)
                 .content("Test content")
                 .notificationType(NotificationType.POST)
-                .sentTime(LocalDateTime.now())
+                .timestamp(LocalDateTime.now())
                 .build();
 
         List<NotificationDto> notifications = new ArrayList<>();

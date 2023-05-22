@@ -35,6 +35,6 @@
 
         <sql>ALTER TABLE notifications
             ADD CONSTRAINT notification_type_check CHECK
-                (notification_type::text = ANY (ARRAY['POST':: character varying, 'POST_COMMENT':: character varying, 'COMMENT_COMMENT':: character varying, 'MESSAGE':: character varying, 'FRIEND_REQUEST':: character varying, 'FRIEND_BIRTHDAY':: character varying]::text[]));</sql>
+                (notification_type::text = ANY (ARRAY['POST':: character varying, 'POST_COMMENT':: character varying, 'COMMENT_COMMENT':: character varying, 'MESSAGE':: character varying, 'FRIEND_REQUEST':: character varying, 'FRIEND_BIRTHDAY':: character varying, 'SEND_EMAIL_MESSAGE':: character varying]::text[]));</sql>
     </changeSet>
 </databaseChangeLog>

@@ -1,2 +1,10 @@
 server:
   port: 8080
+  api:
+    prefix: /api/v1
+
+jwt:
+  secret: ${SN_JWT_SECRET}
+
+websocket:
+  endpoint: ${SN_WEBSOCKET_HTTP_ENDPOINT}

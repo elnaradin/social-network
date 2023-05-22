@@ -1,66 +1,126 @@
 package ru.itgroup.intouch.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import model.Notification;
-import model.account.Account;
-import model.enums.NotificationType;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import ru.itgroup.intouch.contracts.service.creators.NotificationCreator;
+import ru.itgroup.intouch.dto.NotificationDto;
 import ru.itgroup.intouch.dto.request.NotificationRequestDto;
-import ru.itgroup.intouch.repository.AccountRepository;
-import ru.itgroup.intouch.repository.NotificationRepository;
+import ru.itgroup.intouch.dto.response.WsDto;
+import ru.itgroup.intouch.mapper.NotificationMapper;
+import ru.itgroup.intouch.repository.jooq.FriendRepository;
+import ru.itgroup.intouch.repository.jooq.NotificationJooqRepository;
+import ru.itgroup.intouch.repository.jooq.NotificationSettingRepository;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
+@RequiredArgsConstructor
 public class NotificationCreatorService {
-    private Account receiver;
-    private Account author;
+    @Value("${aggregator.protocol}")
+    private String protocol;
 
-    private final AccountRepository accountRepository;
-    private final NotificationRepository notificationRepository;
+    @Value("${aggregator.host}")
+    private String host;
 
-    @Autowired
-    public NotificationCreatorService(
-            AccountRepository accountRepository, NotificationRepository notificationRepository
-    ) {
-        this.accountRepository = accountRepository;
-        this.notificationRepository = notificationRepository;
+    @Value("${aggregator.port}")
+    private String port;
+
+    @Value("${aggregator.websocket.http}")
+    private String endpoint;
+
+    @Value("${server.api.prefix}")
+    private String apiPrefix;
+
+    private NotificationCreator notificationCreator;
+
+    private final ru.itgroup.intouch.repository.NotificationRepository notificationRepository;
+    private final NotificationJooqRepository notificationJooqRepository;
+    private final NotificationSettingRepository notificationSettingRepository;
+    private final NotificationMapper notificationMapper;
+    private final ObjectMapper objectMapper;
+    private final NotificationCreatorFactory notificationCreatorFactory;
+    private final FriendRepository friendRepository;
+
+    public void createNotification(@NotNull NotificationRequestDto notificationRequestDto) throws Exception {
+        notificationCreator = notificationCreatorFactory
+                .getNotificationCreator(notificationRequestDto.getNotificationType());
+        if (notificationRequestDto.getReceiverId() == null) {
+            createMassNotifications(notificationRequestDto);
+            return;
+        }
+
+        createSingleNotification(notificationRequestDto);
     }
 
-    public void createNotification(NotificationRequestDto notificationRequestDto) {
-        setUserProperties(notificationRequestDto);
-        Notification notification = buildNotification(notificationRequestDto);
-        notificationRepository.save(notification);
-    }
+    private void createMassNotifications(@NotNull NotificationRequestDto notificationRequestDto) throws Exception {
+        Set<Long> receiverIdList = new HashSet<>(
+                friendRepository
+                        .getReceiverIds(notificationRequestDto.getAuthorId(), notificationCreator.getTableField())
+        );
 
-    private void setUserProperties(NotificationRequestDto notificationRequestDto) {
-        List<Account> users = getUsers(notificationRequestDto);
-        for (Account user : users) {
-            if (user.getId().equals(notificationRequestDto.getReceiverId())) {
-                receiver = user;
-                continue;
-            }
+        if (receiverIdList.isEmpty()) {
+            return;
+        }
 
-            author = user;
+        List<NotificationDto> notificationDtoList = new ArrayList<>();
+        for (Long receiverId : receiverIdList) {
+            notificationRequestDto.setReceiverId(receiverId);
+            notificationDtoList.add(notificationCreator.create(notificationRequestDto));
+        }
+
+        List<Long> notificationIdList = notificationJooqRepository.saveNotifications(notificationDtoList);
+        List<Notification> notifications = notificationRepository.findAllById(notificationIdList);
+        for (Notification notification : notifications) {
+            sendToWs(notification);
         }
     }
 
-    private @NotNull List<Account> getUsers(@NotNull NotificationRequestDto notificationRequestDto) {
-        List<Long> userIds = new ArrayList<>();
-        userIds.add(notificationRequestDto.getAuthorId());
-        userIds.add(notificationRequestDto.getReceiverId());
+    private void createSingleNotification(@NotNull NotificationRequestDto notificationRequestDto) throws Exception {
+        boolean isEnableNotification = notificationSettingRepository
+                .isEnable(notificationRequestDto.getAuthorId(), notificationCreator.getTableField());
+        if (!isEnableNotification) {
+            return;
+        }
 
-        return accountRepository.findAllById(userIds);
+        NotificationDto notificationDto = notificationCreator.create(notificationRequestDto);
+        long notificationId = notificationJooqRepository.saveNotificationFromDto(notificationDto);
+
+        Notification notification = notificationRepository.findById(notificationId).orElse(null);
+        sendToWs(notification);
     }
 
-    private Notification buildNotification(@NotNull NotificationRequestDto notificationRequestDto) {
-        return Notification.builder()
-                .content(notificationRequestDto.getContent())
-                .notificationType(NotificationType.valueOf(notificationRequestDto.getNotificationType()).name())
-                .author(author)
-                .receiver(receiver)
-                .build();
+    private void sendToWs(Notification notification) throws IOException {
+        if (notification == null) {
+            return;
+        }
+
+        ru.itgroup.intouch.dto.response.notifications.NotificationDto notificationDto = notificationMapper
+                .getDestination(notification);
+        String json = objectMapper.writeValueAsString(new WsDto(notificationDto));
+
+        URL url = new URL(protocol + host + ":" + port + apiPrefix + endpoint);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+        connection.setRequestMethod("POST");
+        connection.setRequestProperty("Content-Type", "application/json");
+        connection.setDoOutput(true);
+        try (OutputStream stream = connection.getOutputStream()) {
+            byte[] input = json.getBytes(StandardCharsets.UTF_8);
+            stream.write(input, 0, input.length);
+        }
+
+        connection.getResponseCode();
     }
 }

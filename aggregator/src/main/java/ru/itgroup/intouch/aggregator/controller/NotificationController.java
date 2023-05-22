@@ -19,7 +19,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/notifications")
+@RequestMapping("${server.api.prefix}/notifications")
 public class NotificationController {
     private final NotificationServiceClient client;
 

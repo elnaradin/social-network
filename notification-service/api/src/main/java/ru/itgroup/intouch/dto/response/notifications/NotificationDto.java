@@ -26,5 +26,5 @@ public class NotificationDto {
     private NotificationType notificationType;
 
     @JMap("createdAt")
-    private LocalDateTime sentTime;
+    private LocalDateTime timestamp;
 }

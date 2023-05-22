@@ -16,7 +16,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/notifications/settings")
+@RequestMapping("${server.api.prefix}/notifications/settings")
 public class NotificationSettingsController {
     private final NotificationSettingsService notificationSettingsService;
 

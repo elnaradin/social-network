@@ -5,6 +5,7 @@ import model.enums.NotificationType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -29,6 +30,9 @@ class CreateNotificationControllerTest {
     @MockBean
     private NotificationCreatorService notificationCreatorService;
 
+    @Value("${server.api.prefix}")
+    private String apiPrefix;
+
     @Test
     @DisplayName("Эндпоинт создания уведомления")
     void testCreateNotification() throws Exception {
@@ -38,7 +42,7 @@ class CreateNotificationControllerTest {
         notificationRequestDto.setNotificationType(NotificationType.POST.name());
         notificationRequestDto.setContent("Hello from test!");
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/notifications/add")
+        mockMvc.perform(MockMvcRequestBuilders.post(apiPrefix + "/notifications/add")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(notificationRequestDto)))
                 .andDo(print())
