@@ -38,6 +38,7 @@ public class NotificationSettingsService {
             case MESSAGE -> notificationSettings.setMessage(notificationSettingsDto.isEnable());
             case FRIEND_REQUEST -> notificationSettings.setFriendRequest(notificationSettingsDto.isEnable());
             case FRIEND_BIRTHDAY -> notificationSettings.setFriendBirthday(notificationSettingsDto.isEnable());
+            case SEND_EMAIL_MESSAGE -> notificationSettings.setSendEmailMessage(notificationSettingsDto.isEnable());
         }
 
         notificationSettingsRepository.save(notificationSettings);

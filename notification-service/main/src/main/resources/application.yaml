@@ -1,5 +1,8 @@
 server:
   port: ${SN_NOTIFICATIONS_PORT}
+  api:
+    prefix: /api/v1
+
 spring:
   profiles:
     active: local
@@ -18,3 +21,28 @@ spring:
 
   messages:
     basename: lang/messages
+
+  mail:
+    host: ${SN_SMTP_HOST}
+    port: ${SN_SMTP_PORT}
+    username: ${SN_SMTP_USERNAME}
+    password: ${SN_SMTP_PASSWORD}
+
+aggregator:
+  protocol: ${SN_AGGREGATOR_PROTOCOL}
+  host: ${SN_AGGREGATOR_HOST}
+  port: ${SN_AGGREGATOR_PORT}
+
+  websocket:
+    http: ${SN_WEBSOCKET_HTTP_ENDPOINT}
+
+jooq:
+  generator:
+    database:
+      name: org.jooq.meta.postgres.PostgresDatabase
+      with-includes: .*
+      with-input-schema: public
+
+    target:
+      package-name: ru.itgroup.intouch
+      directory: notification-service/main/target/generated-sources/jooq

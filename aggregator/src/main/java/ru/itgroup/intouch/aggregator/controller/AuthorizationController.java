@@ -21,7 +21,7 @@ import ru.itgroup.intouch.dto.RegistrationDto;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/auth")
+@RequestMapping("${server.api.prefix}/auth")
 @Slf4j
 public class AuthorizationController {
     private final AuthServiceClient client;
@@ -48,8 +48,10 @@ public class AuthorizationController {
 
     @PostMapping("/password/recovery/{linkId}")
     @ResponseStatus(HttpStatus.OK)
-    public void setNewPassword(@PathVariable String linkId,
-                        @RequestBody PasswordDto passwordDto) {
+    public void setNewPassword(
+            @PathVariable String linkId,
+            @RequestBody PasswordDto passwordDto
+    ) {
         client.setNewPassword(linkId, passwordDto);
     }
 
