@@ -1,11 +1,15 @@
 package ru.itgroup.intouch.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import model.Notification;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import ru.itgroup.intouch.contracts.service.creators.NotificationCreator;
 import ru.itgroup.intouch.dto.NotificationDto;
 import ru.itgroup.intouch.dto.request.NotificationRequestDto;
@@ -15,11 +19,6 @@ import ru.itgroup.intouch.repository.jooq.FriendRepository;
 import ru.itgroup.intouch.repository.jooq.NotificationJooqRepository;
 import ru.itgroup.intouch.repository.jooq.NotificationSettingRepository;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -49,9 +48,9 @@ public class NotificationCreatorService {
     private final NotificationJooqRepository notificationJooqRepository;
     private final NotificationSettingRepository notificationSettingRepository;
     private final NotificationMapper notificationMapper;
-    private final ObjectMapper objectMapper;
     private final NotificationCreatorFactory notificationCreatorFactory;
     private final FriendRepository friendRepository;
+    private final RestTemplate restTemplate;
 
     public void createNotification(@NotNull NotificationRequestDto notificationRequestDto) throws Exception {
         notificationCreator = notificationCreatorFactory
@@ -101,26 +100,19 @@ public class NotificationCreatorService {
         sendToWs(notification);
     }
 
-    private void sendToWs(Notification notification) throws IOException {
+    private void sendToWs(Notification notification) {
         if (notification == null) {
             return;
         }
 
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
         ru.itgroup.intouch.dto.response.notifications.NotificationDto notificationDto = notificationMapper
                 .getDestination(notification);
-        String json = objectMapper.writeValueAsString(new WsDto(notificationDto));
 
-        URL url = new URL(protocol + host + ":" + port + apiPrefix + endpoint);
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-
-        connection.setRequestMethod("POST");
-        connection.setRequestProperty("Content-Type", "application/json");
-        connection.setDoOutput(true);
-        try (OutputStream stream = connection.getOutputStream()) {
-            byte[] input = json.getBytes(StandardCharsets.UTF_8);
-            stream.write(input, 0, input.length);
-        }
-
-        connection.getResponseCode();
+        HttpEntity<WsDto> requestEntity = new HttpEntity<>(new WsDto(notificationDto), headers);
+        String url = protocol + host + ":" + port + apiPrefix + endpoint;
+        restTemplate.exchange(url, HttpMethod.POST, requestEntity, String.class);
     }
 }
