@@ -6,7 +6,7 @@
 
     <groupId>ru.itgroup.intouch</groupId>
     <artifactId>socialnetwork</artifactId>
-    <version>${revision}${sha1}${changelist}</version>
+    <version>1.0.1</version>
     <packaging>pom</packaging>
     <name>ITGroup_Intouch :: SocialNetwork :: FriendsService</name>
     <parent>
@@ -17,10 +17,6 @@
     </parent>
 
     <properties>
-        <revision>1.0.0</revision>
-        <sha1></sha1>
-        <changelist>-SNAPSHOT</changelist>
-
         <org.springframework.boot.version>3.0.2</org.springframework.boot.version>
 
         <org.mapstruct.version>1.5.3.Final</org.mapstruct.version>
@@ -49,6 +45,11 @@
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
             <version>${org.mapstruct.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+            <version>${org.springframework.boot.version}</version>
         </dependency>
     </dependencies>
 
