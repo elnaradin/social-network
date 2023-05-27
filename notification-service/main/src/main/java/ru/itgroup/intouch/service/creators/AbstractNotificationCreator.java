@@ -1,7 +1,6 @@
 package ru.itgroup.intouch.service.creators;
 
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.context.MessageSource;
 import ru.itgroup.intouch.dto.NotificationDto;
@@ -11,9 +10,8 @@ import java.time.LocalDateTime;
 import java.util.Locale;
 
 @AllArgsConstructor
-@RequiredArgsConstructor
 abstract class AbstractNotificationCreator {
-    private MessageSource messageSource;
+    private final MessageSource messageSource;
 
     public NotificationDto create(@NotNull NotificationRequestDto notificationRequestDto) {
         return NotificationDto
@@ -29,6 +27,7 @@ abstract class AbstractNotificationCreator {
     protected abstract String getContent();
 
     protected String getMessage(String name) {
+        System.out.println(messageSource);
         return messageSource.getMessage(name, null, Locale.getDefault());
     }
 }

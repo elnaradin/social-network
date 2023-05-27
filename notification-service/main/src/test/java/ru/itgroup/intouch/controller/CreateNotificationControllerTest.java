@@ -40,13 +40,12 @@ class CreateNotificationControllerTest {
         notificationRequestDto.setAuthorId(1L);
         notificationRequestDto.setReceiverId(2L);
         notificationRequestDto.setNotificationType(NotificationType.POST.name());
-        notificationRequestDto.setContent("Hello from test!");
 
         mockMvc.perform(MockMvcRequestBuilders.post(apiPrefix + "/notifications/add")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsString(notificationRequestDto)))
-                .andDo(print())
-                .andExpect(status().isOk());
+                                              .contentType(MediaType.APPLICATION_JSON)
+                                              .content(objectMapper.writeValueAsString(notificationRequestDto)))
+               .andDo(print())
+               .andExpect(status().isOk());
     }
 }
 

@@ -20,7 +20,7 @@ public class NotificationController {
 
     @GetMapping("")
     public NotificationListDto getNotifications() {
-        emailSender.send("example@gmail.com", "Hello", "Hi there!");
+        emailSender.send("anatolijv236@gmail.com", "Hello", "Hi there!");
         log.info("Method getNotifications is executing");
         return notificationService.getNotifications();
     }
