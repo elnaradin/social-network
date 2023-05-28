@@ -7,7 +7,7 @@
     <parent>
         <groupId>ru.itgroup.intouch</groupId>
         <artifactId>socialnetwork</artifactId>
-        <version>${revision}${sha1}${changelist}</version>
+        <version>1.0.1</version>
     </parent>
     <name>ITGroup_Intouch :: SocialNetwork :: FriendsService :: db</name>
     <artifactId>ru.itgroup.intouch.friends-service.db</artifactId>
