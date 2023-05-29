@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.itgroup.intouch.dto.response.notifications.NotificationCountDto;
 import ru.itgroup.intouch.dto.response.notifications.NotificationListDto;
-import ru.itgroup.intouch.service.EmailSender;
 import ru.itgroup.intouch.service.NotificationService;
 
 @RestController
@@ -16,12 +15,9 @@ import ru.itgroup.intouch.service.NotificationService;
 @Slf4j
 public class NotificationController {
     private final NotificationService notificationService;
-    private final EmailSender emailSender;
 
     @GetMapping("")
     public NotificationListDto getNotifications() {
-        emailSender.send("anatolijv236@gmail.com", "Hello", "Hi there!");
-        log.info("Method getNotifications is executing");
         return notificationService.getNotifications();
     }
 

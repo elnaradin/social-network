@@ -27,4 +27,6 @@ public class NotificationDto {
 
     @JMap("createdAt")
     private LocalDateTime timestamp;
+
+    private Long receiverId;
 }

@@ -6,6 +6,9 @@ import org.jooq.TableField;
 import org.springframework.stereotype.Repository;
 import ru.itgroup.intouch.tables.records.NotificationSettingsRecord;
 
+import java.util.Map;
+import java.util.Set;
+
 import static ru.itgroup.intouch.Tables.NOTIFICATION_SETTINGS;
 
 @Repository
@@ -19,6 +22,14 @@ public class NotificationSettingRepository {
                   .where(NOTIFICATION_SETTINGS.USER_ID.eq(userId))
                   .fetchOptional()
                   .map(record -> record.getValue(field))
-                  .orElse(false);
+                  .orElse(true);
+    }
+
+    public Map<Long, Boolean> getMailingSettingsMap(Set<Long> receiverIdList) {
+        return dsl.select(NOTIFICATION_SETTINGS.USER_ID, NOTIFICATION_SETTINGS.SEND_EMAIL_MESSAGE)
+                  .from(NOTIFICATION_SETTINGS)
+                  .where(NOTIFICATION_SETTINGS.USER_ID.in(receiverIdList))
+                  .fetch()
+                  .intoMap(NOTIFICATION_SETTINGS.USER_ID, NOTIFICATION_SETTINGS.SEND_EMAIL_MESSAGE);
     }
 }
