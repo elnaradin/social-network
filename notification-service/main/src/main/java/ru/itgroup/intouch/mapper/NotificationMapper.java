@@ -15,6 +15,7 @@ public class NotificationMapper {
 
     public NotificationDto getDestination(Notification notification) {
         NotificationDto notificationDto = mapper.getDestination(notification);
+        notificationDto.setReceiverId(notification.getReceiver().getId());
         notificationDto.setAuthor(accountMapper.getDestination(notification.getAuthor()));
         return notificationDto;
     }

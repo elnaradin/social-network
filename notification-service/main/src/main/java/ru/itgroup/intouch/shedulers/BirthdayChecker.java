@@ -7,12 +7,11 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.context.MessageSource;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import ru.itgroup.intouch.controller.NotificationHandler;
 import ru.itgroup.intouch.dto.BirthdayUsersDto;
 import ru.itgroup.intouch.dto.NotificationDto;
-import ru.itgroup.intouch.mapper.NotificationMapper;
 import ru.itgroup.intouch.repository.NotificationRepository;
 import ru.itgroup.intouch.repository.jooq.NotificationJooqRepository;
+import ru.itgroup.intouch.service.notification.sender.NotificationSender;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,13 +22,12 @@ import java.util.Locale;
 public class BirthdayChecker {
     private final NotificationJooqRepository notificationJooqRepository;
     private final NotificationRepository notificationRepository;
-    private final NotificationHandler notificationHandler;
-    private final NotificationMapper notificationMapper;
+    private final NotificationSender notificationSender;
     private final MessageSource messageSource;
 
     private final LocalDateTime now = LocalDateTime.now();
 
-    @Scheduled(cron = "0 14 3 * * *", zone = "Europe/Moscow")
+    @Scheduled(cron = "0 30 0 * * *", zone = "Europe/Moscow")
     private void checkBirthDates() {
         List<BirthdayUsersDto> birthdayNotificationDtoList = notificationJooqRepository.getBirthdayUsers();
         if (birthdayNotificationDtoList.isEmpty()) {
@@ -43,7 +41,7 @@ public class BirthdayChecker {
         }
 
         List<Notification> notifications = notificationRepository.findAllById(notificationIdList);
-        sendNotifications(notifications);
+        notificationSender.send(notifications);
     }
 
     @NotNull
@@ -64,13 +62,5 @@ public class BirthdayChecker {
     private @NotNull String getMessage(@NotNull BirthdayUsersDto dto) {
         return messageSource.getMessage("notification.birthday", new Object[]{dto.getName(), dto.getLastName()},
                                         Locale.getDefault());
-    }
-
-    private void sendNotifications(@NotNull List<Notification> notifications) {
-        notifications.forEach(this::sendNotification);
-    }
-
-    private void sendNotification(Notification notification) {
-        notificationHandler.sendNotification(notificationMapper.getDestination(notification));
     }
 }

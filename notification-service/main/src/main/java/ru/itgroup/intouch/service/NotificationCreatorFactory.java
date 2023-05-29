@@ -1,6 +1,5 @@
 package ru.itgroup.intouch.service;
 
-import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import model.enums.NotificationType;
 import org.springframework.context.ApplicationContext;
@@ -17,14 +16,14 @@ import ru.itgroup.intouch.service.creators.PostNotificationCreator;
 public class NotificationCreatorFactory {
     private final ApplicationContext context;
 
-    public NotificationCreator getNotificationCreator(String type) throws NotFoundException {
+    public NotificationCreator getNotificationCreator(String type) throws ClassNotFoundException {
         return switch (NotificationType.valueOf(type)) {
             case POST -> context.getBean(PostNotificationCreator.class);
             case POST_COMMENT -> context.getBean(PostCommentNotificationCreator.class);
             case COMMENT_COMMENT -> context.getBean(CommentCommentNotificationCreator.class);
             case MESSAGE -> context.getBean(MessageNotificationCreator.class);
             case FRIEND_REQUEST -> context.getBean(FriendRequestNotificationCreator.class);
-            default -> throw new NotFoundException("Notification creator not found");
+            default -> throw new ClassNotFoundException("Notification creator not found");
         };
     }
 }

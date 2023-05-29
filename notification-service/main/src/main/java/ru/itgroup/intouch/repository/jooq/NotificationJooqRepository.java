@@ -2,6 +2,7 @@ package ru.itgroup.intouch.repository.jooq;
 
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
+import org.jooq.Condition;
 import org.jooq.DSLContext;
 import org.jooq.DatePart;
 import org.jooq.InsertValuesStep5;
@@ -19,6 +20,7 @@ import static org.jooq.impl.DSL.extract;
 import static ru.itgroup.intouch.Tables.ACCOUNTS;
 import static ru.itgroup.intouch.Tables.FRIENDS;
 import static ru.itgroup.intouch.Tables.NOTIFICATIONS;
+import static ru.itgroup.intouch.Tables.NOTIFICATION_SETTINGS;
 import static ru.itgroup.intouch.Tables.USERS;
 
 @Repository
@@ -28,15 +30,21 @@ public class NotificationJooqRepository {
     private final BirthdayUsersMapper birthdayUsersMapper;
 
     public List<BirthdayUsersDto> getBirthdayUsers() {
+        Condition condition = NOTIFICATION_SETTINGS.FRIEND_BIRTHDAY.isTrue()
+                                                                   .or(NOTIFICATION_SETTINGS.FRIEND_BIRTHDAY.isNull());
+
         return dsl.select(FRIENDS.USER_ID_FROM, FRIENDS.USER_ID_TO, USERS.FIRST_NAME, USERS.LAST_NAME)
                   .from(ACCOUNTS)
                   .leftJoin(FRIENDS)
                   .on(ACCOUNTS.ID.eq(FRIENDS.USER_ID_TO))
                   .leftJoin(USERS)
                   .on(ACCOUNTS.ID.eq(USERS.ID))
+                  .leftJoin(NOTIFICATION_SETTINGS)
+                  .on(FRIENDS.USER_ID_TO.eq(NOTIFICATION_SETTINGS.USER_ID))
                   .where(extract(ACCOUNTS.BIRTH_DATE, DatePart.MONTH).eq(extract(currentDate(), DatePart.MONTH)))
                   .and(extract(ACCOUNTS.BIRTH_DATE, DatePart.DAY).eq(extract(currentDate(), DatePart.DAY)))
                   .and(FRIENDS.ID.isNotNull())
+                  .and(condition)
                   .fetch()
                   .map(birthdayUsersMapper);
     }

@@ -14,7 +14,8 @@ spring:
     driver-class-name: org.postgresql.Driver
 
   jpa:
-    hibernate.ddl-auto: none
+    hibernate:
+      ddl-auto: none
     defer-datasource-initialization: false
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: false
