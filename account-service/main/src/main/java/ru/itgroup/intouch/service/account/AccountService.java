@@ -14,6 +14,7 @@ import ru.itgroup.intouch.mapper.UserMapper;
 import ru.itgroup.intouch.repository.AccountRepository;
 import ru.itgroup.intouch.repository.UserRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -64,5 +65,10 @@ public class AccountService {
         Account account = firstByEmail.get();
         account.setDeleted(true);
         userRepository.save(firstByEmail.get());
+    }
+
+    public List<AccountDto> getListOfUsers(List<Long> userIds) {
+        List<Account> accounts = accountRepository.findByIdIn(userIds);
+        return userMapper.accountsToDtos(accounts);
     }
 }

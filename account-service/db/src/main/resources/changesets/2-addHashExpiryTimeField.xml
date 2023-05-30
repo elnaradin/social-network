@@ -1,0 +1,18 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet id="2" author="user">
+        <addColumn tableName="users">
+            <column name="hash_expiry_time" type="TIMESTAMP WITHOUT TIME ZONE"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="changeColumnHashcode" author="user">
+        <renameColumn columnDataType="VARCHAR(255)"
+                      newColumnName="hash"
+                      oldColumnName="hashcode"
+                      remarks="A change in names"
+                      tableName="users"/>
+    </changeSet>
+</databaseChangeLog>

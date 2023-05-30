@@ -26,15 +26,17 @@ public class JWTUtil {
 
     public String generateAccessToken(UserDto userDto) {
         final LocalDateTime now = LocalDateTime.now();
-        final Instant accessExpirationInstant = now.plusDays(1) //jwt expiration made longer
+        final Instant accessExpirationInstant = now.plusDays(1)
                 .atZone(ZoneId.systemDefault()).toInstant();
         final Date accessExpiration = Date.from(accessExpirationInstant);
 
-        return Jwts.builder().setSubject(userDto.getEmail())
+        String userId = Jwts.builder().setSubject(userDto.getEmail())
                 .claim("userId", userDto.getId())
                 .setExpiration(accessExpiration)
                 .signWith(SignatureAlgorithm.HS256, secret)
                 .compact();
+        log.info("token created: " + userId);
+        return userId;
     }
 
     public Integer extractUserId(String token) {
@@ -59,6 +61,7 @@ public class JWTUtil {
     }
 
     private Claims extractAllClaims(String token) throws JwtException {
+        log.info("token received: " + token);
         return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
     }
 
@@ -75,7 +78,7 @@ public class JWTUtil {
         return extractExpiration(token).before(new Date());
     }
 
-//    public Boolean validateToken(String token) {
-//        return (!isTokenExpired(token));
-//    }
+    public Boolean validateToken(String token, String userName) {
+        return (!isTokenExpired(token) && extractUsername(token).equals(userName));
+    }
 }
