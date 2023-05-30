@@ -64,15 +64,11 @@ public class SecurityConfig {
                 )
                 .and()
                 .authorizeHttpRequests(requests -> {
-
                     try {
                         requests
                                 .requestMatchers("/api/v1/account/me").hasRole("USER")
                                 .requestMatchers("/api/v1/auth/logout").hasRole("USER")
-
                                 .requestMatchers("/**").permitAll();
-//                                .and()
-//                                .logout().logoutUrl("/api/v1/auth/logout");
                     } catch (Exception e) {
                         log.error(e.getMessage());
                     }
@@ -81,18 +77,6 @@ public class SecurityConfig {
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
-
-//    @Bean
-//    public CorsFilter corsFilter() {
-//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//        CorsConfiguration configuration = new CorsConfiguration();
-//        configuration.setAllowCredentials(true);
-//        configuration.addAllowedOriginPattern("*");
-//        configuration.addAllowedHeader("*");
-//        configuration.addAllowedMethod("*");
-//        source.registerCorsConfiguration("/**", configuration);
-//        return new CorsFilter(source);
-//    }
 
 
 }

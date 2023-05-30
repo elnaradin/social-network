@@ -24,8 +24,13 @@ spring:
 
 email:
   subject: Восстановление пароля
-  message: "Чтобы восстановить пароль, перейдите по ссылке: http://${SN_ACCOUNT_HOST}:80/change-password/"
+  message: "Чтобы восстановить пароль, перейдите по ссылке: http://${SN_ACCOUNT_HOST}/change-password/"
 
+delete-hash:
+  delay-ms: 60000
+
+user:
+  hash-expiry-min: 15
 
 
 

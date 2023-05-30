@@ -13,6 +13,7 @@ import ru.itgroup.intouch.dto.UserDto;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 
 @Mapper(componentModel = "spring")
@@ -23,6 +24,7 @@ public interface UserMapper {
     Account registrationDto2AccountEntity(RegistrationDto dto);
 
     AccountDto accountEntityToAccountDto(Account entity);
+    List<AccountDto> accountsToDtos(List<Account> accountList);
 
     @Mapping(target = "regDate", qualifiedByName = "stringToLDT")
     @Mapping(target = "birthDate", qualifiedByName = "stringToLDT")
