@@ -11,7 +11,7 @@ import ru.itgroup.intouch.service.NotificationCreatorService;
 public class NotificationKafkaListener {
     private final NotificationCreatorService notificationCreatorService;
 
-    @KafkaListener(topics = "${spring.kafka.notification-event}", groupId = "notification_serv")
+    @KafkaListener(topics = "${spring.kafka.notification-event}", groupId = "${spring.kafka.consumer.group-id}")
     public void onMessage(NotificationRequestDto dto) throws ClassNotFoundException {
         notificationCreatorService.createNotification(dto);
     }
