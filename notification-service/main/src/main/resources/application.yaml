@@ -29,6 +29,24 @@ spring:
     username: ${SN_SMTP_USERNAME}
     password: ${SN_SMTP_PASSWORD}
 
+  kafka:
+    notification-serv: ${SN_NOTIFICATION_SERV}
+    notification-event: ${SN_NOTIFICATION_EVENT}
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.LongSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    consumer:
+      group-id: notification_serv
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.LongDeserializer
+      value-deserializer: ru.itgroup.intouch.serialization.CustomDeserializer
+      properties:
+        spring:
+          json:
+            trusted:
+              packages: "*"
+
 aggregator:
   protocol: ${SN_AGGREGATOR_PROTOCOL}
   host: ${SN_AGGREGATOR_HOST}

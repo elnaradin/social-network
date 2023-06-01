@@ -1,5 +1,7 @@
 package ru.itgroup.intouch.service.notification.sender;
 
+import jakarta.annotation.PreDestroy;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import model.Notification;
 import org.jetbrains.annotations.NotNull;
@@ -13,6 +15,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 import static ru.itgroup.intouch.tables.NotificationSettings.NOTIFICATION_SETTINGS;
@@ -20,9 +24,15 @@ import static ru.itgroup.intouch.tables.NotificationSettings.NOTIFICATION_SETTIN
 @Service
 @RequiredArgsConstructor
 public class NotificationMailObserver implements NotificationObserver {
+    private final ExecutorService executorService = Executors.newFixedThreadPool(10);
     private final NotificationSettingRepository notificationSettingRepository;
     private final MessageSource messageSource;
     private final EmailSender emailSender;
+
+    @PreDestroy
+    public void shutdownExecutorService() {
+        executorService.shutdown();
+    }
 
     @Override
     public void send(@NotNull Notification notification) {
@@ -59,6 +69,12 @@ public class NotificationMailObserver implements NotificationObserver {
     private void sendMail(@NotNull Notification notification) {
         String to = notification.getReceiver().getEmail();
         String subject = messageSource.getMessage("notification.new", null, Locale.getDefault());
-        emailSender.send(to, subject, notification.getContent());
+
+        executorService.execute(() -> {
+            try {
+                emailSender.send(to, subject, notification.getContent());
+            } catch (MessagingException ignored) {
+            }
+        });
     }
 }
