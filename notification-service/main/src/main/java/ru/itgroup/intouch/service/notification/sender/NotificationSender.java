@@ -1,14 +1,12 @@
 package ru.itgroup.intouch.service.notification.sender;
 
 import model.Notification;
-import org.springframework.stereotype.Service;
 import ru.itgroup.intouch.contracts.service.notification.sender.NotificationObserver;
 
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-@Service
 public class NotificationSender {
     private final Map<String, NotificationObserver> observers = new ConcurrentHashMap<>();
 

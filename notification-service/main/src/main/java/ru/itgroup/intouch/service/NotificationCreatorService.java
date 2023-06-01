@@ -19,14 +19,10 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class NotificationCreatorService {
-    private final ExecutorService executorService = Executors.newFixedThreadPool(10);
     private final NotificationSettingRepository notificationSettingRepository;
     private final NotificationJooqRepository notificationJooqRepository;
     private final NotificationCreatorFactory notificationCreatorFactory;
@@ -35,12 +31,6 @@ public class NotificationCreatorService {
     private final FriendRepository friendRepository;
 
     private NotificationCreator notificationCreator;
-
-    @PreDestroy
-    public void shutdownExecutorService() {
-        executorService.shutdown();
-        log.info("Executor service was shutdown");
-    }
 
     public void createNotification(@NotNull NotificationRequestDto notificationRequestDto)
             throws ClassNotFoundException {
@@ -51,6 +41,7 @@ public class NotificationCreatorService {
         String content = notificationCreator.getContent(notificationRequestDto.getEntityId());
         if (notificationRequestDto.getReceiverId() == null) {
             createMassNotifications(notificationRequestDto, content);
+            return;
         }
 
         createSingleNotification(notificationRequestDto, content);
