@@ -1,7 +1,7 @@
 spring:
   kafka:
     notification-serv: ${SN_NOTIFICATION_SERV}
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: ${SN_KAFKA_HOST}:${SN_KAFKA_PORT}
     consumer:
       group-id: aggregator_serv
       auto-offset-reset: earliest

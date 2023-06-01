@@ -32,7 +32,7 @@ spring:
   kafka:
     notification-serv: ${SN_NOTIFICATION_SERV}
     notification-event: ${SN_NOTIFICATION_EVENT}
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: ${SN_KAFKA_HOST}:${SN_KAFKA_PORT}
     producer:
       key-serializer: org.apache.kafka.common.serialization.LongSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
