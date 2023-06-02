@@ -7,6 +7,7 @@ import model.Notification;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
+import ru.itgroup.intouch.annotation.Loggable;
 import ru.itgroup.intouch.contracts.service.notification.sender.NotificationObserver;
 import ru.itgroup.intouch.repository.jooq.NotificationSettingRepository;
 import ru.itgroup.intouch.service.EmailSender;
@@ -66,6 +67,7 @@ public class NotificationMailObserver implements NotificationObserver {
         return notificationSettingRepository.getMailingSettingsMap(receiverIdList);
     }
 
+    @Loggable
     private void sendMail(@NotNull Notification notification) {
         String to = notification.getReceiver().getEmail();
         String subject = messageSource.getMessage("notification.new", null, Locale.getDefault());

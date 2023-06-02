@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import model.Notification;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
+import ru.itgroup.intouch.annotation.Loggable;
 import ru.itgroup.intouch.contracts.service.creators.NotificationCreator;
 import ru.itgroup.intouch.dto.NotificationDto;
 import ru.itgroup.intouch.dto.request.NotificationRequestDto;
@@ -32,6 +33,7 @@ public class NotificationCreatorService {
 
     private NotificationCreator notificationCreator;
 
+    @Loggable
     public void createNotification(@NotNull NotificationRequestDto notificationRequestDto)
             throws ClassNotFoundException {
         notificationCreator = notificationCreatorFactory
@@ -47,6 +49,7 @@ public class NotificationCreatorService {
         createSingleNotification(notificationRequestDto, content);
     }
 
+    @Loggable
     private @NotNull String getContent(Long entityId) {
         String content = notificationCreator.getContent(entityId);
         if (content.length() <= CONTENT_LENGTH) {
@@ -56,6 +59,7 @@ public class NotificationCreatorService {
         return content.substring(0, CONTENT_LENGTH - 3).trim() + "...";
     }
 
+    @Loggable
     private void createMassNotifications(@NotNull NotificationRequestDto notificationRequestDto, String content) {
         Set<Long> receiverIdList = new HashSet<>(
                 friendRepository
@@ -77,6 +81,7 @@ public class NotificationCreatorService {
         notificationSender.send(notifications);
     }
 
+    @Loggable
     private void createSingleNotification(@NotNull NotificationRequestDto notificationRequestDto, String content) {
         boolean isEnableNotification = notificationSettingRepository
                 .isEnable(notificationRequestDto.getReceiverId(), notificationCreator.getTableField());

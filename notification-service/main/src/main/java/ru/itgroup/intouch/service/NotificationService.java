@@ -5,6 +5,7 @@ import model.Notification;
 import model.account.Account;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
+import ru.itgroup.intouch.annotation.Loggable;
 import ru.itgroup.intouch.dto.response.CountDto;
 import ru.itgroup.intouch.dto.response.notifications.NotificationCountDto;
 import ru.itgroup.intouch.dto.response.notifications.NotificationListDto;
@@ -22,6 +23,7 @@ public class NotificationService {
     private final AccountRepository accountRepository;
     private final NotificationListMapper notificationListMapper;
 
+    @Loggable
     public NotificationListDto getNotifications() {
         Account receiver = accountRepository.findById(1);
         List<Notification> notifications = notificationRepository.findByReceiverOrderByCreatedAtDesc(receiver);
@@ -30,6 +32,7 @@ public class NotificationService {
         return notificationListMapper.getDestination(notifications);
     }
 
+    @Loggable
     public NotificationCountDto countNewNotifications() {
         Account receiver = accountRepository.findById(1);
         long notificationsCount = notificationRepository.countByReceiverAndReadAtIsNull(receiver);
