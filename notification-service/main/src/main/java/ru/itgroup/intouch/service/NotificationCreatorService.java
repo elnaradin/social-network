@@ -1,8 +1,6 @@
 package ru.itgroup.intouch.service;
 
-import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import model.Notification;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
@@ -23,6 +21,8 @@ import java.util.Set;
 @Service
 @RequiredArgsConstructor
 public class NotificationCreatorService {
+    private static final int CONTENT_LENGTH = 120;
+
     private final NotificationSettingRepository notificationSettingRepository;
     private final NotificationJooqRepository notificationJooqRepository;
     private final NotificationCreatorFactory notificationCreatorFactory;
@@ -38,13 +38,22 @@ public class NotificationCreatorService {
                 .getNotificationCreator(notificationRequestDto.getNotificationType());
 
         notificationCreator.validateData(notificationRequestDto);
-        String content = notificationCreator.getContent(notificationRequestDto.getEntityId());
+        String content = getContent(notificationRequestDto.getEntityId());
         if (notificationRequestDto.getReceiverId() == null) {
             createMassNotifications(notificationRequestDto, content);
             return;
         }
 
         createSingleNotification(notificationRequestDto, content);
+    }
+
+    private @NotNull String getContent(Long entityId) {
+        String content = notificationCreator.getContent(entityId);
+        if (content.length() <= CONTENT_LENGTH) {
+            return content;
+        }
+
+        return content.substring(0, CONTENT_LENGTH - 3).trim() + "...";
     }
 
     private void createMassNotifications(@NotNull NotificationRequestDto notificationRequestDto, String content) {
