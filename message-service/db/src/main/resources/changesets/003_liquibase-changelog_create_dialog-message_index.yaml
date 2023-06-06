@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id:  07042023-4
+      author:  Smelov
+      changes:
+        - createIndex:
+            columns:
+              - column:
+                  name:  dialog_id
+            indexName:  idx_dialog
+            tableName:  messages
