@@ -1,12 +1,14 @@
 package model.message;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "account_dialogs")
 @NoArgsConstructor
+@AllArgsConstructor
 @Data
 @IdClass(AccountDialogKey.class)
 public class AccountDialog {

@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Data
 @Table(name = "dialogs")
@@ -18,4 +20,10 @@ public class Dialog {
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "last_message_id", referencedColumnName = "id")
     private Message lastMessage;
+    @OneToMany(mappedBy="dialog", cascade = CascadeType.PERSIST)
+    private List<AccountDialog> accounts;
+
+    public void addAccount(AccountDialog accountDialog){
+        accounts.add(accountDialog);
+    }
 }
