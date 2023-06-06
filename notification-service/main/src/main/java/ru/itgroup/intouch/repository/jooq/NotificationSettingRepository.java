@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.jooq.TableField;
 import org.springframework.stereotype.Repository;
+import ru.itgroup.intouch.annotation.Loggable;
 import ru.itgroup.intouch.tables.records.NotificationSettingsRecord;
 
 import java.util.Map;
@@ -16,6 +17,7 @@ import static ru.itgroup.intouch.Tables.NOTIFICATION_SETTINGS;
 public class NotificationSettingRepository {
     private final DSLContext dsl;
 
+    @Loggable
     public boolean isEnable(Long userId, TableField<NotificationSettingsRecord, Boolean> field) {
         return dsl.select(field)
                   .from(NOTIFICATION_SETTINGS)
@@ -25,6 +27,7 @@ public class NotificationSettingRepository {
                   .orElse(true);
     }
 
+    @Loggable
     public Map<Long, Boolean> getMailingSettingsMap(Set<Long> receiverIdList) {
         return dsl.select(NOTIFICATION_SETTINGS.USER_ID, NOTIFICATION_SETTINGS.SEND_EMAIL_MESSAGE)
                   .from(NOTIFICATION_SETTINGS)

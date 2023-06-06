@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ru.itgroup.intouch.annotation.Loggable;
 import ru.itgroup.intouch.dto.response.notifications.NotificationCountDto;
 import ru.itgroup.intouch.dto.response.notifications.NotificationListDto;
 import ru.itgroup.intouch.service.NotificationService;
@@ -16,11 +17,13 @@ import ru.itgroup.intouch.service.NotificationService;
 public class NotificationController {
     private final NotificationService notificationService;
 
+    @Loggable
     @GetMapping("")
     public NotificationListDto getNotifications() {
         return notificationService.getNotifications();
     }
 
+    @Loggable
     @GetMapping("/count")
     public NotificationCountDto getNotificationsCount() {
         return notificationService.countNewNotifications();

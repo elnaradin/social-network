@@ -8,6 +8,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
+import ru.itgroup.intouch.annotation.Loggable;
 
 @Service
 @RequiredArgsConstructor
@@ -15,6 +16,7 @@ public class EmailSender {
     private final JavaMailSender javaMailSender;
     private final TemplateEngine templateEngine;
 
+    @Loggable
     public void send(String to, String subject, String text) throws MessagingException {
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");

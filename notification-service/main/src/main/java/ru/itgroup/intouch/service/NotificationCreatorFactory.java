@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import model.enums.NotificationType;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
+import ru.itgroup.intouch.annotation.Loggable;
 import ru.itgroup.intouch.contracts.service.creators.NotificationCreator;
 import ru.itgroup.intouch.service.creators.CommentCommentNotificationCreator;
 import ru.itgroup.intouch.service.creators.FriendRequestNotificationCreator;
@@ -16,6 +17,7 @@ import ru.itgroup.intouch.service.creators.PostNotificationCreator;
 public class NotificationCreatorFactory {
     private final ApplicationContext context;
 
+    @Loggable
     public NotificationCreator getNotificationCreator(String type) throws ClassNotFoundException {
         return switch (NotificationType.valueOf(type)) {
             case POST -> context.getBean(PostNotificationCreator.class);
