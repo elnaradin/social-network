@@ -15,25 +15,26 @@ public class LoggerAspect {
     @Around("@annotation(ru.itgroup.intouch.annotation.Loggable)")
     public Object loadAdvice(@NotNull ProceedingJoinPoint proceedingJoinPoint) {
         MethodSignature signature = (MethodSignature) proceedingJoinPoint.getSignature();
-        log.info("Method " +
-                         signature.getDeclaringType().getSimpleName() +
-                         "::" +
-                         signature.getMethod().getName() +
-                         " started");
 
-        Object returnValue;
+        Object returnValue = null;
         try {
+            log.info("Method " +
+                    signature.getDeclaringType().getSimpleName() +
+                    "::" +
+                    signature.getMethod().getName() +
+                    " started");
             returnValue = proceedingJoinPoint.proceed();
+            log.info("Method " +
+                    signature.getDeclaringType().getSimpleName() +
+                    "::" +
+                    signature.getMethod().getName() +
+                    " success " +
+                    "finished");
         } catch (Throwable e) {
-            throw new RuntimeException(e);
+            log.error(e.getMessage());
+            e.printStackTrace();
         }
 
-        log.info("Method " +
-                         signature.getDeclaringType().getSimpleName() +
-                         "::" +
-                         signature.getMethod().getName() +
-                         " success " +
-                         "finished");
         return returnValue;
     }
 }
