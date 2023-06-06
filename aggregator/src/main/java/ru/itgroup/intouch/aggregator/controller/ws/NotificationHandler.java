@@ -17,6 +17,8 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 import ru.itgroup.intouch.aggregator.utils.CookieUtil;
+import ru.itgroup.intouch.client.MessageServiceClient;
+import ru.itgroup.intouch.dto.message.SendMessageDto;
 
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
@@ -27,6 +29,7 @@ public class NotificationHandler extends TextWebSocketHandler {
     private final CookieUtil cookieUtil;
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
+    private final MessageServiceClient messageServiceClient;
 
     @Value("${server.api.account}")
     private String url;
@@ -65,6 +68,22 @@ public class NotificationHandler extends TextWebSocketHandler {
         long receiverId = jsonNode.get("receiverId").asLong(0);
         if (sessions.containsKey(receiverId)) {
             sessions.get(receiverId).sendMessage(new TextMessage(notification));
+        }
+    }
+
+    @Override
+    protected void handleTextMessage(WebSocketSession session, TextMessage message) {
+        try {
+            JsonNode jsonNode = objectMapper.readTree(message.getPayload()).get("data");
+            SendMessageDto messageDto =  objectMapper.treeToValue(jsonNode, SendMessageDto.class);
+
+            messageServiceClient.saveMessage(messageDto);
+            WebSocketSession sendSession = sessions.get(messageDto.getRecipientId());
+            if(sendSession != null){
+                sendSession.sendMessage(message);
+            }
+        } catch (IOException e) {
+            //todo Logger
         }
     }
 
