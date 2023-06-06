@@ -1,0 +1,29 @@
+databaseChangeLog:
+  - changeSet:
+      id: 07042023-3
+      author: Smelov
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: dialog_id
+            baseTableName: messages
+            constraintName: fk_dialog_message
+            referencedTableName: dialogs
+            referencedColumnNames: id
+            deferrable: true
+            initiallyDeferred: false
+        - addForeignKeyConstraint:
+            baseColumnNames: last_message_id
+            baseTableName: dialogs
+            constraintName: fk_message_dialog
+            referencedTableName: messages
+            referencedColumnNames: id
+            deferrable: true
+            initiallyDeferred: false
+        - addForeignKeyConstraint:
+            baseColumnNames: dialog_id
+            baseTableName: account_dialogs
+            constraintName: fk_dialog_accdial
+            referencedTableName: dialogs
+            referencedColumnNames: id
+            deferrable: true
+            initiallyDeferred: false

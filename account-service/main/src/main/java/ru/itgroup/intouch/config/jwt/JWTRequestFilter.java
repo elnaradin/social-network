@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -37,6 +38,7 @@ public class JWTRequestFilter extends OncePerRequestFilter {
                                     FilterChain chain) throws ServletException, IOException,
             UsernameNotFoundException, JwtException {
         final String header = request.getHeader(HttpHeaders.AUTHORIZATION);
+        SecurityContext context = SecurityContextHolder.getContext();
 
         if (isEmpty(header) || !header.startsWith("Bearer ")) {
             logger.warn("no AUTHORIZATION header present");
@@ -46,9 +48,10 @@ public class JWTRequestFilter extends OncePerRequestFilter {
 
         final String token = header.split(" ")[1].trim();
         try {
-            if (jwtUtil.isTokenExpired(token)) {
+            if (context.getAuthentication() != null
+                    && jwtUtil.validateToken(token, context.getAuthentication().getName())) {
                 chain.doFilter(request, response);
-                log.warn("token is expired");
+                log.warn("token is not valid");
                 return;
             }
             UserDetailsImpl userDetails = (UserDetailsImpl) userDetailsService
@@ -62,7 +65,7 @@ public class JWTRequestFilter extends OncePerRequestFilter {
             authentication.setDetails(
                     new WebAuthenticationDetailsSource().buildDetails(request)
             );
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+            context.setAuthentication(authentication);
         } catch (ExpiredJwtException e) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.getWriter().write(e.getMessage());

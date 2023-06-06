@@ -5,6 +5,7 @@ import model.account.Account;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import ru.itgroup.intouch.dto.AccountDto;
@@ -24,5 +25,8 @@ public interface AccountServiceClient {
     void deleteAccount();
     @GetMapping("/search")
     List<Account> search(AccountSearchDtoPageable dto);
+
+    @PostMapping("/accounts")
+    List<AccountDto> accounts(@RequestBody List<Long> userIds);
 
 }
