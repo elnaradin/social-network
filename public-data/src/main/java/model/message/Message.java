@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import model.enums.MessageStatus;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Entity
@@ -17,7 +18,7 @@ public class Message {
     private Long id;
     @Column(name = "is_deleted")
     private boolean isDeleted;
-    private LocalDateTime time;
+    private Instant time;
     @Column(name = "author_id")
     private Long authorId;
     @Column(name = "recipient_id")
