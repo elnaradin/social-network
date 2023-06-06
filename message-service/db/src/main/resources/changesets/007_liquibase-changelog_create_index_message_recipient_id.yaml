@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id: 03052023-1
+      author: Smelov
+      changes:
+        - createIndex:
+            columns:
+              - column:
+                  name: recipient_id
+            indexName: message_recipient
+            tableName: messages

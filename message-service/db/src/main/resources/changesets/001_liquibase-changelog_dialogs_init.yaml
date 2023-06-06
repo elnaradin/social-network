@@ -1,0 +1,23 @@
+databaseChangeLog:
+  - changeSet:
+      id: 07042023-1
+      author: Smelov
+      changes:
+        - createTable:
+            tableName: dialogs
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: is_deleted
+                  type: boolean
+                  constraints:
+                    nullable: false
+              - column:
+                  name: last_message_id
+                  type: BIGINT
