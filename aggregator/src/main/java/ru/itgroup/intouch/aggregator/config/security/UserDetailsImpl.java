@@ -1,4 +1,4 @@
-package ru.itgroup.intouch.config;
+package ru.itgroup.intouch.aggregator.config.security;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

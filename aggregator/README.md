@@ -21,6 +21,7 @@ SN_STORAGE_HOST
 SN_STORAGE_PORT
 SN_WEBSOCKET_HTTP_ENDPOINT=ws/send
 SN_PROTOCOL // http:// OR https://
+JWT_SIGNATURE
 ```
 
 # Подключение микросервиса к агрегатору

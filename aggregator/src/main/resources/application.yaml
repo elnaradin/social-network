@@ -22,3 +22,6 @@ server:
 
 websocket:
   endpoint: ${SN_WEBSOCKET_HTTP_ENDPOINT}
+
+jwt:
+  secret: ${JWT_SIGNATURE}
