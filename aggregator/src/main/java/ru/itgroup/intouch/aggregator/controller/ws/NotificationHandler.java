@@ -1,21 +1,16 @@
 package ru.itgroup.intouch.aggregator.controller.ws;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
+import ru.itgroup.intouch.aggregator.config.security.jwt.JWTUtil;
 import ru.itgroup.intouch.aggregator.utils.CookieUtil;
 import ru.itgroup.intouch.client.MessageServiceClient;
 import ru.itgroup.intouch.dto.message.SendMessageDto;
@@ -27,12 +22,9 @@ import java.util.concurrent.ConcurrentHashMap;
 @RequiredArgsConstructor
 public class NotificationHandler extends TextWebSocketHandler {
     private final CookieUtil cookieUtil;
-    private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
     private final MessageServiceClient messageServiceClient;
-
-    @Value("${server.api.account}")
-    private String url;
+    private final JWTUtil jwtUtil;
 
     private final ConcurrentHashMap<Long, WebSocketSession> sessions = new ConcurrentHashMap<>();
 
@@ -72,40 +64,31 @@ public class NotificationHandler extends TextWebSocketHandler {
     }
 
     @Override
-    protected void handleTextMessage(WebSocketSession session, TextMessage message) {
+    protected void handleTextMessage(@NotNull WebSocketSession session, @NotNull TextMessage message) {
         try {
             JsonNode jsonNode = objectMapper.readTree(message.getPayload()).get("data");
-            SendMessageDto messageDto =  objectMapper.treeToValue(jsonNode, SendMessageDto.class);
+            SendMessageDto messageDto = objectMapper.treeToValue(jsonNode, SendMessageDto.class);
 
             messageServiceClient.saveMessage(messageDto);
             WebSocketSession sendSession = sessions.get(messageDto.getRecipientId());
-            if(sendSession != null){
+            if (sendSession != null) {
                 sendSession.sendMessage(message);
                 Thread.sleep(5000);
                 sendSession.sendMessage(new TextMessage(jsonNode.binaryValue()));
                 Thread.sleep(5000);
                 sendSession.sendMessage(new TextMessage(jsonNode.get("messageText").binaryValue()));
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
     }
 
-    private @Nullable Long getUserId(@NotNull WebSocketSession session) throws JsonProcessingException {
+    private @Nullable Long getUserId(@NotNull WebSocketSession session) {
         String jwt = cookieUtil.getJwt(session.getHandshakeHeaders());
         if (jwt == null) {
             return null;
         }
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentLength(0);
-        headers.setBearerAuth(jwt);
-        String responseBody = restTemplate.exchange(url, HttpMethod.GET, new HttpEntity<>(headers), String.class)
-                                          .getBody();
-
-        JsonNode jsonNode = objectMapper.readTree(responseBody);
-        return jsonNode.get("id").asLong();
+        return jwtUtil.extractUserId(jwt).longValue();
     }
 }
