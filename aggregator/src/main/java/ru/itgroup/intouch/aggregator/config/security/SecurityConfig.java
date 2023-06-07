@@ -1,11 +1,11 @@
-package ru.itgroup.intouch.config;
+package ru.itgroup.intouch.aggregator.config.security;
 
 
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -15,8 +15,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import ru.itgroup.intouch.config.jwt.JWTRequestFilter;
-import ru.itgroup.intouch.service.security.UserDetailsServiceImpl;
+import ru.itgroup.intouch.aggregator.config.security.jwt.JWTRequestFilter;
+import ru.itgroup.intouch.aggregator.service.UserDetailsServiceImpl;
 
 
 @Configuration
@@ -56,24 +56,26 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .exceptionHandling()
-                .authenticationEntryPoint(
-                        (request, response, ex) -> response.sendError(
-                                HttpServletResponse.SC_UNAUTHORIZED,
-                                ex.getMessage()
-                        )
-                )
+                // stops returning status forbidden
+                .authenticationEntryPoint((request, response, authException) ->
+                        log.error(authException.getLocalizedMessage()))
                 .and()
-                .authorizeHttpRequests(requests -> {
-                    try {
-                        requests
-                                .requestMatchers("/api/v1/account/me").hasRole("USER")
-                                .requestMatchers("/api/v1/auth/logout").hasRole("USER")
-                                .requestMatchers("/**").permitAll();
-                    } catch (Exception e) {
-                        log.error(e.getMessage());
-                    }
-
-                });
+                .authorizeHttpRequests(requests -> requests
+                        .requestMatchers("/login").permitAll()
+                        .requestMatchers("/registration").permitAll()
+                        .requestMatchers("/forgot").permitAll()
+                        .requestMatchers("/api/v1/auth/password/recovery/").permitAll()
+                        .requestMatchers("/api/v1/auth/password/recovery/{linkId}").permitAll()
+                        .requestMatchers("/api/v1/auth/login").permitAll()
+                        .requestMatchers("/api/v1/auth/register").permitAll()
+                        .requestMatchers("/api/v1/auth/captcha").permitAll()
+                        .anyRequest().authenticated())
+                .logout().logoutUrl("/api/v1/auth/logout")
+                .logoutSuccessUrl("/login")
+                .logoutSuccessHandler((request, response, authentication) ->
+                        response.setStatus(HttpStatus.OK.value()))
+                .deleteCookies("jwt")
+                .clearAuthentication(true);
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
