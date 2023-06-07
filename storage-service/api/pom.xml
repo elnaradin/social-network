@@ -6,7 +6,7 @@
 
     <parent>
         <groupId>ru.itgroup.intouch</groupId>
-        <artifactId>storage-service</artifactId>
+        <artifactId>ru.itgroup.intouch.storage-service</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
