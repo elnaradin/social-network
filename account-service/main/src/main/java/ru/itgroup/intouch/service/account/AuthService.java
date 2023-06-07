@@ -1,6 +1,5 @@
 package ru.itgroup.intouch.service.account;
 
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,8 +20,6 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final UserDetailsServiceImpl userDetailsService;
     private final JWTUtil jwtUtil;
-    private final HttpServletResponse response;
-
     public AuthenticateResponseDto login(AuthenticateDto authenticateDto) throws AuthenticationException {
         log.info("login started");
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticateDto.getEmail(),
