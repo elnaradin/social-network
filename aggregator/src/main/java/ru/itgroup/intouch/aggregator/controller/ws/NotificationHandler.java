@@ -81,9 +81,15 @@ public class NotificationHandler extends TextWebSocketHandler {
             WebSocketSession sendSession = sessions.get(messageDto.getRecipientId());
             if(sendSession != null){
                 sendSession.sendMessage(message);
+                Thread.sleep(5000);
+                sendSession.sendMessage(new TextMessage(jsonNode.binaryValue()));
+                Thread.sleep(5000);
+                sendSession.sendMessage(new TextMessage(jsonNode.get("messageText").binaryValue()));
             }
         } catch (IOException e) {
-            //todo Logger
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 
