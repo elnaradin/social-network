@@ -24,6 +24,7 @@ public interface UserMapper {
     Account registrationDto2AccountEntity(RegistrationDto dto);
 
     AccountDto accountEntityToAccountDto(Account entity);
+
     List<AccountDto> accountsToDtos(List<Account> accountList);
 
     @Mapping(target = "regDate", qualifiedByName = "stringToLDT")
@@ -33,6 +34,8 @@ public interface UserMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "email", ignore = true)
     @Mapping(target = "password", ignore = true)
+    @Mapping(target = "hash", ignore = true)
+    @Mapping(target = "hashExpiryTime", ignore = true)
     void updateAccountFromDto(AccountDto dto, @MappingTarget Account entity);
 
     @Named("stringToLDT")

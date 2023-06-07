@@ -1,7 +1,6 @@
 package ru.itgroup.intouch.controller;
 
 import dto.AccountSearchDtoPageable;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import model.account.Account;
@@ -13,7 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.itgroup.intouch.dto.AccountDto;
-import ru.itgroup.intouch.exceptions.NoUserLoggedInException;
+import ru.itgroup.intouch.dto.EmailDto;
+import ru.itgroup.intouch.dto.UserDto;
 import ru.itgroup.intouch.service.account.AccountService;
 
 import java.util.List;
@@ -32,23 +32,25 @@ public class AccountController {
         return accountService.getListOfUsers(userIds);
     }
 
-    @GetMapping("/me")
-    public AccountDto myAccount(HttpServletRequest request) throws NoUserLoggedInException {
-        log.warn("../account/me AUTHORIZATION request header value (must NOT be null): "
-                + request.getHeader("AUTHORIZATION"));
-        return accountService.getUserInfo();
+    @PostMapping("/currentUser")
+    UserDto currentUser(@RequestBody EmailDto emailDto) {
+        return accountService.getUserInfo(emailDto.getEmail());
+    }
+
+    @PostMapping("/me")
+    public AccountDto myAccount(@RequestBody EmailDto emailDto) {
+        return accountService.getAccountInfo(emailDto.getEmail());
     }
 
     @PutMapping("/me")
-    public AccountDto changeProfile(@RequestBody AccountDto accountDto)
-            throws NoUserLoggedInException {
+    public AccountDto changeProfileInfo(@RequestBody AccountDto accountDto) {
         accountService.updateAccountData(accountDto);
         return accountDto;
     }
 
     @DeleteMapping("/me")
-    public void deleteAccount() throws NoUserLoggedInException {
-        accountService.setAccountDeleted();
+    public void deleteAccount(@RequestBody EmailDto emailDto) {
+        accountService.setAccountDeleted(emailDto.getEmail());
     }
 
     @GetMapping("/search")
