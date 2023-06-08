@@ -13,7 +13,7 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>3.0.2</version>
-        <relativePath/> 
+        <relativePath/>
     </parent>
 
     <properties>
@@ -25,12 +25,8 @@
     </properties>
 
     <modules>
-        <module>api</module>
-        <module>db</module>
-        <module>main</module>
         <module>account-service</module>
         <module>search-engine</module>
-
     </modules>
 
     <dependencies>
