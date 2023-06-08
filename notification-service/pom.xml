@@ -25,7 +25,7 @@
         <org.springframework.version>6.0.9</org.springframework.version>
         <java.version>17</java.version>
 
-        <public.data.version>0.1.4</public.data.version>
+        <public.data.version>0.1.5</public.data.version>
         <log4j.version>2.20.0</log4j.version>
         <jooq.version>3.18.4</jooq.version>
         <liquibase.version>4.22.0</liquibase.version>

@@ -7,7 +7,7 @@
     <parent>
         <groupId>ru.itgroup.intouch</groupId>
         <artifactId>account-service</artifactId>
-        <version>${revision}${sha1}${changelist}</version>
+        <version>1.0.0-SNAPSHOT</version>
     </parent>
     <name>ITGroup_Intouch :: AccountServ :: main</name>
     <artifactId>ru.itgroup.intouch.account-service.main</artifactId>
@@ -79,11 +79,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>org.mapstruct</groupId>-->
-<!--            <artifactId>mapstruct</artifactId>-->
-<!--            <version>${org.mapstruct.version}</version>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.mapstruct</groupId>-->
+        <!--            <artifactId>mapstruct</artifactId>-->
+        <!--            <version>${org.mapstruct.version}</version>-->
+        <!--        </dependency>-->
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -94,6 +94,11 @@
             <groupId>io.github.openfeign</groupId>
             <artifactId>feign-httpclient</artifactId>
             <version>12.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.modelmapper</groupId>
+            <artifactId>modelmapper</artifactId>
+            <version>3.1.1</version>
         </dependency>
 
     </dependencies>

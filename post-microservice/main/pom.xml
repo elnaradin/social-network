@@ -7,7 +7,7 @@
     <parent>
         <groupId>ru.itgroup.intouch</groupId>
         <artifactId>post-service</artifactId>
-        <version>${revision}${sha1}${changelist}</version>
+        <version>1.0.0-SNAPSHOT</version>
     </parent>
     <name>ITGroup_Intouch :: SocialNetwork :: main</name>
     <artifactId>post-service.main</artifactId>
@@ -16,7 +16,7 @@
         <dependency>
             <groupId>ru.itgroup.intouch</groupId>
             <artifactId>ru.itgroup.intouch.public-data</artifactId>
-            <version>0.1.4</version>
+            <version>0.1.5</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -84,7 +84,7 @@
         <dependency>
             <groupId>ru.itgroup.intouch</groupId>
             <artifactId>ru.itgroup.intouch.public-data</artifactId>
-            <version>0.1.4</version>
+            <version>0.1.5</version>
             <scope>compile</scope>
         </dependency>
 

@@ -6,7 +6,7 @@
 
     <groupId>ru.itgroup.intouch</groupId>
     <artifactId>account-service</artifactId>
-    <version>${revision}${sha1}${changelist}</version>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>ITGroup_Intouch :: Account_serv</name>
     <parent>
