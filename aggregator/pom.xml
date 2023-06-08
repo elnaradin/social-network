@@ -74,6 +74,12 @@
         </dependency>
 
         <dependency>
+            <groupId>ru.itgroup.intouch</groupId>
+            <artifactId>ru.itgroup.intouch.message-service.main</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-websocket</artifactId>
             <version>6.0.6</version>
