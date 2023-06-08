@@ -1,6 +1,7 @@
 package ru.itgroup.intouch.aggregator.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.itgroup.intouch.client.FriendsServiceClient;
 import ru.itgroup.intouch.dto.FriendDto;
-import ru.itgroup.intouch.dto.FriendListDto;
 import ru.itgroup.intouch.dto.FriendSearchDto;
 import ru.itgroup.intouch.dto.FriendSearchPageableDto;
 import ru.itgroup.intouch.dto.response.ApiResponse;
@@ -46,7 +46,7 @@ public class FriendsController {
     }
 
     @GetMapping("/friends")
-    public ResponseEntity<ApiResponse<FriendListDto>> getFriendsByRequestHandle(
+    public ResponseEntity<ApiResponse<Page<FriendDto>>> getFriendsByRequestHandle(
             @RequestParam(required = false) Long id,
             @RequestParam(required = false) Boolean isDeleted,
             @RequestParam(required = false) List<Long> ids,
@@ -94,7 +94,7 @@ public class FriendsController {
     }
 
     @GetMapping("/friends/recommendations")
-    public ResponseEntity<ApiResponse<FriendListDto>> getRecommendationsHandle(
+    public ResponseEntity<ApiResponse<Page<FriendDto>>> getRecommendationsHandle(
             @RequestParam(required = false) Long id,
             @RequestParam(required = false) Boolean isDeleted,
             @RequestParam(required = false) List<Long> ids,
