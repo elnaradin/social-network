@@ -4,6 +4,7 @@ import dto.AccountSearchDtoPageable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import model.account.Account;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -50,6 +51,8 @@ public class AccountController {
 
     @GetMapping("/search")
     @ResponseStatus(HttpStatus.OK)
-    public List<Account> search(AccountSearchDtoPageable dto) { return client.search(dto); }
+    public Page<AccountDto> search(AccountSearchDtoPageable dto) {
+        return client.search(dto);
+    }
 
 }

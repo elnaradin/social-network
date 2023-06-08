@@ -1,22 +1,23 @@
 package model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import model.enums.PostType;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
-@Data
+
 //@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 @Entity
-public class Post {
+@Table(name = "posts")
+public class Post implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -30,17 +31,21 @@ public class Post {
     @Column(name = "time_changed")
     private LocalDateTime timeChanged;
     @Column(name = "author_id")
-    private Integer authorId; //TODO: connection to PersonaEntity
-    private PostType type;
+    private Long authorId; //TODO: connection to PersonaEntity
+    @Column(name = "post_type")
+    @Enumerated(EnumType.STRING)
+    private PostType postType;
     @Column(name = "post_text", columnDefinition = "TEXT")
     private String postText;
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(cascade = CascadeType.ALL,   fetch = FetchType.LAZY)
     @JoinTable(
             name = "post2tags",
             joinColumns = @JoinColumn(name = "post_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
-    private Set<Tag> tags;
+    private Set<Tag> postTags;
+    @Column (name = "comments_count")
+    private Integer commentsCount;
     @Column(name = "like_amount")
     private Integer likeAmount;
     @Column(name = "my_like")
