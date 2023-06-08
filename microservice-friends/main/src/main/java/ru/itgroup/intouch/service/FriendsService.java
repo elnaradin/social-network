@@ -1,8 +1,8 @@
 package ru.itgroup.intouch.service;
 
 import model.account.Account;
+import org.springframework.data.domain.Page;
 import ru.itgroup.intouch.dto.FriendDto;
-import ru.itgroup.intouch.dto.FriendListDto;
 import ru.itgroup.intouch.dto.FriendSearchDto;
 import ru.itgroup.intouch.dto.FriendSearchPageableDto;
 
@@ -19,11 +19,11 @@ public interface FriendsService {
 
     FriendDto subscribeOnFriendById(Long id, Account account) throws Exception;
 
-    FriendListDto getFriendsByRequest(FriendSearchPageableDto friendSearchPageableDto, Account account);
+    Page<FriendDto> getFriendsByRequest(FriendSearchPageableDto friendSearchPageableDto, Account account);
 
     FriendDto deleteFriendById(Long id, Account account) throws Exception;
 
-    FriendListDto getRecommendations(FriendSearchDto friendSearchDto, Account account);
+    Page<FriendDto> getRecommendations(FriendSearchDto friendSearchDto, Account account);
 
     List<Long> getFriendIds(Account account);
 

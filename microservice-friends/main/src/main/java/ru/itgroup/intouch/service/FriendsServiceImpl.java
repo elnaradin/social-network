@@ -5,12 +5,13 @@ import model.Friend;
 import model.account.Account;
 import model.enums.Status;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.itgroup.intouch.aspect.CheckAndGetAuthUser;
 import ru.itgroup.intouch.aspect.ValidateParams;
 import ru.itgroup.intouch.dto.FriendDto;
-import ru.itgroup.intouch.dto.FriendListDto;
 import ru.itgroup.intouch.dto.FriendSearchDto;
 import ru.itgroup.intouch.dto.FriendSearchPageableDto;
 import ru.itgroup.intouch.exceptions.FriendServiceException;
@@ -165,17 +166,17 @@ public class FriendsServiceImpl implements FriendsService {
      * !!! временно реализовано получение всех записей по Status с ограничением по Pagination.size !!!
      *
      * @param friendSearchPageableDto        - параметры запроса
-     * @return List<FriendDto> - возвращается LIST FriendDto
+     * @return Page<FriendDto> - возвращается Page FriendDto
      */
     @ValidateParams
     @CheckAndGetAuthUser
-    public FriendListDto getFriendsByRequest(FriendSearchPageableDto friendSearchPageableDto,
-                                             Account accountFrom) {
+    public Page<FriendDto> getFriendsByRequest(FriendSearchPageableDto friendSearchPageableDto,
+                                               Account accountFrom) {
 
         //TODO: добавить обработку всех полей запроса
 
         List<Friend> friends = friendRepository.getAllByUserIdFrom(accountFrom);
-        return new FriendListDto(friends.stream()
+        return new PageImpl<>(friends.stream()
                 .filter(friend -> friend.getStatusCode().equals(friendSearchPageableDto.getStatusCode()))
                 .map(friend -> friendMapper.toFriendDto(friend, friend.getUserIdTo(), Status.NONE.getStatus()))
                 .limit(friendSearchPageableDto.getSize())
@@ -228,11 +229,11 @@ public class FriendsServiceImpl implements FriendsService {
      * В результат попадают первые n рекомендаций, где n - LIMIT_RECOMMENDATION
      *
      * @param friendSearchDto - параметры запроса
-     * @return List<FriendDto> - возвращается LIST FriendDto
+     * @return Page<FriendDto> - возвращается Page FriendDto
      */
     @ValidateParams
     @CheckAndGetAuthUser
-    public FriendListDto getRecommendations(FriendSearchDto friendSearchDto, Account accountFrom) {
+    public Page<FriendDto> getRecommendations(FriendSearchDto friendSearchDto, Account accountFrom) {
 
         //TODO: добавить получение друзей в зависимости от параметров объекта friendSearchDto
 
@@ -246,7 +247,7 @@ public class FriendsServiceImpl implements FriendsService {
             }
         }
         Collections.shuffle(result);
-        return new FriendListDto(result.stream()
+        return new PageImpl<>(result.stream()
                 .filter(friend -> friend.getStatusCode().equals(friendSearchDto.getStatusCode()))
                 .map(friend -> friendMapper.toFriendDto(friend, friend.getUserIdTo(), Status.NONE.getStatus()))
                 .limit(LIMIT_RECOMMENDATION)

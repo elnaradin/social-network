@@ -16,12 +16,7 @@ spring:
 server:
   port: 8080
   api:
-    protocol: ${SN_PROTOCOL}
     prefix: /api/v1
-    account: ${server.api.protocol}${SN_ACCOUNT_HOST}:${SN_ACCOUNT_PORT}${server.api.prefix}/account/me
-
-websocket:
-  endpoint: ${SN_WEBSOCKET_HTTP_ENDPOINT}
 
 jwt:
   secret: ${JWT_SIGNATURE}

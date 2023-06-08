@@ -69,6 +69,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/auth/login").permitAll()
                         .requestMatchers("/api/v1/auth/register").permitAll()
                         .requestMatchers("/api/v1/auth/captcha").permitAll()
+                        .requestMatchers("/api/v1/streaming/ws").permitAll()
                         .anyRequest().authenticated())
                 .logout().logoutUrl("/api/v1/auth/logout")
                 .logoutSuccessUrl("/login")

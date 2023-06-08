@@ -2,6 +2,7 @@ package ru.itgroup.intouch.client;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.cloud.openfeign.SpringQueryMap;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,7 +10,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import ru.itgroup.intouch.dto.FriendDto;
-import ru.itgroup.intouch.dto.FriendListDto;
 import ru.itgroup.intouch.dto.FriendSearchDto;
 import ru.itgroup.intouch.dto.FriendSearchPageableDto;
 import ru.itgroup.intouch.dto.response.ApiResponse;
@@ -33,7 +33,7 @@ public interface FriendsServiceClient {
     ResponseEntity<ApiResponse<FriendDto>> feignSubscribeOnFriendByIdHandle(@PathVariable Long id);
 
     @GetMapping("/friends")
-    ResponseEntity<ApiResponse<FriendListDto>> feignGetFriendsByRequestHandle(
+    ResponseEntity<ApiResponse<Page<FriendDto>>> feignGetFriendsByRequestHandle(
             @SpringQueryMap FriendSearchPageableDto friendSearchPageableDto);
 
     @GetMapping("/friends/{id}")
@@ -43,7 +43,7 @@ public interface FriendsServiceClient {
     ResponseEntity<ApiResponse<FriendDto>> feignDeleteFriendByIdHandle(@PathVariable Long id);
 
     @GetMapping("/friends/recommendations")
-    ResponseEntity<ApiResponse<FriendListDto>> feignGetRecommendationsHandle(
+    ResponseEntity<ApiResponse<Page<FriendDto>>> feignGetRecommendationsHandle(
             @SpringQueryMap FriendSearchDto friendSearchDto);
 
     @GetMapping("/friends/friendId")

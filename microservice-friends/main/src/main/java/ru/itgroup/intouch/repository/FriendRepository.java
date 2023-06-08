@@ -1,9 +1,8 @@
 package ru.itgroup.intouch.repository;
 
 
-import model.account.Account;
 import model.Friend;
-import model.enums.Status;
+import model.account.Account;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
