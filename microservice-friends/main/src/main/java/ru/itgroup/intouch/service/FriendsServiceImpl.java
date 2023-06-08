@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.itgroup.intouch.aspect.CheckAndGetAuthUser;
 import ru.itgroup.intouch.aspect.ValidateParams;
 import ru.itgroup.intouch.dto.FriendDto;
-import ru.itgroup.intouch.dto.FriendListDto;
 import ru.itgroup.intouch.dto.FriendSearchDto;
 import ru.itgroup.intouch.dto.FriendSearchPageableDto;
 import ru.itgroup.intouch.exceptions.FriendServiceException;
