@@ -30,6 +30,7 @@ public class SecurityAspect {
     public Object execAdviceForGetSecurityUser(ProceedingJoinPoint proceedingJoinPoint, Account account)
             throws Throwable {
         AccountDto accountDto = accountServiceClient.myAccount();
+
         if (accountDto == null) {
             throw new AuthenticationException();
         }

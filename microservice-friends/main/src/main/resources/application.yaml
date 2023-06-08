@@ -8,9 +8,10 @@ spring:
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate.ddl-auto: none
+    defer-datasource-initialization: false
     database-platform: org.hibernate.dialect.PostgreSQLDialect
-    show-sql: true
+    show-sql: false
 
   liquibase:
-    enabled: false
-    change-log: classpath:dbchangelog-master.xml
+    enabled: true
+    change-log: classpath:/dbchangelog-master.xml
