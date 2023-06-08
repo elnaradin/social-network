@@ -1,0 +1,26 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+    <changeSet id="add_like_type" author="alex_fadeev">
+        <sql> CREATE TYPE liketype AS ENUM ('POST','COMMENT'); </sql>
+    </changeSet>
+    <changeSet id="add_likes" author="alex_fadeev">
+    <createTable tableName="likes">
+    <column autoIncrement="true" name="id"  type="BIGINT">
+        <constraints nullable="false" primaryKey="true" />
+    </column>
+    <column name="is_deleted" type="boolean"/>
+        <column name="author_id" type="BIGINT"/>
+        <column name="time" type="TIMESTAMP WITHOUT TIME ZONE"/>
+        <column name="item_id" type="BIGINT"/>
+        <column name="like_type"
+                type="liketype"
+                defaultValue="POST">
+            <constraints nullable="false"/>
+        </column>
+    </createTable>
+   </changeSet>
+</databaseChangeLog>

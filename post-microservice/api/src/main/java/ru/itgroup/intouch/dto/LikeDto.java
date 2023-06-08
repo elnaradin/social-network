@@ -1,22 +1,14 @@
-package model;
+package ru.itgroup.intouch.dto;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import model.enums.LikeType;
 
 import java.time.LocalDateTime;
 
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-@Entity
-public class Like {
-    @Id
+public class LikeDto {
+
+
     private Long id;
 
     private boolean isDeleted;
@@ -29,3 +21,4 @@ public class Like {
 
     private LikeType type;
 }
+

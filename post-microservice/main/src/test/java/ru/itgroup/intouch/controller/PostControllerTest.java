@@ -82,7 +82,7 @@ class PostControllerTest {
         postDto.setTimeChanged(LocalDateTime.parse("2023-03-20T00:00:00"));
         postDto.setAuthorId(6);
         postDto.setTitle("odio curabitur convallis duis consequat dui nec");
-        postDto.setType("POSTED");
+        postDto.setPostType("POSTED");
         postDto.setPostText("mauris viverra diam vitae quam suspendisse potenti " +
                 "nullam porttitor lacus at turpis donec posuere metus vitae ipsum " +
                 "aliquam non mauris morbi non lectus aliquam sit amet diam in magna " +
@@ -95,12 +95,12 @@ class PostControllerTest {
                 "in purus eu magna vulputate luctus cum sociis natoque penatibus et magnis " +
                 "dis parturient montes nascetur ridiculus mus vivamus vestibulum sagittis " +
                 "sapien cum sociis natoque penatibus");
-        postDto.setCommentsCounts(null);
+        postDto.setCommentsCount(0);
 
         List<String> tags = new ArrayList<>();
         tags.add("Мотивация"); tags.add("Счастливый брак"); tags.add("Для детей"); tags.add("Для ценителей прекрасного");
 
-        postDto.setTags(tags);
+        postDto.setPostTags(tags);
         postDto.setLikeAmount(27);
         postDto.setMyLike(false);
         postDto.setDeleted(false);
@@ -116,7 +116,7 @@ class PostControllerTest {
         postDto.setPostText("Продуктовая разработка — это создание и вывод на рынок продукта. Это может " +
                 "быть приложение, сайт, программа или новая функция. Продуктовые разработчики на первое место ставят пользу и " +
                 "ценность продукта. Чтобы понять, в том ли месте они ее ищут, они много исследуют, выдвигают гипотезы и тестируют их.");
-        postDto.setType("POSTED");
+        postDto.setPostType("POSTED");
         List<String> tags = new ArrayList<>();
         tags.add("Для взрослых"); tags.add("Распродажа"); tags.add("Разбитое сердце"); tags.add("Совершенное тело");
 

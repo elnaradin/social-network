@@ -1,27 +1,24 @@
 package ru.itgroup.intouch.dto;
 
 import lombok.Data;
-
+import model.enums.CommentType;
 import java.time.LocalDateTime;
-import java.util.List;
 
 
 @Data
-public class PostDto {
-    private Integer id;
+public class CommentDto {
+    private Long id;
     private boolean isDeleted;
-    private LocalDateTime publishDate;
+    private CommentType commentType;
     private LocalDateTime time;
     private LocalDateTime timeChanged;
-    private Integer authorId;
-    private String title;
-    private String postType;
-    private String postText;
+    private Long authorId;
+    private Long parentId;
+    private String commentText;
+    private Long postId;
     private boolean isBlocked;
     private Integer commentsCount;
-    private List<String> PostTags;
     private Integer likeAmount;
     private boolean myLike;
     private String imagePath;
-
 }

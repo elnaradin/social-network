@@ -1,24 +1,15 @@
 package ru.itgroup.intouch.controller;
 
-import dto.PostSearchDto;
 
 import dto.PostSearchDtoPageable;
 import lombok.RequiredArgsConstructor;
-
-import model.Post;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MissingPathVariableException;
 import org.springframework.web.bind.annotation.*;
 import ru.itgroup.intouch.dto.PostDto;
-import ru.itgroup.intouch.response.FalsePostResponse;
-import ru.itgroup.intouch.response.PostResponse;
-import ru.itgroup.intouch.response.TruePostResponse;
 import ru.itgroup.intouch.service.PostSearchService;
 import ru.itgroup.intouch.service.PostService;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,43 +18,40 @@ public class PostController {
     private final PostSearchService postSearchService;
 
     @GetMapping("/api/v1/post/{id}")
-    public ResponseEntity<PostResponse> getPost(@PathVariable Long id) {
+    public ResponseEntity<?> getPost(@PathVariable Long id) {
         PostDto postDto = postService.getPostById(id);
-        if (postDto != null) {
-            return new ResponseEntity<>(new TruePostResponse(true, "Пост найден", postDto), HttpStatus.OK);
-        }
-        return new ResponseEntity<>(new FalsePostResponse(false, "Пост не найден"), HttpStatus.NOT_FOUND);
+
+        return (postDto != null) ? ResponseEntity.ok(postDto) : ResponseEntity.notFound().build();
+
     }
 
     @PostMapping("/api/v1/post")
     public ResponseEntity<?> createPost(@RequestBody PostDto postDto) {
         PostDto post = postService.createNewPost(postDto);
-        if (post != null) {
-            return new ResponseEntity<>(post, HttpStatus.OK);
-        }
-        return new ResponseEntity<>(new FalsePostResponse(false, "Пост не создан"), HttpStatus.NOT_FOUND);
+
+        return (post != null) ? ResponseEntity.ok(post) : ResponseEntity.notFound().build();
+
     }
 
     @DeleteMapping("/api/v1/post/{id}")
     public ResponseEntity<?> deletePost(@PathVariable Long id) {
-        if (postService.deletePostById(id)) {
-            return new ResponseEntity<>("Пост удален", HttpStatus.OK);
-        }
-        return new ResponseEntity<>("Посты не найден", HttpStatus.NOT_FOUND);
+
+        return (postService.deletePostById(id)) ? ResponseEntity.ok("Пост удален") : ResponseEntity.notFound().build();
     }
 
     @ExceptionHandler(MissingPathVariableException.class)
-    public ResponseEntity<FalsePostResponse> handleMissingServletParameterException(Exception exception) {
-        return new ResponseEntity<>(new FalsePostResponse(false, exception.getLocalizedMessage()), HttpStatus.BAD_REQUEST);
+    public ResponseEntity<?> handleMissingServletParameterException(Exception exception) {
+
+        return ResponseEntity.badRequest().build();
     }
 
     @GetMapping("/api/v1/post")
-    public ResponseEntity<List<Post>> search(PostSearchDtoPageable dto) {
-        List<Post> postList = postSearchService.getAccountResponse(dto);
-        if (postList.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        return new ResponseEntity<List<Post>>(postList, HttpStatus.OK);
+    public ResponseEntity<?> search(PostSearchDtoPageable dto) {
+        Page<PostDto> postList = postSearchService.getAccountResponse(dto);
+
+        return (postList != null) ? ResponseEntity.ok(postList) : ResponseEntity.notFound().build();
+
     }
+
 
 }

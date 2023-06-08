@@ -22,8 +22,8 @@ public class MapperToPostDto {
         TypeMap<Post, PostDto> propertyMapper = propertyManager.getPostPropertyMapper();
         Converter<Collection<Tag>, Collection<String>> collectionToTagString =
                 c -> c.getSource().stream().map(Tag::getName).toList();
-        propertyMapper.addMappings(mapper -> mapper.map(Post::getType, PostDto::setType));
-        propertyMapper.addMappings(mapper -> mapper.using(collectionToTagString).map(Post::getTags, PostDto::setTags));
+        propertyMapper.addMappings(mapper -> mapper.map(Post::getPostType, PostDto::setPostType));
+        propertyMapper.addMappings(mapper -> mapper.using(collectionToTagString).map(Post::getPostTags, PostDto::setPostTags));
         return this.modelMapper.map(postEntity, PostDto.class);
     }
 
