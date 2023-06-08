@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import model.Tag;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -26,9 +27,11 @@ public class PostSearchDto implements Serializable {
 
     private boolean isDeleted;
 
-    private SearchIds ids;
+    private List<Long> ids;
 
-    private SearchBlockedByIds blockedByIds;
+    private List<Long> blockedIds;
+
+    private List<Long> accountIds;
 
     private String author;
 
@@ -39,12 +42,6 @@ public class PostSearchDto implements Serializable {
     private LocalDateTime dateFrom;
 
     private LocalDateTime dateTo;
-
-    public List<String> getTags() {
-
-        if (tags == null) return new ArrayList<>();
-        return tags;
-    }
 
 
 }

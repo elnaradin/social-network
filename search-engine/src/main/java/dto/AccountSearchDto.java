@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Data
 @Builder
@@ -23,9 +24,9 @@ public class AccountSearchDto implements Serializable {
 
     private boolean isDeleted;
 
-    private SearchIds ids;
+    private List<Long> ids;
 
-    private SearchBlockedByIds blockedByIds;
+    private List<Long> blockedByIds;
 
     private String author;
 

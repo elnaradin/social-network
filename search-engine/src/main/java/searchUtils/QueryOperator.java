@@ -11,6 +11,7 @@ public enum QueryOperator {
     EQUALS,
     LIKE,
     NOT_EQ,
-    IN
+    IN,
+    NOT_IN
 }
 
