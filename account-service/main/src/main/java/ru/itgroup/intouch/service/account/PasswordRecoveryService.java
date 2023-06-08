@@ -7,9 +7,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import ru.itgroup.intouch.exceptions.NoEmailFoundException;
+import ru.itgroup.intouch.exceptions.NoUserRegisteredException;
 import ru.itgroup.intouch.repository.UserRepository;
 
 import java.time.LocalDateTime;
@@ -27,17 +27,16 @@ public class PasswordRecoveryService {
     private String from;
     private final JavaMailSender mailSender;
     private final UserRepository userRepository;
-
-    private final PasswordEncoder passwordEncoder;
     @Value("${user.hash-expiry-min}")
     private long expiryMinutes;
 
     public void setNewPassword(String linkId, String password) {
         Optional<User> firstByEmail = userRepository.findFirstByHash(linkId);
         if (firstByEmail.isEmpty()) {
-            throw new UsernameNotFoundException("user not found");
+            throw new NoUserRegisteredException("Unable to change password. User with hash \"" +
+                    linkId + "\" not found");
         }
-        firstByEmail.get().setPassword(passwordEncoder.encode(password));
+        firstByEmail.get().setPassword(password);
         userRepository.save(firstByEmail.get());
     }
 
@@ -48,7 +47,7 @@ public class PasswordRecoveryService {
         message.setSubject(subject);
         Optional<User> optUser = userRepository.findFirstByEmail(to);
         if (optUser.isEmpty()) {
-            throw new UsernameNotFoundException("no user with email " + to + " found");
+            throw new NoEmailFoundException("Пользователь с адресом \"" + to + "\" не зарегистрирован");
         }
         User user = optUser.get();
         String userHash = UUID.randomUUID().toString();
@@ -58,10 +57,11 @@ public class PasswordRecoveryService {
         user.setHashExpiryTime(LocalDateTime.now().plusMinutes(expiryMinutes));
         userRepository.save(user);
     }
+
     @Scheduled(fixedDelayString = "${delete-hash.delay-ms}")
     @Transactional
-    public void deleteHashWithDelay(){
-       userRepository.clearHashAfterExpiry(LocalDateTime.now());
+    public void deleteHashWithDelay() {
+        userRepository.clearHashAfterExpiry(LocalDateTime.now());
     }
 
 }

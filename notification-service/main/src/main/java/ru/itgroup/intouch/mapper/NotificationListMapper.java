@@ -17,8 +17,8 @@ public class NotificationListMapper implements ListResponseMapper<Notification> 
 
     public NotificationListDto getDestination(@NotNull List<Notification> notifications) {
         List<NotificationDto> notificationDtoList = notifications.stream()
-                .map(notificationMapper::getDestination)
-                .toList();
+                                                                 .map(notificationMapper::getDestination)
+                                                                 .toList();
 
         return NotificationListDto.builder().data(notificationDtoList).build();
     }

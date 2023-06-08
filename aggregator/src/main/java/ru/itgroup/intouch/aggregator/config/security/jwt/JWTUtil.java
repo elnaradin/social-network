@@ -1,7 +1,6 @@
-package ru.itgroup.intouch.config.jwt;
+package ru.itgroup.intouch.aggregator.config.security.jwt;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
@@ -43,13 +42,13 @@ public class JWTUtil {
         return extractClaim(token, (claims) -> (Integer) claims.get("userId"));
     }
 
-    public String generateRefreshToken(UserDto user) {
+    public String generateRefreshToken(UserDto userDto) {
         final LocalDateTime now = LocalDateTime.now();
         final Instant refreshExpirationInstant = now.plusDays(30)
                 .atZone(ZoneId.systemDefault()).toInstant();
         final Date refreshExpiration = Date.from(refreshExpirationInstant);
         return Jwts.builder()
-                .setSubject(user.getEmail())
+                .setSubject(userDto.getEmail())
                 .setExpiration(refreshExpiration)
                 .signWith(SignatureAlgorithm.HS256, secret)
                 .compact();
@@ -60,7 +59,7 @@ public class JWTUtil {
         return claimsResolver.apply(claims);
     }
 
-    private Claims extractAllClaims(String token) throws JwtException {
+    private Claims extractAllClaims(String token) {
         log.info("token received: " + token);
         return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
     }

@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ru.itgroup.intouch.annotation.Loggable;
 import ru.itgroup.intouch.dto.request.NotificationRequestDto;
 import ru.itgroup.intouch.service.NotificationCreatorService;
 
@@ -16,6 +17,7 @@ import ru.itgroup.intouch.service.NotificationCreatorService;
 public class CreateNotificationController {
     private final NotificationCreatorService notificationCreatorService;
 
+    @Loggable
     @PostMapping("/add")
     public ResponseEntity<?> createNotification(@RequestBody @Validated NotificationRequestDto notificationRequestDto)
             throws Exception {

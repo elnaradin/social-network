@@ -7,6 +7,7 @@ import org.jooq.DSLContext;
 import org.jooq.DatePart;
 import org.jooq.InsertValuesStep5;
 import org.springframework.stereotype.Repository;
+import ru.itgroup.intouch.annotation.Loggable;
 import ru.itgroup.intouch.dto.BirthdayUsersDto;
 import ru.itgroup.intouch.dto.NotificationDto;
 import ru.itgroup.intouch.mapper.BirthdayUsersMapper;
@@ -29,6 +30,7 @@ public class NotificationJooqRepository {
     private final DSLContext dsl;
     private final BirthdayUsersMapper birthdayUsersMapper;
 
+    @Loggable
     public List<BirthdayUsersDto> getBirthdayUsers() {
         Condition condition = NOTIFICATION_SETTINGS.FRIEND_BIRTHDAY.isTrue()
                                                                    .or(NOTIFICATION_SETTINGS.FRIEND_BIRTHDAY.isNull());
@@ -49,6 +51,7 @@ public class NotificationJooqRepository {
                   .map(birthdayUsersMapper);
     }
 
+    @Loggable
     public List<Long> saveNotifications(@NotNull List<NotificationDto> notificationDtoList) {
         if (notificationDtoList.isEmpty()) {
             return null;
@@ -73,6 +76,7 @@ public class NotificationJooqRepository {
         return insertStep.returning(NOTIFICATIONS.ID).fetch().getValues(NOTIFICATIONS.ID);
     }
 
+    @Loggable
     public Long saveNotificationFromDto(@NotNull NotificationDto dto) {
         return dsl.insertInto(NOTIFICATIONS,
                               NOTIFICATIONS.CONTENT,

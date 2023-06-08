@@ -1,17 +1,14 @@
-package ru.itgroup.intouch.service.account;
+package ru.itgroup.intouch.aggregator.service;
 
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
-import ru.itgroup.intouch.config.UserDetailsImpl;
-import ru.itgroup.intouch.config.jwt.JWTUtil;
+import ru.itgroup.intouch.aggregator.config.security.UserDetailsImpl;
+import ru.itgroup.intouch.aggregator.config.security.jwt.JWTUtil;
 import ru.itgroup.intouch.dto.AuthenticateDto;
 import ru.itgroup.intouch.dto.AuthenticateResponseDto;
-import ru.itgroup.intouch.service.security.UserDetailsServiceImpl;
 
 
 @Service
@@ -21,9 +18,8 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final UserDetailsServiceImpl userDetailsService;
     private final JWTUtil jwtUtil;
-    private final HttpServletResponse response;
 
-    public AuthenticateResponseDto login(AuthenticateDto authenticateDto) throws AuthenticationException {
+    public AuthenticateResponseDto login(AuthenticateDto authenticateDto) {
         log.info("login started");
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticateDto.getEmail(),
                 authenticateDto.getPassword()));
