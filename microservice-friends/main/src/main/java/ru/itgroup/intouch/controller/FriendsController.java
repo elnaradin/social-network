@@ -3,6 +3,7 @@ package ru.itgroup.intouch.controller;
 import model.account.Account;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.openfeign.SpringQueryMap;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -56,7 +57,7 @@ public class FriendsController {
     }
 
     @GetMapping("/friends")
-    public ResponseEntity<ApiResponse<FriendListDto>> getFriendsByRequestHandle(
+    public ResponseEntity<ApiResponse<Page<FriendDto>>> getFriendsByRequestHandle(
             @SpringQueryMap FriendSearchPageableDto friendSearchPageableDto) {
         return getApiResponse(friendsService.getFriendsByRequest(friendSearchPageableDto, new Account()));
     }
@@ -74,7 +75,7 @@ public class FriendsController {
     }
 
     @GetMapping("/friends/recommendations")
-    public ResponseEntity<ApiResponse<FriendListDto>> getRecommendationsHandle(
+    public ResponseEntity<ApiResponse<Page<FriendDto>>> getRecommendationsHandle(
             @SpringQueryMap FriendSearchDto friendSearchDto) {
         return getApiResponse(friendsService.getRecommendations(friendSearchDto, new Account()));
     }
