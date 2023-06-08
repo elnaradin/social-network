@@ -52,9 +52,6 @@ aggregator:
   host: ${SN_AGGREGATOR_HOST}
   port: ${SN_AGGREGATOR_PORT}
 
-  websocket:
-    http: ${SN_WEBSOCKET_HTTP_ENDPOINT}
-
 jooq:
   generator:
     database:
