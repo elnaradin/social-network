@@ -25,31 +25,31 @@ public interface PostServiceClient {
     @GetMapping("")
     public ResponseEntity<?> search(PostSearchDtoPageable dtoPageable);
 
-    @PostMapping("/api/v1/post/{id}/comment")
+    @PostMapping("/{id}/comment")
     public ResponseEntity<?> createCommentToPost(@PathVariable(value = "id") Long idPost, @RequestBody CommentDto dto);
 
-    @GetMapping("/api/v1/post/{id}/comment")
+    @GetMapping("/{id}/comment")
     public ResponseEntity<?> getCommentsToPost(@PathVariable(value = "id") Long idPost, @RequestBody Pageable pageable);
 
-    @DeleteMapping("/api/v1/post/{id}/comment/{commentId}")
+    @DeleteMapping("/{id}/comment/{commentId}")
     public ResponseEntity<?> deleteComment(@PathVariable(value = "commentId") Long commentId);
 
-    @PutMapping("/api/v1/post/{id}/comment/{commentId}")
+    @PutMapping("/{id}/comment/{commentId}")
     public ResponseEntity<?> createSubcommentToComment(@PathVariable(value = "commentId") Long commentId, @RequestBody SubCommentDto subComment);
 
-    @GetMapping("/api/v1/post/{id}/comment/{commentId}/subcomment")
+    @GetMapping("/{id}/comment/{commentId}/subcomment")
     public ResponseEntity<?> getSubcommentsToComment(@PathVariable(value = "commentId") Long commentId, @RequestBody Pageable pageable);
 
-    @PostMapping("/api/v1/post/{id}/like")
+    @PostMapping("/{id}/like")
     public ResponseEntity<?> createLikeToPost(@PathVariable(value = "id") Long idPost);
 
-    @DeleteMapping("/api/v1/post/{id}/like")
+    @DeleteMapping("/{id}/like")
     public ResponseEntity<?> deleteLikeToPost(@PathVariable(value = "id") Long idPost);
 
-    @PostMapping("/api/v1/post/{id}/comment/{commentId}/like")
+    @PostMapping("/{id}/comment/{commentId}/like")
     public ResponseEntity<?> createLikeToComment(@PathVariable(value = "commentId") Long idComment);
 
-    @DeleteMapping("/api/v1/post/{id}/comment/{commentId}/like")
+    @DeleteMapping("/{id}/comment/{commentId}/like")
     public ResponseEntity<?> deleteLikeToComment(@PathVariable(value = "commentId") Long idComment);
 }
 

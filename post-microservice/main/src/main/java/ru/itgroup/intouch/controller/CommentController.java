@@ -11,11 +11,12 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/v1/post")
 public class CommentController {
 
     private final CommentService commentService;
 
-    @PostMapping("/api/v1/post/{id}/comment")
+    @PostMapping("/{id}/comment")
     public ResponseEntity<?> createCommentToPost(@PathVariable(value = "id") Long idPost, @RequestBody CommentDto dto) {
         CommentDto comment = commentService.createNewComment(dto, idPost);
 
@@ -23,7 +24,7 @@ public class CommentController {
     }
 
 
-    @GetMapping("/api/v1/post/{id}/comment")
+    @GetMapping("/{id}/comment")
     public ResponseEntity<?> getCommentsToPost(@PathVariable(value = "id") Long idPost, @RequestBody Pageable pageable) {
         List<CommentDto> commentDtoList = commentService.getCommentsByIdPost(idPost, pageable);
 
@@ -32,7 +33,7 @@ public class CommentController {
 
     }
 
-    @DeleteMapping("/api/v1/post/{id}/comment/{commentId}")
+    @DeleteMapping("/{id}/comment/{commentId}")
     public ResponseEntity<?> deleteComment(@PathVariable(value = "commentId") Long commentId) {
 
         return (commentService.deleteComment(commentId)) ? ResponseEntity.ok("Пост удален") : ResponseEntity.notFound().build();
