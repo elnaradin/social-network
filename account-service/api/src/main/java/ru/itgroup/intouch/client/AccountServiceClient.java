@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import ru.itgroup.intouch.client.exceptionHandling.CustomErrorDecoder;
 import ru.itgroup.intouch.dto.AccountDto;
-import ru.itgroup.intouch.dto.EmailDto;
 import ru.itgroup.intouch.dto.UserDto;
 
 import java.util.List;
@@ -22,17 +22,17 @@ import java.util.List;
         path = "/api/v1/account",
         configuration = {CustomErrorDecoder.class})
 public interface AccountServiceClient {
-    @PostMapping("/me")
-    AccountDto myAccount(@RequestBody EmailDto emailDto);
+    @GetMapping("/me")
+    AccountDto myAccount(@RequestParam("email") String email);
 
-    @PostMapping("/currentUser")
-    UserDto currentUser(@RequestBody EmailDto emailDto);
+    @GetMapping("/currentUser")
+    UserDto currentUser(@RequestParam("email") String email);
 
     @PutMapping("/me")
     AccountDto changeProfile(@RequestBody AccountDto accountDto);
 
     @DeleteMapping("/me")
-    void deleteAccount(@RequestBody EmailDto emailDto);
+    void deleteAccount(@RequestParam("email") String email);
 
     @GetMapping("/search")
     Page<AccountDto> search(AccountSearchDtoPageable dto);

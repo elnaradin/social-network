@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.itgroup.intouch.dto.AccountDto;
-import ru.itgroup.intouch.dto.EmailDto;
 import ru.itgroup.intouch.dto.UserDto;
 import ru.itgroup.intouch.service.account.AccountService;
 
@@ -33,14 +33,14 @@ public class AccountController {
         return accountService.getListOfUsers(userIds);
     }
 
-    @PostMapping("/currentUser")
-    UserDto currentUser(@RequestBody EmailDto emailDto) {
-        return accountService.getUserInfo(emailDto.getEmail());
+    @GetMapping("/currentUser")
+    UserDto currentUser(@RequestParam("email") String email) {
+        return accountService.getUserInfo(email);
     }
 
-    @PostMapping("/me")
-    public AccountDto myAccount(@RequestBody EmailDto emailDto) {
-        return accountService.getAccountInfo(emailDto.getEmail());
+    @GetMapping("/me")
+    public AccountDto myAccount(@RequestParam("email") String email) {
+        return accountService.getAccountInfo(email);
     }
 
     @PutMapping("/me")
@@ -50,8 +50,8 @@ public class AccountController {
     }
 
     @DeleteMapping("/me")
-    public void deleteAccount(@RequestBody EmailDto emailDto) {
-        accountService.setAccountDeleted(emailDto.getEmail());
+    public void deleteAccount(@RequestParam("email") String email) {
+        accountService.setAccountDeleted(email);
     }
 
     @GetMapping("/search")
