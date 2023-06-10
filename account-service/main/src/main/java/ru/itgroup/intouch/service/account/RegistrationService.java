@@ -1,10 +1,17 @@
 package ru.itgroup.intouch.service.account;
 
+import com.github.cage.GCage;
 import lombok.RequiredArgsConstructor;
 import model.account.Account;
 import model.account.User;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import ru.itgroup.intouch.client.StorageServiceClient;
+import ru.itgroup.intouch.dto.CaptchaDto;
+import ru.itgroup.intouch.dto.ImageDTO;
 import ru.itgroup.intouch.dto.RegistrationDto;
+import ru.itgroup.intouch.dto.UploadPhotoDto;
 import ru.itgroup.intouch.exceptions.CaptchaNotValidException;
 import ru.itgroup.intouch.exceptions.UserAlreadyRegisteredException;
 import ru.itgroup.intouch.mapper.UserMapper;
@@ -19,10 +26,11 @@ import java.util.Optional;
 public class RegistrationService {
     private final UserMapper userMapper;
     private final UserRepository userRepository;
+    private final StorageServiceClient storageServiceClient;
 
     public void registerNewUser(RegistrationDto registrationDto) {
         if (!Objects.equals(registrationDto.getCaptchaCode(), registrationDto.getCaptchaSecret())) {
-            throw new CaptchaNotValidException("Капча введена неверно.");
+            throw new CaptchaNotValidException("Каптча введена неверно.");
         }
         Optional<User> firstByEmail = userRepository.findFirstByEmail(registrationDto.getEmail());
         if (firstByEmail.isPresent()) {
@@ -37,5 +45,16 @@ public class RegistrationService {
     }
 
 
+    public CaptchaDto generateCaptcha()  {
+        GCage gCage = new GCage();
+        String token = gCage.getTokenGenerator().next();
+        byte[] image = gCage.draw(token);
+        MultipartFile multipartImage = new MockMultipartFile(token, image);
+        UploadPhotoDto uploadPhotoDto = new UploadPhotoDto();
+        uploadPhotoDto.setMultipartFile(multipartImage);
+        ImageDTO imageDTO = storageServiceClient.feignUploadPhoto(uploadPhotoDto);
+
+        return new CaptchaDto(token, imageDTO.getPhotoPath());
+    }
 }
 

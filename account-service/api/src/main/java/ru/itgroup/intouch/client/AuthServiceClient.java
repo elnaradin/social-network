@@ -16,9 +16,6 @@ import ru.itgroup.intouch.dto.RegistrationDto;
         path = "/api/v1/auth",
         configuration = {CustomErrorDecoder.class})
 public interface AuthServiceClient {
-//    @PostMapping("/login")
-//    AuthenticateResponseDto login(@RequestBody AuthenticateDto authenticateDto);
-
     @PostMapping("/register")
     void register(@RequestBody RegistrationDto registrationDto);
 
@@ -28,9 +25,6 @@ public interface AuthServiceClient {
     @PostMapping("/password/recovery/{linkId}")
     void setNewPassword(@PathVariable String linkId,
                         @RequestBody PasswordDto passwordDto);
-
-//    @PostMapping("/logout")
-//    void logout();
 
     @GetMapping("/captcha")
     CaptchaDto captcha();

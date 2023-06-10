@@ -48,12 +48,7 @@ public class AuthController {
     // TODO: 22.04.2023 finish captcha
     @GetMapping("/captcha")
     public CaptchaDto captcha() {
-        CaptchaDto captchaDto = new CaptchaDto("smwm",
-                "https://www.researchgate.net/publication/220459388/figure/fig1/AS:" +
-                        "305672878084096@1449889501199/Example-of-a-graphical-CAPTCHA-a-Com-" +
-                        "pletely-Automated-Public-Turing-Test-to-Tell.png");
-        log.info("captcha returned");
-        return captchaDto;
+        return  registrationService.generateCaptcha();
     }
 
 }

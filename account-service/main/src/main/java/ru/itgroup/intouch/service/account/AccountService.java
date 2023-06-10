@@ -1,6 +1,7 @@
 package ru.itgroup.intouch.service.account;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import model.account.Account;
 import model.account.User;
 import org.springframework.stereotype.Service;
@@ -16,12 +17,14 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AccountService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final AccountRepository accountRepository;
 
     public AccountDto getAccountInfo(String email) {
+
         Optional<Account> account = accountRepository.findFirstByEmail(email);
         if (account.isEmpty()) {
             throw new NoUserRegisteredException("Unable to find data. No user with email \"" +
@@ -41,6 +44,7 @@ public class AccountService {
 
     public void updateAccountData(AccountDto accountDto) {
         Optional<Account> account = accountRepository.findFirstByEmail(accountDto.getEmail());
+        log.info("change account with email \"" + accountDto.getEmail() + "\"");
         if (account.isEmpty()) {
             throw new NoUserRegisteredException("Unable to change account info. Email \"" +
                     accountDto.getEmail() + "\" doesn't exist.");
@@ -64,6 +68,7 @@ public class AccountService {
         List<Account> accounts = accountRepository.findByIdIn(userIds);
         return userMapper.accountsToDtos(accounts);
     }
+
 
 
 }
