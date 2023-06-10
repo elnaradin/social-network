@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import ru.itgroup.intouch.aggregator.config.security.UserDetailsImpl;
 import ru.itgroup.intouch.client.AccountServiceClient;
 import ru.itgroup.intouch.dto.AccountDto;
-import ru.itgroup.intouch.dto.EmailDto;
 
 
 @Service
@@ -19,8 +18,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) {
-        AccountDto accountDto = accountServiceClient.myAccount(new EmailDto(username));
+        AccountDto accountDto = accountServiceClient.myAccount(username);
         log.info("User with email " +accountDto.getEmail() + " received successfully");
-        return new UserDetailsImpl(accountServiceClient.currentUser(new EmailDto(username)));
+        return new UserDetailsImpl(accountServiceClient.currentUser(username));
     }
 }

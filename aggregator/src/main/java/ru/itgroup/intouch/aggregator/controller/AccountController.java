@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import model.account.Account;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import ru.itgroup.intouch.client.AccountServiceClient;
 import ru.itgroup.intouch.dto.AccountDto;
-import ru.itgroup.intouch.dto.EmailDto;
 
 import java.util.List;
 
@@ -29,24 +28,23 @@ public class AccountController {
 
     @GetMapping("/me")
     @ResponseStatus(HttpStatus.OK)
-    public AccountDto myAccount() {
-        return client.myAccount(new EmailDto(
-                SecurityContextHolder
-                .getContext()
-                .getAuthentication().getName())
+    public AccountDto myAccount(Authentication authentication) {
+              return client.myAccount(
+                authentication.getName()
         );
     }
 
     @PutMapping("/me")
     @ResponseStatus(HttpStatus.OK)
-    public AccountDto changeProfile(@RequestBody AccountDto accountDto) {
+    public AccountDto changeProfile(@RequestBody AccountDto accountDto, Authentication authentication) {
+        accountDto.setEmail(authentication.getName());
         return client.changeProfile(accountDto);
     }
 
     @DeleteMapping("/me")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteAccount(@RequestBody EmailDto emailDto) {
-        client.deleteAccount(emailDto);
+    public void deleteAccount(Authentication authentication) {
+        client.deleteAccount(authentication.getName());
     }
 
     @GetMapping("/search")
