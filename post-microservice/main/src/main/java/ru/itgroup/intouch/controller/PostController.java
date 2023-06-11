@@ -13,11 +13,12 @@ import ru.itgroup.intouch.service.PostService;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/v1/post")
 public class PostController {
     private final PostService postService;
     private final PostSearchService postSearchService;
 
-    @GetMapping("/api/v1/post/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<?> getPost(@PathVariable Long id) {
         PostDto postDto = postService.getPostById(id);
 
@@ -25,7 +26,7 @@ public class PostController {
 
     }
 
-    @PostMapping("/api/v1/post")
+    @PostMapping("")
     public ResponseEntity<?> createPost(@RequestBody PostDto postDto) {
         PostDto post = postService.createNewPost(postDto);
 
@@ -33,7 +34,7 @@ public class PostController {
 
     }
 
-    @DeleteMapping("/api/v1/post/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> deletePost(@PathVariable Long id) {
 
         return (postService.deletePostById(id)) ? ResponseEntity.ok("Пост удален") : ResponseEntity.notFound().build();
@@ -45,7 +46,7 @@ public class PostController {
         return ResponseEntity.badRequest().build();
     }
 
-    @GetMapping("/api/v1/post")
+    @GetMapping("")
     public ResponseEntity<?> search(PostSearchDtoPageable dto) {
         Page<PostDto> postList = postSearchService.getAccountResponse(dto);
 
