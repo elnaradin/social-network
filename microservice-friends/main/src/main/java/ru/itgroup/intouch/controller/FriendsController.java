@@ -3,6 +3,7 @@ package ru.itgroup.intouch.controller;
 import model.account.Account;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.openfeign.SpringQueryMap;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,7 +13,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.itgroup.intouch.dto.FriendDto;
-import ru.itgroup.intouch.dto.FriendListDto;
 import ru.itgroup.intouch.dto.FriendSearchDto;
 import ru.itgroup.intouch.dto.FriendSearchPageableDto;
 import ru.itgroup.intouch.dto.response.ApiResponse;
@@ -56,7 +56,7 @@ public class FriendsController {
     }
 
     @GetMapping("/friends")
-    public ResponseEntity<ApiResponse<FriendListDto>> getFriendsByRequestHandle(
+    public ResponseEntity<ApiResponse<Page<FriendDto>>> getFriendsByRequestHandle(
             @SpringQueryMap FriendSearchPageableDto friendSearchPageableDto) {
         return getApiResponse(friendsService.getFriendsByRequest(friendSearchPageableDto, new Account()));
     }
@@ -74,7 +74,7 @@ public class FriendsController {
     }
 
     @GetMapping("/friends/recommendations")
-    public ResponseEntity<ApiResponse<FriendListDto>> getRecommendationsHandle(
+    public ResponseEntity<ApiResponse<Page<FriendDto>>> getRecommendationsHandle(
             @SpringQueryMap FriendSearchDto friendSearchDto) {
         return getApiResponse(friendsService.getRecommendations(friendSearchDto, new Account()));
     }

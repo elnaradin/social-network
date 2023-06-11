@@ -15,7 +15,6 @@ public class NotificationRequestDto {
     @Min(value = 1, message = "Author id can't be less then 0")
     private Long authorId;
 
-    @NotNull(message = "Receiver id can't be null")
     @Min(value = 1, message = "Receiver id can't be less then 0")
     private Long receiverId;
 
@@ -24,7 +23,6 @@ public class NotificationRequestDto {
     @ValidEnum(enumClass = NotificationType.class)
     private String notificationType;
 
-    @NotNull(message = "Content can't be null")
-    @NotBlank(message = "Content can't be empty")
-    private String content;
+    @Min(value = 1, message = "Receiver id can't be less then 0")
+    private Long entityId;
 }

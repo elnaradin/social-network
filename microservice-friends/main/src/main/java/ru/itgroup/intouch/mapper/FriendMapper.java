@@ -4,6 +4,7 @@ import model.account.Account;
 import model.Friend;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import ru.itgroup.intouch.dto.AccountDto;
 import ru.itgroup.intouch.dto.FriendDto;
 
 
@@ -20,8 +21,8 @@ public interface FriendMapper {
     @Mapping(source = "account.city", target = "city")
     @Mapping(source = "account.country", target = "country")
     @Mapping(source = "account.birthDate", target = "birthDate")
- //   @Mapping(source = "account.isOnline", target = "isOnline")
- //   @Mapping(source = "account.isDeleted", target = "isDeleted")
     @Mapping(source = "previousStatusCode", target = "previousStatusCode")
     FriendDto toFriendDto(Friend friend, Account account, String previousStatusCode);
+
+    Account accountDtoToAccount(AccountDto accountDto);
 }

@@ -11,6 +11,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 //@Builder
 @NoArgsConstructor
@@ -32,5 +34,6 @@ public class User {
     private String email;
 
     private String password;
-    private String hashcode;
+    private String hash;
+    private LocalDateTime hashExpiryTime;
 }

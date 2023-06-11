@@ -1,20 +1,36 @@
 package model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
+
+
 //@Builder
-@NoArgsConstructor
+
 @AllArgsConstructor
+@Getter
+@Setter
 @Entity
-public class Tag {
+@Table(name = "post_tags")
+public class Tag implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @Column(unique = true)
     private String name;
-}
+
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {CascadeType.ALL},
+            mappedBy = "postTags")
+
+    private Set<Post> posts = new HashSet<Post>();
+
+    public Tag () {
+        super();
+
+    }
+
+   }

@@ -1,2 +1,22 @@
+spring:
+  kafka:
+    notification-serv: ${SN_NOTIFICATION_SERV}
+    bootstrap-servers: ${SN_KAFKA_HOST}:${SN_KAFKA_PORT}
+    consumer:
+      group-id: aggregator_serv
+      auto-offset-reset: earliest
+      key-serializer: org.apache.kafka.common.serialization.LongSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring:
+          json:
+            trusted:
+              package: "*"
+
 server:
   port: 8080
+  api:
+    prefix: /api/v1
+
+jwt:
+  secret: ${JWT_SIGNATURE}

@@ -24,15 +24,15 @@ public class NotificationSettingsMapper {
         return settings;
     }
 
-    private void addSettingItemDto(
-            NotificationSettings notificationSettings, @NotNull NotificationType NotificationType,
-            List<SettingsItemDto> settings
-    ) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    private void addSettingItemDto(NotificationSettings notificationSettings,
+                                   @NotNull NotificationType NotificationType,
+                                   @NotNull List<SettingsItemDto> settings)
+            throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         String label = NotificationType.getLabel();
         Method getter = NotificationSettings.class.getMethod("is" + StringUtils.capitalize(label));
         settings.add(SettingsItemDto.builder()
-                             .enable((boolean) getter.invoke(notificationSettings))
-                             .notificationType(NotificationType.name())
-                             .build());
+                                    .enable((boolean) getter.invoke(notificationSettings))
+                                    .notificationType(NotificationType.name())
+                                    .build());
     }
 }

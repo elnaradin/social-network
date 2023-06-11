@@ -1,16 +1,20 @@
 package ru.itgroup.intouch.service.account;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import model.account.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import ru.itgroup.intouch.exceptions.NoEmailFoundException;
+import ru.itgroup.intouch.exceptions.NoUserRegisteredException;
 import ru.itgroup.intouch.repository.UserRepository;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -23,15 +27,16 @@ public class PasswordRecoveryService {
     private String from;
     private final JavaMailSender mailSender;
     private final UserRepository userRepository;
-
-    private final PasswordEncoder passwordEncoder;
+    @Value("${user.hash-expiry-min}")
+    private long expiryMinutes;
 
     public void setNewPassword(String linkId, String password) {
-        Optional<User> firstByEmail = userRepository.findFirstByHashcode(linkId);
+        Optional<User> firstByEmail = userRepository.findFirstByHash(linkId);
         if (firstByEmail.isEmpty()) {
-            throw new UsernameNotFoundException("user not found");
+            throw new NoUserRegisteredException("Unable to change password. User with hash \"" +
+                    linkId + "\" not found");
         }
-        firstByEmail.get().setPassword(passwordEncoder.encode(password));
+        firstByEmail.get().setPassword(password);
         userRepository.save(firstByEmail.get());
     }
 
@@ -42,27 +47,21 @@ public class PasswordRecoveryService {
         message.setSubject(subject);
         Optional<User> optUser = userRepository.findFirstByEmail(to);
         if (optUser.isEmpty()) {
-            throw new UsernameNotFoundException("no user with email " + to + " found");
+            throw new NoEmailFoundException("Пользователь с адресом \"" + to + "\" не зарегистрирован");
         }
         User user = optUser.get();
-        String userHashcode = String.valueOf(user.hashCode());
-        message.setText(text + userHashcode);
+        String userHash = UUID.randomUUID().toString();
+        message.setText(text + userHash);
         mailSender.send(message);
-        user.setHashcode(userHashcode);
+        user.setHash(userHash);
+        user.setHashExpiryTime(LocalDateTime.now().plusMinutes(expiryMinutes));
         userRepository.save(user);
-        deleteHashWithDelay(userRepository.save(user));
     }
 
-    void deleteHashWithDelay(User user) {
-        Thread thread = new Thread(() -> {
-            try {
-                Thread.sleep(900000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-            user.setHashcode(null);
-            userRepository.save(user);
-        });
-        thread.start();
+    @Scheduled(fixedDelayString = "${delete-hash.delay-ms}")
+    @Transactional
+    public void deleteHashWithDelay() {
+        userRepository.clearHashAfterExpiry(LocalDateTime.now());
     }
+
 }

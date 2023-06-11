@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ru.itgroup.intouch.annotation.Loggable;
 import ru.itgroup.intouch.dto.request.NotificationSettingsDto;
 import ru.itgroup.intouch.dto.response.settings.SettingsItemDto;
 import ru.itgroup.intouch.service.NotificationSettingsService;
@@ -16,16 +17,18 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/notifications/settings")
+@RequestMapping("${server.api.prefix}/notifications/settings")
 public class NotificationSettingsController {
     private final NotificationSettingsService notificationSettingsService;
 
+    @Loggable
     @GetMapping("")
     public List<SettingsItemDto> getSettings()
             throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         return notificationSettingsService.getSettings();
     }
 
+    @Loggable
     @PutMapping("")
     public ResponseEntity<?> updateSettings(@RequestBody NotificationSettingsDto notificationSettingsDto) {
         notificationSettingsService.updateSettings(notificationSettingsDto);

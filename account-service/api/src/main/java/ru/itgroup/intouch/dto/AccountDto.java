@@ -1,15 +1,18 @@
 package ru.itgroup.intouch.dto;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
-
-@EqualsAndHashCode(callSuper = true)
 @Data
-public class AccountDto extends AbstractUser {
+public class AccountDto {
+
     private int id;
+    private String firstName;
+    private String lastName;
+    private String email;
     private boolean isDeleted;
+    @JsonIgnore
     private String password;
     private String phone;
     private String photo;

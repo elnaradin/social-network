@@ -1,11 +1,12 @@
 package ru.itgroup.intouch.aggregator.controller;
 
 import dto.AccountSearchDtoPageable;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import model.account.Account;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -27,26 +28,29 @@ public class AccountController {
 
     @GetMapping("/me")
     @ResponseStatus(HttpStatus.OK)
-    public AccountDto myAccount(HttpServletRequest request) {
-        log.info("../account/me (get method) AUTHORIZATION request header value: "
-                + request.getHeader("AUTHORIZATION"));
-        return client.myAccount();
+    public AccountDto myAccount(Authentication authentication) {
+              return client.myAccount(
+                authentication.getName()
+        );
     }
 
     @PutMapping("/me")
     @ResponseStatus(HttpStatus.OK)
-    public AccountDto changeProfile(@RequestBody AccountDto accountDto) {
+    public AccountDto changeProfile(@RequestBody AccountDto accountDto, Authentication authentication) {
+        accountDto.setEmail(authentication.getName());
         return client.changeProfile(accountDto);
     }
 
     @DeleteMapping("/me")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteAccount() {
-        client.deleteAccount();
+    public void deleteAccount(Authentication authentication) {
+        client.deleteAccount(authentication.getName());
     }
 
     @GetMapping("/search")
     @ResponseStatus(HttpStatus.OK)
-    public List<Account> search(AccountSearchDtoPageable dto) { return client.search(dto); }
+    public Page<AccountDto> search(AccountSearchDtoPageable dto) {
+        return client.search(dto);
+    }
 
 }

@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -39,6 +40,9 @@ class NotificationSettingsControllerTest {
     @MockBean
     private NotificationSettingsService notificationSettingsService;
 
+    @Value("${server.api.prefix}")
+    private String apiPrefix;
+
     @Test
     @DisplayName("Эндпоинт получения настроек уведомлений")
     void getSettings() throws Exception {
@@ -48,7 +52,7 @@ class NotificationSettingsControllerTest {
         }
 
         given(notificationSettingsService.getSettings()).willReturn(settings);
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/notifications/settings"))
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(apiPrefix + "/notifications/settings"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
@@ -71,7 +75,7 @@ class NotificationSettingsControllerTest {
         notificationSettingsDto.setNotificationType(String.valueOf(NotificationType.POST));
         notificationSettingsDto.setEnable(false);
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/notifications/settings")
+        mockMvc.perform(MockMvcRequestBuilders.put(apiPrefix + "/notifications/settings")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(notificationSettingsDto)))
                 .andDo(print())

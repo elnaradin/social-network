@@ -1,0 +1,26 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet id="make_comment_and_like_type_as_string" author="alex_fadeev">
+        <modifyDataType tableName="comments" columnName="comment_type" newDataType="CHAR"/>
+        <modifyDataType tableName="likes" columnName="like_type" newDataType="CHAR"/>
+    </changeSet>
+    <changeSet id="make_comment_and_like_type_as_text" author="alex_fadeev">
+        <modifyDataType tableName="comments" columnName="comment_type" newDataType="TEXT"/>
+        <modifyDataType tableName="likes" columnName="like_type" newDataType="TEXT"/>
+    </changeSet>
+    <changeSet id="make_comments_count" author="alex_fadeev">
+        <addColumn tableName="posts">
+            <column name="comments_count" type="INTEGER"/>
+        </addColumn>
+      </changeSet>
+    <changeSet id="make_comments_nullable" author="alex_fadeev">
+        <dropNotNullConstraint tableName="comments" columnName="comment_type"/>
+        <dropNotNullConstraint tableName="likes" columnName="like_type"/>
+    </changeSet>
+    <changeSet id="make_post_type_as_text" author="alex_fadeev">
+    <modifyDataType tableName="posts" columnName="post_type" newDataType="TEXT"/>
+</changeSet>
+</databaseChangeLog>

@@ -1,6 +1,8 @@
 package ru.itgroup.intouch.config;
 
-import Filters.AccountFilterBuilder;
+import filters.AccountFilterBuilder;
+import mappers.AccountDtoPageableMapper;
+import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import searchUtils.SpecificationBuilder;
@@ -16,5 +18,15 @@ public class SearchEngineConfig {
     @Bean
     public SpecificationBuilder accountSpecificationBuilder() {
         return new SpecificationBuilder();
+    }
+
+    @Bean
+    public AccountDtoPageableMapper dtoPageableMapper() {
+        return new AccountDtoPageableMapper();
+    }
+
+    @Bean
+    public ModelMapper modelMapper() {
+        return new ModelMapper();
     }
 }

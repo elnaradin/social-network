@@ -1,13 +1,19 @@
 package ru.itgroup.intouch.service.account;
 
+import com.github.cage.GCage;
 import lombok.RequiredArgsConstructor;
 import model.account.Account;
 import model.account.User;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import ru.itgroup.intouch.client.StorageServiceClient;
+import ru.itgroup.intouch.dto.CaptchaDto;
+import ru.itgroup.intouch.dto.ImageDTO;
 import ru.itgroup.intouch.dto.RegistrationDto;
+import ru.itgroup.intouch.dto.UploadPhotoDto;
 import ru.itgroup.intouch.exceptions.CaptchaNotValidException;
-import ru.itgroup.intouch.exceptions.UserAlreadyExistsException;
+import ru.itgroup.intouch.exceptions.UserAlreadyRegisteredException;
 import ru.itgroup.intouch.mapper.UserMapper;
 import ru.itgroup.intouch.repository.UserRepository;
 
@@ -19,19 +25,19 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class RegistrationService {
     private final UserMapper userMapper;
-    private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
+    private final StorageServiceClient storageServiceClient;
 
-    public void registerNewUser(RegistrationDto registrationDto) throws UserAlreadyExistsException, CaptchaNotValidException {
+    public void registerNewUser(RegistrationDto registrationDto) {
         if (!Objects.equals(registrationDto.getCaptchaCode(), registrationDto.getCaptchaSecret())) {
-            throw new CaptchaNotValidException("entered captcha code doesn't equal secret");
+            throw new CaptchaNotValidException("Каптча введена неверно.");
         }
         Optional<User> firstByEmail = userRepository.findFirstByEmail(registrationDto.getEmail());
         if (firstByEmail.isPresent()) {
-            throw new UserAlreadyExistsException("User with this email already exists");
+            throw new UserAlreadyRegisteredException("Пользователь с адресом \"" +
+                    registrationDto.getEmail() + "\" уже зарегистрирован.");
         }
         Account accountEntity = userMapper.registrationDto2AccountEntity(registrationDto);
-        accountEntity.setPassword(passwordEncoder.encode(accountEntity.getPassword()));
         accountEntity.setCreatedOn(LocalDateTime.now());
         accountEntity.setRegDate(LocalDateTime.now());
         accountEntity.setUpdateOn(LocalDateTime.now());
@@ -39,5 +45,16 @@ public class RegistrationService {
     }
 
 
+    public CaptchaDto generateCaptcha()  {
+        GCage gCage = new GCage();
+        String token = gCage.getTokenGenerator().next();
+        byte[] image = gCage.draw(token);
+        MultipartFile multipartImage = new MockMultipartFile(token, image);
+        UploadPhotoDto uploadPhotoDto = new UploadPhotoDto();
+        uploadPhotoDto.setMultipartFile(multipartImage);
+        ImageDTO imageDTO = storageServiceClient.feignUploadPhoto(uploadPhotoDto);
+
+        return new CaptchaDto(token, imageDTO.getPhotoPath());
+    }
 }
 

@@ -3,6 +3,30 @@
 Докер образ создан по гайду из `notification-service`. Сам образ
 находится [тут](https://hub.docker.com/repository/docker/intouchgroup/aggregator/general)
 
+# Необходимые переменные окружения
+
+```
+SN_POST_HOST
+SN_POST_PORT
+SN_ACCOUNT_HOST
+SN_ACCOUNT_PORT
+SN_AGGREGATOR_PORT
+SN_FRIENDS_HOST
+SN_FRIENDS_PORT
+SN_NOTIFICATIONS_HOST
+SN_NOTIFICATIONS_PORT
+SN_NOTIFICATION_SERV
+SN_MESSAGE_HOST
+SN_MESSAGE_PORT
+SN_STORAGE_HOST
+SN_STORAGE_PORT
+SN_WEBSOCKET_HTTP_ENDPOINT=ws/send
+SN_PROTOCOL // http:// OR https://
+JWT_SIGNATURE
+SN_KAFKA_HOST
+SN_KAFKA_PORT
+```
+
 # Подключение микросервиса к агрегатору
 
 1. Добавить зависимость в api модуль своего микросервиса

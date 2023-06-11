@@ -1,3 +1,32 @@
+# Локальный запуск приложения
+
+Перед запуском приложения через IDE необходимо выполнить команду, которая сгенерирует необходимые исходники  
+`mvn generate-sources`
+
+Для её запуска потребуются переменные окружения, используемые в `pom.xml`. После генерации кода, рекомендуется
+перезагрузить мавен проекты.
+
+# Необходимые переменные окружения
+
+```
+SN_DB_HOST
+SN_DB_PORT
+SN_DB_NAME
+SN_DB_USER
+SN_DB_PASSWORD
+SN_NOTIFICATIONS_HOST
+SN_NOTIFICATIONS_PORT
+SN_AGGREGATOR_HOST
+SN_AGGREGATOR_PORT
+SN_AGGREGATOR_PROTOCOL
+SN_WEBSOCKET_HTTP_ENDPOINT
+
+SN_SMTP_HOST
+SN_SMTP_PORT
+SN_SMTP_USERNAME
+SN_SMTP_PASSWORD
+```
+
 # JMapper
 
 Для работы JMapper'а необходимо добавить `VM option`:  

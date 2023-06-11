@@ -6,6 +6,7 @@ import model.account.Account;
 import model.enums.NotificationType;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
+import ru.itgroup.intouch.annotation.Loggable;
 import ru.itgroup.intouch.dto.request.NotificationSettingsDto;
 import ru.itgroup.intouch.dto.response.settings.SettingsItemDto;
 import ru.itgroup.intouch.mapper.NotificationSettingsMapper;
@@ -22,12 +23,14 @@ public class NotificationSettingsService {
     private final AccountRepository accountRepository;
     private final NotificationSettingsMapper notificationSettingsMapper;
 
+    @Loggable
     public List<SettingsItemDto> getSettings()
             throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         NotificationSettings notificationSettings = getNotificationSettingsModel();
         return notificationSettingsMapper.getDestination(notificationSettings);
     }
 
+    @Loggable
     public void updateSettings(@NotNull NotificationSettingsDto notificationSettingsDto) {
         NotificationSettings notificationSettings = getNotificationSettingsModel();
         NotificationType notificationType = NotificationType.valueOf(notificationSettingsDto.getNotificationType());
@@ -38,6 +41,7 @@ public class NotificationSettingsService {
             case MESSAGE -> notificationSettings.setMessage(notificationSettingsDto.isEnable());
             case FRIEND_REQUEST -> notificationSettings.setFriendRequest(notificationSettingsDto.isEnable());
             case FRIEND_BIRTHDAY -> notificationSettings.setFriendBirthday(notificationSettingsDto.isEnable());
+            case SEND_EMAIL_MESSAGE -> notificationSettings.setSendEmailMessage(notificationSettingsDto.isEnable());
         }
 
         notificationSettingsRepository.save(notificationSettings);

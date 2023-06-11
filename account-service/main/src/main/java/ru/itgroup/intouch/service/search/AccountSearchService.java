@@ -1,16 +1,22 @@
 package ru.itgroup.intouch.service.search;
 
-import Filters.AccountFilterBuilder;
+import dto.AccountSearchDtoPageable;
+import filters.AccountFilterBuilder;
 import dto.AccountSearchDto;
 import lombok.RequiredArgsConstructor;
+import mappers.AccountDtoPageableMapper;
 import model.account.Account;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import ru.itgroup.intouch.dto.AccountDto;
 import ru.itgroup.intouch.repository.AccountRepository;
+import ru.itgroup.intouch.repository.UserRepository;
 import searchUtils.Filter;
 import searchUtils.SpecificationBuilder;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,26 +26,47 @@ import java.util.List;
 public class AccountSearchService {
 
     private final AccountRepository accountRepository;
+    private final UserRepository userRepository;
     private final AccountFilterBuilder filterBuilder;
     private final SpecificationBuilder specificationBuilder;
+    private final AccountDtoPageableMapper dtoPageableMapper;
+    private final ModelMapper modelMapper;
+    private AccountSearchDto accountSearchDto;
 
-    public List<Account> getAccountResponse(AccountSearchDto dto, Pageable pageable) {
+    public Page<AccountDto> getAccountResponse(AccountSearchDtoPageable dto) {
 
-        List<Filter> filter = filterBuilder.createFilter(dto);
+        accountSearchDto = dtoPageableMapper.mapToAccountSearchDto(dto);
+        Pageable pageable = dtoPageableMapper.mapToPageable(dto);
+
+        List<Long> authorIds = (!dto.getAuthor().isEmpty()) ? getUserIdsFromAuthor(dto.getAuthor()) : new ArrayList<>();
+
+        List<Filter> filter = filterBuilder.createFilter(accountSearchDto, authorIds);
 
         if (filter.isEmpty()) {
-            return new ArrayList<>();
+            return null;
         }
 
         Specification<Account> specification = (Specification<Account>) specificationBuilder.getSpecificationFromFilters(filter);
 
         Page<Account> pageResult = accountRepository.findAll(specification, pageable);
 
+
         if (pageResult.hasContent()) {
-            return pageResult.getContent();
+            return pageResult.map(Account -> modelMapper.map(Account, AccountDto.class));
         } else {
-            return new ArrayList<>();
+            return null;
         }
+    }
+
+    private List<Long> getUserIdsFromAuthor(String author) {
+
+        String[] authorNames = accountSearchDto.getAuthor().split(" ");
+
+        List<Long> authors = userRepository.findAllByNames(authorNames);
+
+        return new ArrayList<>(authors);
+
+
     }
 }
 

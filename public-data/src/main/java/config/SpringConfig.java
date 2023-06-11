@@ -11,11 +11,15 @@ import javax.sql.DataSource;
 @Configuration
 public class SpringConfig {
 
-        @Value("${database.url}")
-        private String url;
-        @Value("${database.username}")
+        @Value("${SN_DB_HOST}")
+        private String host;
+        @Value("${SN_DB_PORT}")
+        private String port;
+        @Value("${SN_DB_NAME}")
+        private String name;
+        @Value("${SN_DB_USER}")
         private String userName;
-        @Value("${database.password}")
+        @Value("${SN_DB_PASSWORD}")
         private String password;
 
         @Bean
@@ -23,7 +27,7 @@ public class SpringConfig {
 
                 DriverManagerDataSource driver = new DriverManagerDataSource();
                 driver.setDriverClassName("org.postgresql.Driver");
-                driver.setUrl(url);
+                driver.setUrl("jdbc:postgresql://" +host +":" + port + "/" + name);
                 driver.setUsername(userName);
                 driver.setPassword(password);
 

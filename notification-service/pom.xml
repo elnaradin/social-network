@@ -12,7 +12,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.0.2</version>
+        <version>3.0.7</version>
         <relativePath/>
     </parent>
 
@@ -21,10 +21,15 @@
         <sha1></sha1>
         <changelist>-SNAPSHOT</changelist>
 
-        <org.springframework.boot.version>3.0.2</org.springframework.boot.version>
+        <org.springframework.boot.version>3.0.7</org.springframework.boot.version>
+        <org.springframework.version>6.0.9</org.springframework.version>
         <java.version>17</java.version>
 
+        <public.data.version>0.1.5</public.data.version>
         <log4j.version>2.20.0</log4j.version>
+        <jooq.version>3.18.4</jooq.version>
+        <liquibase.version>4.22.0</liquibase.version>
+        <jackson.version>2.15.1</jackson.version>
     </properties>
 
     <modules>

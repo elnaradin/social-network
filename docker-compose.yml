@@ -5,7 +5,7 @@ services:
     volumes:
       - 'pgsql:/var/lib/postgresql/data'
     ports:
-      - '${SN_DB_PORT}:5432'
+      - '127.0.0.1:5432:5432'
     environment:
       PGPASSWORD: ${SN_DB_PASSWORD}
       POSTGRES_DB: ${SN_DB_NAME}
@@ -14,43 +14,60 @@ services:
     networks:
       - server
 
-#  aggregator:
-#    image: 'intouchgroup/aggregator'
-#    ports:
-#      - '${SN_AGGREGATOR_PORT}:${SN_AGGREGATOR_PORT}'
-#    environment:
-#      SN_AGGREGATOR_PORT: ${SN_AGGREGATOR_PORT}
-#      SN_NOTIFICATIONS_PORT: ${SN_NOTIFICATIONS_PORT}
-#      SN_NOTIFICATIONS_HOST: notifications
-#    depends_on:
-#      - pgsql
-#      - notifications
-#    networks:
-#      - server
-#
-#  notifications:
-#    image: 'intouchgroup/notification-serv'
-#    ports:
-#      - '${SN_NOTIFICATIONS_PORT}:${SN_NOTIFICATIONS_PORT}'
-#    networks:
-#      - server
-#    depends_on:
-#      - pgsql
-#    environment:
-#      SN_DB_PASSWORD: ${SN_DB_PASSWORD}
-#      SN_DB_NAME: ${SN_DB_NAME}
-#      SN_DB_USER: ${SN_DB_USER}
-#      SN_DB_HOST: pgsql
-#      SN_DB_PORT: ${SN_DB_PORT}
-#      SN_NOTIFICATIONS_PORT: ${SN_NOTIFICATIONS_PORT}
-#      SN_NOTIFICATIONS_HOST: notifications
+  aggregator:
+    image: 'intouchgroup/aggregator'
+    ports:
+      - '127.0.0.1:8080:8080'
+    environment:
+      SN_AGGREGATOR_PORT: 8080
+      SN_NOTIFICATIONS_PORT: 8888
+      SN_NOTIFICATIONS_HOST: notifications
+      SN_ACCOUNT_HOST: localhost
+      SN_ACCOUNT_PORT: 8085
+      SN_JWT_SECRET: secret
+      SN_WEBSOCKET_HTTP_ENDPOINT: /ws/send
+    depends_on:
+      - pgsql
+      - notifications
+    networks:
+      - server
 
-#  front:
-#    image: 'typuctroot/front-localhost'
-#    ports:
-#      - '80:80'
-#    networks:
-#      - server
+  notifications:
+    image: 'intouchgroup/notification-serv'
+    ports:
+      - '${SN_NOTIFICATIONS_PORT}:${SN_NOTIFICATIONS_PORT}'
+    networks:
+      - server
+    depends_on:
+      - pgsql
+    environment:
+      SN_DB_PASSWORD: ${SN_DB_PASSWORD}
+      SN_DB_NAME: ${SN_DB_NAME}
+      SN_DB_USER: ${SN_DB_USER}
+      SN_DB_HOST: pgsql
+      SN_DB_PORT: ${SN_DB_PORT}
+      SN_NOTIFICATIONS_PORT: ${SN_NOTIFICATIONS_PORT}
+      SN_NOTIFICATIONS_HOST: notifications
+      SN_WEBSOCKET_HTTP_ENDPOINT: /ws/send
+      SN_AGGREGATOR_HOST: localhost
+      SN_AGGREGATOR_PORT: 80
+      SN_AGGREGATOR_PROTOCOL: http://
+
+  zookeeper:
+    image: wurstmeister/zookeeper
+    ports:
+      - "2181:2181"
+    restart: on-failure
+
+  kafka:
+    image: wurstmeister/kafka
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: 127.0.0.1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_CREATE_TOPICS: "order:4:1"
+    restart: on-failure
 
 networks:
   server:

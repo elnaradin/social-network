@@ -1,14 +1,12 @@
 package ru.itgroup.intouch.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Getter
-@Setter
+
+@Data
 public class PostDto {
     private Integer id;
     private boolean isDeleted;
@@ -17,12 +15,13 @@ public class PostDto {
     private LocalDateTime timeChanged;
     private Integer authorId;
     private String title;
-    private String type;
+    private String postType;
     private String postText;
     private boolean isBlocked;
-    private Integer commentsCounts;
-    private List<String> tags;
+    private Integer commentsCount;
+    private List<String> PostTags;
     private Integer likeAmount;
     private boolean myLike;
+    private String imagePath;
 
 }
