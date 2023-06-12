@@ -7,7 +7,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import ru.itgroup.intouch.aggregator.config.security.UserDetailsImpl;
 import ru.itgroup.intouch.client.AccountServiceClient;
-import ru.itgroup.intouch.dto.AccountDto;
+import ru.itgroup.intouch.dto.UserDto;
 
 
 @Service
@@ -18,8 +18,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) {
-        AccountDto accountDto = accountServiceClient.myAccount(username);
-        log.info("User with email " +accountDto.getEmail() + " received successfully");
-        return new UserDetailsImpl(accountServiceClient.currentUser(username));
+        UserDto userDto = accountServiceClient.currentUser(username);
+        log.info("User with email " +userDto.getEmail() + " received successfully");
+        return new UserDetailsImpl(userDto);
     }
 }
