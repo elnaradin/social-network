@@ -58,12 +58,12 @@ public class SecurityConfig {
                 .exceptionHandling()
                 // stops returning status forbidden
                 .authenticationEntryPoint((request, response, authException) ->
-                        log.error(authException.getLocalizedMessage()))
+                {
+                    log.error(authException.getLocalizedMessage());
+                    response.sendRedirect("/login");
+                })
                 .and()
                 .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/login").permitAll()
-                        .requestMatchers("/registration").permitAll()
-                        .requestMatchers("/forgot").permitAll()
                         .requestMatchers("/api/v1/auth/password/recovery/").permitAll()
                         .requestMatchers("/api/v1/auth/password/recovery/{linkId}").permitAll()
                         .requestMatchers("/api/v1/auth/login").permitAll()
@@ -72,7 +72,6 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/streaming/ws").permitAll()
                         .anyRequest().authenticated())
                 .logout().logoutUrl("/api/v1/auth/logout")
-                .logoutSuccessUrl("/login")
                 .logoutSuccessHandler((request, response, authentication) ->
                         response.setStatus(HttpStatus.OK.value()))
                 .deleteCookies("jwt")
