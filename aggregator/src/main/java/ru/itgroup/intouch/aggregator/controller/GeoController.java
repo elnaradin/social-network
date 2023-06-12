@@ -1,34 +1,30 @@
-package ru.itgroup.intouch.controller;
+package ru.itgroup.intouch.aggregator.controller;
 
-
-import model.Country;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.itgroup.intouch.service.GeoService;
-
-import java.util.List;
+import ru.itgroup.intouch.client.GeoServiceClient;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/v1/geo")
 public class GeoController {
-    @Autowired
-    GeoService geoService;
+
+    private final GeoServiceClient client;
 
     @PutMapping("/load")
     public ResponseEntity loadGeo(){
-        geoService.loadGeo();
-        return ResponseEntity.ok().build();
+        return client.feignLoadGeo();
     }
 
     @GetMapping("/country")
     public ResponseEntity getCountries(){
-        List<Country> countries = geoService.getCountries();
-        return ResponseEntity.ok(countries);
+        return client.feignGetCountries();
     }
 
     @GetMapping("/country/{countryId}/cities")
     public ResponseEntity getCities(@PathVariable Long countryId){
-        return ResponseEntity.ok(geoService.getCities(countryId));
+        return client.feignGetCities(countryId);
     }
 }

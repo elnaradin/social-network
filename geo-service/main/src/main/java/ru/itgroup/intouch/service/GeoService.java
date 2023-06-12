@@ -1,19 +1,20 @@
 package ru.itgroup.intouch.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import model.City;
+import model.Country;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import ru.itgroup.intouch.model.AreaUnit;
-import ru.itgroup.intouch.model.City;
-import ru.itgroup.intouch.model.Country;
 import ru.itgroup.intouch.repository.CityRepository;
 import ru.itgroup.intouch.repository.CountryRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class GeoService {
@@ -26,6 +27,8 @@ public class GeoService {
 
     public ResponseEntity loadGeo() {
         try {
+            countryRepository.deleteAll();
+            countryRepository.flush();
             AreaUnit areaUnit = getAreaUnits();
             Country country = new Country();
             country.setId(Long.parseLong(areaUnit.getId()));
@@ -62,9 +65,7 @@ public class GeoService {
     }
 
     public List<City> getCities(Long countryId) {
-        if(countryRepository.findById(countryId).isEmpty()){
-            return null;
-        }
-        return cityRepository.findByCountryId(countryId);
+        Optional<Country> optionalCountry = countryRepository.findById(countryId);
+        return optionalCountry.map(country -> cityRepository.findByCountry(country)).orElse(null);
     }
 }

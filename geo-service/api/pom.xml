@@ -13,7 +13,16 @@
     <name>ITGroup_Intouch :: SocialNetwork :: GeoService :: api</name>
     <artifactId>ru.itgroup.intouch.geo-service.api</artifactId>
 
+    <properties>
+        <org.springframework.boot.version>3.0.5</org.springframework.boot.version>
+    </properties>
+
     <dependencies>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+            <version>${org.springframework.boot.version}</version>
+        </dependency>
     </dependencies>
 
 </project>
