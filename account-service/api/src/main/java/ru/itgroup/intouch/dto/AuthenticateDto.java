@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 public class AuthenticateDto {
-    @Email(regexp = "Некорректный Email")
+    @Email(message = "Некорректный E-mail")
     private String email;
 
     private String password;

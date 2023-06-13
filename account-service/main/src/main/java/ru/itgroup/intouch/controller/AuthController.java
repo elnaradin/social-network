@@ -1,7 +1,6 @@
 package ru.itgroup.intouch.controller;
 
 import jakarta.mail.MessagingException;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,13 +30,13 @@ public class AuthController {
 
 
     @PostMapping("/register")
-    public void register(@Valid @RequestBody RegistrationDto registrationDto)
+    public void register(@RequestBody RegistrationDto registrationDto)
             throws UserAlreadyRegisteredException, CaptchaNotValidException {
         registrationService.registerNewUser(registrationDto);
     }
 
     @PostMapping("/password/recovery/")
-    public void recoverPassword(@Valid @RequestBody EmailDto emailDto) throws MessagingException {
+    public void recoverPassword(@RequestBody EmailDto emailDto) throws MessagingException {
         credentialsRenewalService.sendLetter(emailDto.getEmail(),
                 emailContents.getPasswordRecovery(), true);
 
@@ -45,17 +44,15 @@ public class AuthController {
 
     @PostMapping("/password/recovery/{linkId}")
     public void setNewPassword(@PathVariable String linkId,
-                               @Valid @RequestBody PasswordDto passwordDto) {
+                               @RequestBody PasswordDto passwordDto) {
         credentialsRenewalService.setNewPassword(linkId, passwordDto.getPassword());
     }
 
 
-
     @GetMapping("/captcha")
     public CaptchaDto captcha() {
-        return  registrationService.generateCaptcha();
+        return registrationService.generateCaptcha();
     }
-
 
 
     // FIXME: 12.06.2023 current user is needed for these two

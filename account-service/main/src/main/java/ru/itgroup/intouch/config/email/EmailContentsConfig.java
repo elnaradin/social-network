@@ -13,5 +13,4 @@ public class EmailContentsConfig {
     private EmailContents passwordChange;
 
 
-
 }

@@ -23,44 +23,52 @@ public class AccountService {
     private final UserMapper userMapper;
     private final AccountRepository accountRepository;
 
-    public AccountDto getAccountInfo(String email) {
 
-        Optional<Account> account = accountRepository.findFirstByEmail(email);
+    public AccountDto getAccountInfo(String email) {
+        Optional<Account> account = accountRepository
+                .findFirstByEmailEqualsAndIsDeletedEquals(email, false);
         if (account.isEmpty()) {
-            throw new NoUserRegisteredException("Unable to find data. No user with email \"" +
-                    email + "\" found.");
+            throw new NoUserRegisteredException("Аккаунт с адресом \"" +
+                    email + "\" не найден.");
         }
         return userMapper.accountEntityToAccountDto(account.get());
     }
 
     public UserDto getUserInfo(String email) {
-        Optional<User> user = userRepository.findFirstByEmail(email);
-        if (user.isEmpty()) {
-            throw new NoUserRegisteredException("Unable to find data. No user with email \"" +
-                    email + "\" found.");
+        if (!userRepository.existsByEmail(email)) {
+            throw new NoUserRegisteredException("Пользователь с адресом \"" +
+                    email + "\" не зарегистрирован.");
         }
-        return userMapper.userEntity2UserDto(user.get());
+        Optional<User> user = userRepository
+                .findFirstByEmailEqualsAndIsDeletedEquals(email, false);
+        if (user.isPresent()) {
+            return userMapper.userEntity2UserDto(user.get());
+        }
+        throw new NoUserRegisteredException("Пользователь с адресом \"" +
+                email + "\" удалил свой аккаунт.");
     }
 
     public void updateAccountData(AccountDto accountDto) {
-        Optional<Account> account = accountRepository.findFirstByEmail(accountDto.getEmail());
+        Optional<Account> account = accountRepository
+                .findFirstByEmailEqualsAndIsDeletedEquals(accountDto.getEmail(), false);
         log.info("change account with email \"" + accountDto.getEmail() + "\"");
         if (account.isEmpty()) {
-            throw new NoUserRegisteredException("Unable to change account info. Email \"" +
-                    accountDto.getEmail() + "\" doesn't exist.");
+            throw new NoUserRegisteredException("Невозможно изменить данные аккаунта. E-mail \"" +
+                    accountDto.getEmail() + "\" не найден.");
         }
         userMapper.updateAccountFromDto(accountDto, account.get());
         accountRepository.save(account.get());
     }
 
     public void setAccountDeleted(String email) {
-        Optional<Account> firstByEmail = accountRepository.findFirstByEmail(email);
+        Optional<User> firstByEmail = userRepository
+                .findFirstByEmailEqualsAndIsDeletedEquals(email, false);
         if (firstByEmail.isEmpty()) {
-            throw new NoUserRegisteredException("Unable to soft delete account. No user with mail \"" +
-                    email + "\" found.");
+            throw new NoUserRegisteredException("Невозможно удалить аккаунт. " +
+                    "E-mail \"" + email + "\" не найден.");
         }
-        Account account = firstByEmail.get();
-        account.setDeleted(true);
+        User user = firstByEmail.get();
+        user.setDeleted(true);
         userRepository.save(firstByEmail.get());
     }
 
@@ -68,7 +76,6 @@ public class AccountService {
         List<Account> accounts = accountRepository.findByIdIn(userIds);
         return userMapper.accountsToDtos(accounts);
     }
-
 
 
 }
