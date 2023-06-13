@@ -22,7 +22,6 @@
         <changelist>-SNAPSHOT</changelist>
 
         <org.springframework.boot.version>3.0.7</org.springframework.boot.version>
-        <org.springframework.version>6.0.9</org.springframework.version>
         <java.version>17</java.version>
 
         <public.data.version>0.1.5</public.data.version>
@@ -42,6 +41,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+            <version>${org.springframework.boot.version}</version>
         </dependency>
 
         <dependency>
