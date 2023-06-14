@@ -62,4 +62,16 @@ public class AuthorizationController {
         return authServiceClient.captcha();
     }
 
+    @PostMapping("/change-password-link")
+    @ResponseStatus(HttpStatus.OK)
+    public void changePassword(@RequestBody EmailDto emailDto){
+        authServiceClient.changePassword(emailDto);
+    }
+
+    @PostMapping("/change-email-link")
+    @ResponseStatus(HttpStatus.OK)
+    public void changeEmail(@RequestBody EmailDto emailDto){
+        authServiceClient.changeEmail(emailDto);
+    }
+
 }
