@@ -5,11 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
+
 import ru.itgroup.intouch.aggregator.config.security.UserDetailsImpl;
 import ru.itgroup.intouch.aggregator.config.security.jwt.JWTUtil;
 import ru.itgroup.intouch.dto.AuthenticateDto;
 import ru.itgroup.intouch.dto.AuthenticateResponseDto;
-
 
 @Service
 @RequiredArgsConstructor
