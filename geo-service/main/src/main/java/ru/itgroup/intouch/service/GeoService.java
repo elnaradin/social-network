@@ -6,6 +6,7 @@ import model.Country;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import ru.itgroup.intouch.model.AreaUnit;
@@ -25,31 +26,39 @@ public class GeoService {
     @Autowired
     CountryRepository countryRepository;
 
+    private List<Long> loadedCityID = new ArrayList<>();
+
+    @Scheduled(cron = "${loadGeoPeriod-in-cron}")
     public ResponseEntity loadGeo() {
         try {
-            countryRepository.deleteAll();
-            countryRepository.flush();
+            System.out.println("loading started");
             AreaUnit areaUnit = getAreaUnits();
-            Country country = new Country();
-            country.setId(Long.parseLong(areaUnit.getId()));
-            country.setTitle(areaUnit.getName());
-            country.setDeleted(false);
+            Country country = createCountry(areaUnit);
             countryRepository.saveAndFlush(country);
             List<AreaUnit> citiesUnits = areaUnit.getAreas().stream().flatMap(a -> a.getAreas().stream()).toList();
             List<City> cities = new ArrayList<>();
             citiesUnits.forEach(cu -> {
-                City city = new City();
-                city.setId(Long.parseLong(cu.getId()));
-                city.setDeleted(false);
-                city.setTitle(cu.getName());
-                city.setCountry(country);
-                cities.add(city);
+                long cityID = Long.parseLong(cu.getId());
+                if(!loadedCityID.contains(cityID)) {
+                    loadedCityID.add(cityID);
+                    City city = createCity(cu, country);
+                    cities.add(city);
+                }
             });
             cityRepository.saveAll(cities);
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
+    }
+
+    public List<Country> getCountries() {
+        return countryRepository.findAll();
+    }
+
+    public List<City> getCities(Long countryId) {
+        Optional<Country> optionalCountry = countryRepository.findById(countryId);
+        return optionalCountry.map(country -> cityRepository.findByCountry(country)).orElse(null);
     }
 
     private AreaUnit getAreaUnits() throws Exception{
@@ -60,12 +69,20 @@ public class GeoService {
         return objectMapper.readValue(response, AreaUnit.class);
     }
 
-    public List<Country> getCountries() {
-        return countryRepository.findAll();
+    private Country createCountry(AreaUnit countryUnit) {
+        Country country = new Country();
+        country.setId(Long.parseLong(countryUnit.getId()));
+        country.setTitle(countryUnit.getName());
+        country.setDeleted(false);
+        return country;
     }
 
-    public List<City> getCities(Long countryId) {
-        Optional<Country> optionalCountry = countryRepository.findById(countryId);
-        return optionalCountry.map(country -> cityRepository.findByCountry(country)).orElse(null);
+    private City createCity(AreaUnit cityUnit, Country country) {
+        City city = new City();
+        city.setId(Long.parseLong(cityUnit.getId()));
+        city.setDeleted(false);
+        city.setTitle(cityUnit.getName());
+        city.setCountry(country);
+        return city;
     }
 }

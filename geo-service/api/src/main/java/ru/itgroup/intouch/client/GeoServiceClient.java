@@ -9,8 +9,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 @FeignClient(
         name = "geo-service",
         url = "${SN_GEO_HOST}:${SN_GEO_PORT}",
-        path = "/api/v1/geo",
-        configuration = FeignClient.class
+        path = "/api/v1/geo"
 )
 public interface GeoServiceClient {
 
