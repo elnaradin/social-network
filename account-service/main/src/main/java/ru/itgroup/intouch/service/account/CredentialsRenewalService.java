@@ -55,7 +55,7 @@ public class CredentialsRenewalService {
                 StandardCharsets.UTF_8.name()
         );
         Context context = new Context();
-        Optional<User> optUser = userRepository.findFirstByEmail(to);
+        Optional<User> optUser = userRepository.findFirstByEmailEqualsAndIsDeletedEquals(to, false);
         if (optUser.isEmpty()) {
             throw new NoEmailFoundException("Пользователь с адресом \"" + to + "\" не зарегистрирован");
         }
@@ -65,7 +65,7 @@ public class CredentialsRenewalService {
         helper.setSubject(contents.getSubject().toUpperCase(Locale.ROOT));
 
         String userHash = "";
-        if(addLinkId){
+        if (addLinkId) {
             userHash = UUID.randomUUID().toString();
             user.setHash(userHash);
             user.setHashExpiryTime(LocalDateTime.now().plusMinutes(expiryMinutes));
