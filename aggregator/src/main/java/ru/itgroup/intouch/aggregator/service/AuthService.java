@@ -20,17 +20,18 @@ public class AuthService {
     private final JWTUtil jwtUtil;
 
     public AuthenticateResponseDto login(AuthenticateDto authenticateDto) {
-        log.info("login started");
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticateDto.getEmail(),
-                authenticateDto.getPassword()));
         UserDetailsImpl userDetails = (UserDetailsImpl)
                 userDetailsService.loadUserByUsername(authenticateDto.getEmail());
 
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        authenticateDto.getEmail(),
+                        authenticateDto.getPassword())
+        );
         AuthenticateResponseDto responseDto = new AuthenticateResponseDto();
         String jwtAccessToken = jwtUtil.generateAccessToken(userDetails.userDto());
         String jwtRefreshToken = jwtUtil.generateRefreshToken(userDetails.userDto());
 
-        log.info("JWTs generated successfully");
         responseDto.setAccessToken(jwtAccessToken);
         responseDto.setRefreshToken(jwtRefreshToken);
         return responseDto;
