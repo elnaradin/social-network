@@ -1,25 +1,29 @@
 package model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
-
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
+@Data
+@Table(name = "cities")
 public class City {
     @Id
-    private Long id;
+    private long id;
 
     private boolean isDeleted;
 
     private String title;
 
-    private int countryId;
+    @ManyToOne ()
+    @JoinColumn(name = "country_id", nullable = false)
+    @JsonIgnore
+    private Country country;
+
+    @JsonGetter("countryId")
+    @Transient
+    public Long getCountryId(){
+        return country.getId();
+    }
 }

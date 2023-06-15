@@ -1,0 +1,25 @@
+server:
+  port: ${SN_GEO_PORT}
+
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: none
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+
+  datasource:
+    url: jdbc:postgresql://${SN_DB_HOST}:${SN_DB_PORT}/${SN_DB_NAME}?createDatabaseIfNotExist=true
+    username: ${SN_DB_USERNAME}
+    password: ${SN_DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  liquibase:
+    enabled: true
+    change-log: classpath:/dbchangelog-master.xml
+
+logging:
+  level:
+    root: info
+
+loadGeoPeriod-in-cron: * * * * * 7
