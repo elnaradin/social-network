@@ -1,0 +1,24 @@
+merge_geo:
+  stage: build
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_COMMIT_REF_NAME =~ /^geo/
+  script:
+    - cd /root/social-network/back
+    - git pull
+    - docker stop builder || true
+    - docker rm builder || true
+    - docker rmi builder || true
+
+    - docker buildx build --platform linux/amd64 -f Dockerfile-geo --tag intouchgroup/geo-new:latest . --load 2>&1 | tee build-geo.log
+
+    - docker stop builder || true
+    - docker rm builder || true
+    - docker rmi builder || true
+
+    - cd /root/social-network
+    - docker stop social-network-geo-1 || true
+    - docker rm social-network-geo-1 || true
+    - docker rmi intouchgroup/geo-serv || true
+    - docker tag intouchgroup/geo-new:latest intouchgroup/geo-serv:latest
+    - docker rmi intouchgroup/geo-new:latest
+    - docker compose up -d --build

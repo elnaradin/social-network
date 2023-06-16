@@ -13,7 +13,7 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>3.0.2</version>
-        <relativePath/> 
+        <relativePath/>
     </parent>
 
     <properties>
@@ -93,6 +93,7 @@
     </dependencies>
 
     <build>
+        <finalName>geo-service</finalName>
         <pluginManagement>
             <plugins>
                 <plugin>

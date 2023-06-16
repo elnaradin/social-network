@@ -1,0 +1,24 @@
+merge_account:
+  stage: build
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_COMMIT_REF_NAME =~ /^account/
+  script:
+    - cd /root/social-network/back
+    - git pull
+    - docker stop builder || true
+    - docker rm builder || true
+    - docker rmi builder || true
+
+    - docker buildx build --platform linux/amd64 -f Dockerfile-account --tag intouchgroup/account-new:latest . --load 2>&1 | tee build-account.log
+
+    - docker stop builder || true
+    - docker rm builder || true
+    - docker rmi builder || true
+
+    - cd /root/social-network
+    - docker stop social-network-account-1 || true
+    - docker rm social-network-account-1 || true
+    - docker rmi intouchgroup/account-serv || true
+    - docker tag intouchgroup/account-new:latest intouchgroup/account-serv:latest
+    - docker rmi intouchgroup/account-new:latest
+    - docker compose up -d --build
