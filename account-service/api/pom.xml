@@ -19,7 +19,7 @@
         <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
         <org.springframework.cloud.version>4.0.1</org.springframework.cloud.version>
         <ru.itgroup.intouch.search-engine.version>0.1.0</ru.itgroup.intouch.search-engine.version>
-        <ru.itgroup.intouch.public-data.version>0.1.5</ru.itgroup.intouch.public-data.version>
+        <ru.itgroup.intouch.public-data.version>0.1.6</ru.itgroup.intouch.public-data.version>
     </properties>
 
     <dependencies>

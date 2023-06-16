@@ -1,0 +1,6 @@
+merge_message:
+  stage: build
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_COMMIT_REF_NAME =~ /^message/
+  script:
+    - echo "Message pipeline"
