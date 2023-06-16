@@ -1,7 +1,7 @@
 merge_geo:
   stage: build
   rules:
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_COMMIT_REF_NAME =~ /^geo/
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "master" && $CI_COMMIT_MESSAGE =~ /^Merge branch \'geo/
   script:
     - cd /root/social-network/back
     - git pull
