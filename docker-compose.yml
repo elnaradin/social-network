@@ -11,6 +11,7 @@ services:
       POSTGRES_DB: ${SN_DB_NAME}
       POSTGRES_USER: ${SN_DB_USER}
       POSTGRES_PASSWORD: ${SN_DB_PASSWORD}
+      TZ: Europe/Moscow
     networks:
       - server
 
