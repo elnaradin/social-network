@@ -2,6 +2,7 @@ package ru.itgroup.intouch.aggregator.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,10 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.itgroup.intouch.client.NotificationServiceClient;
 import ru.itgroup.intouch.dto.request.NotificationRequestDto;
 import ru.itgroup.intouch.dto.request.NotificationSettingsDto;
-import ru.itgroup.intouch.dto.response.notifications.NotificationCountDto;
-import ru.itgroup.intouch.dto.response.notifications.NotificationListDto;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,8 +20,8 @@ import java.util.List;
 public class NotificationController {
     private final NotificationServiceClient client;
 
-    @GetMapping("")
-    public NotificationListDto getNotifications() {
+    @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
+    public String getNotifications() {
         return client.feignGetNotifications();
     }
 
@@ -33,13 +30,13 @@ public class NotificationController {
         return client.feignCreateNotification(notificationRequestDto);
     }
 
-    @GetMapping("/count")
-    public NotificationCountDto getNotificationsCount() {
+    @GetMapping(value = "/count", produces = MediaType.APPLICATION_JSON_VALUE)
+    public String getNotificationsCount() {
         return client.feignGetNotificationsCount();
     }
 
-    @GetMapping("/settings")
-    public List<?> getSettings() {
+    @GetMapping(value = "/settings", produces = MediaType.APPLICATION_JSON_VALUE)
+    public String getSettings() {
         return client.feignGetSettings();
     }
 
