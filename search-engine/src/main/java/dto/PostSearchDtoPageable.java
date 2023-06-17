@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 
 @Data
@@ -32,13 +33,13 @@ public class PostSearchDtoPageable {
 
     private List<String> tags;
 
-    private String dateFrom;
+    private ZonedDateTime dateFrom;
 
-    private String dateTo;
-
+    private ZonedDateTime dateTo;
+    @JsonProperty (defaultValue = "1")
     private String page;
-
+    @JsonProperty (defaultValue = "5")
     private String size;
-
+    @JsonProperty (defaultValue = "id")
     private String sort;
 }
