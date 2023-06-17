@@ -1,0 +1,6 @@
+merge_friend:
+  stage: build
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "master" && $CI_COMMIT_MESSAGE =~ /^Merge branch \'friend/
+  script:
+    - echo "Friend pipeline"

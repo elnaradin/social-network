@@ -32,8 +32,9 @@ public class RegistrationService {
         if (!Objects.equals(registrationDto.getCaptchaCode(), registrationDto.getCaptchaSecret())) {
             throw new CaptchaNotValidException("Каптча введена неверно.");
         }
-        Optional<User> firstByEmail = userRepository.findFirstByEmail(registrationDto.getEmail());
-        if (firstByEmail.isPresent()) {
+        Optional<User> firstByEmail = userRepository
+                .findFirstByEmailEqualsAndIsDeletedEquals(registrationDto.getEmail(), false);
+        if (firstByEmail.isPresent() && !firstByEmail.get().isDeleted()) {
             throw new UserAlreadyRegisteredException("Пользователь с адресом \"" +
                     registrationDto.getEmail() + "\" уже зарегистрирован.");
         }
@@ -45,7 +46,7 @@ public class RegistrationService {
     }
 
 
-    public CaptchaDto generateCaptcha()  {
+    public CaptchaDto generateCaptcha() {
         GCage gCage = new GCage();
         String token = gCage.getTokenGenerator().next();
         byte[] image = gCage.draw(token);

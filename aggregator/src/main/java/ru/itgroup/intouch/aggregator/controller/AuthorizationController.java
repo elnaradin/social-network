@@ -1,5 +1,6 @@
 package ru.itgroup.intouch.aggregator.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -31,27 +32,27 @@ public class AuthorizationController {
 
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)
-    public AuthenticateResponseDto login(@RequestBody AuthenticateDto authenticateDto) {
+    public AuthenticateResponseDto login(@Valid @RequestBody AuthenticateDto authenticateDto) {
         return authService.login(authenticateDto);
     }
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.OK)
-    public void register(@RequestBody RegistrationDto registrationDto) {
+    public void register(@Valid @RequestBody RegistrationDto registrationDto) {
         registrationDto.setPassword1(passwordEncoder.encode(registrationDto.getPassword1()));
         authServiceClient.register(registrationDto);
     }
 
     @PostMapping("/password/recovery/")
     @ResponseStatus(HttpStatus.OK)
-    public void recoverPassword(@RequestBody EmailDto emailDto) {
+    public void recoverPassword(@Valid @RequestBody EmailDto emailDto) {
         authServiceClient.recoverPassword(emailDto);
     }
 
     @PostMapping("/password/recovery/{linkId}")
     @ResponseStatus(HttpStatus.OK)
     public void setNewPassword(@PathVariable String linkId,
-                               @RequestBody PasswordDto passwordDto) {
+                               @Valid @RequestBody PasswordDto passwordDto) {
         passwordDto.setPassword(passwordEncoder.encode(passwordDto.getPassword()));
         authServiceClient.setNewPassword(linkId, passwordDto);
     }
@@ -60,6 +61,18 @@ public class AuthorizationController {
     @ResponseStatus(HttpStatus.OK)
     public CaptchaDto captcha() {
         return authServiceClient.captcha();
+    }
+
+    @PostMapping("/change-password-link")
+    @ResponseStatus(HttpStatus.OK)
+    public void changePassword(@Valid @RequestBody EmailDto emailDto) {
+        authServiceClient.changePassword(emailDto);
+    }
+
+    @PostMapping("/change-email-link")
+    @ResponseStatus(HttpStatus.OK)
+    public void changeEmail(@Valid @RequestBody EmailDto emailDto) {
+        authServiceClient.changeEmail(emailDto);
     }
 
 }

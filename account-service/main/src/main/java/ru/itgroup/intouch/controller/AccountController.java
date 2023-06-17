@@ -3,7 +3,6 @@ package ru.itgroup.intouch.controller;
 import dto.AccountSearchDtoPageable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import model.account.Account;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;

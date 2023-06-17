@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserDto extends AbstractUser {
-    private Integer id;
     private boolean isDeleted;
     private String password;
 

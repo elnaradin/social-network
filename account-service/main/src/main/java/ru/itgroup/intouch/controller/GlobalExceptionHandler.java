@@ -1,5 +1,6 @@
 package ru.itgroup.intouch.controller;
 
+import jakarta.mail.MessagingException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,32 +17,22 @@ import ru.itgroup.intouch.exceptions.UserAlreadyRegisteredException;
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+
     @ExceptionHandler({CaptchaNotValidException.class,
             UserAlreadyRegisteredException.class,
             NoEmailFoundException.class,
-            UserAlreadyRegisteredException.class})
+            UserAlreadyRegisteredException.class,
+            MessagingException.class,
+            NoUserRegisteredException.class})
     public ResponseEntity<ErrorResponse> handleBadRequest(Exception exception,
                                                           WebRequest request) {
         log.error(exception.getMessage());
         return new ResponseEntity<>(new ErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
                 HttpStatus.BAD_REQUEST.name(),
-                exception.getMessage(),
+                "<br/>" + exception.getMessage(),
                 request.getDescription(false)),
                 HttpStatus.BAD_REQUEST);
     }
-
-    @ExceptionHandler({NoUserRegisteredException.class})
-    public ResponseEntity<ErrorResponse> handleUnauthorized(Exception exception,
-                                                            WebRequest request) {
-        log.error(exception.getMessage());
-        return new ResponseEntity<>(new ErrorResponse(
-                HttpStatus.UNAUTHORIZED.value(),
-                HttpStatus.UNAUTHORIZED.name(),
-                exception.getMessage(),
-                request.getDescription(false)),
-                HttpStatus.UNAUTHORIZED);
-    }
-
 
 }

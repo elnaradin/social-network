@@ -14,8 +14,9 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
+    boolean existsByEmail(String email);
 
-    Optional<User> findFirstByEmail(String email);
+    Optional<User> findFirstByEmailEqualsAndIsDeletedEquals(String email, boolean isDeleted);
 
     Optional<User> findFirstByHash(String hashCode);
 
