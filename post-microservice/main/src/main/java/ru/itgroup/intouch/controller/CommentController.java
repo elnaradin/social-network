@@ -18,8 +18,8 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping("/{id}/comment")
-    public ResponseEntity<?> createCommentToPost(@PathVariable(value = "id") Long idPost, @RequestBody CommentDto dto, Long userId) {
-        CommentDto comment = commentService.createNewComment(dto, idPost, userId);
+    public ResponseEntity<?> createCommentToPost(@PathVariable(value = "id") Long idPost, @RequestBody CommentDto dto) {
+        CommentDto comment = commentService.createNewComment(dto, idPost);
 
         return (comment.getPostId() != null) ? ResponseEntity.ok(comment) : ResponseEntity.notFound().build();
     }

@@ -3,6 +3,7 @@ package ru.itgroup.intouch.dto;
 import lombok.Data;
 import model.enums.CommentType;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 
 @Data
@@ -10,8 +11,8 @@ public class CommentDto {
     private Long id;
     private boolean isDeleted;
     private CommentType commentType;
-    private LocalDateTime time;
-    private LocalDateTime timeChanged;
+    private ZonedDateTime time;
+    private ZonedDateTime timeChanged;
     private Long authorId;
     private Long parentId;
     private String commentText;

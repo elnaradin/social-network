@@ -15,5 +15,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query(value = "SELECT id FROM users WHERE last_name IN (:names) OR first_name IN (:names)", nativeQuery = true)
     List<Long> findAllIdByNames(@Param("names") String[] names);
 
-    Optional<User> findByEmail (@Param("email") String email);
+    Optional<User> findByEmail(@Param("email") String email);
 }

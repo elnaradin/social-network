@@ -5,17 +5,11 @@ import dto.PostSearchDto;
 import lombok.RequiredArgsConstructor;
 import mappers.PostDtoPageableMapper;
 import model.Post;
-import model.account.User;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestHeader;
-import ru.itgroup.intouch.config.JWTUtil;
 import ru.itgroup.intouch.dto.PostDto;
 import ru.itgroup.intouch.repository.PostRepository;
 import ru.itgroup.intouch.repository.PostTagRepository;
@@ -24,10 +18,8 @@ import searchUtils.Filter;
 import searchUtils.SpecificationBuilder;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+
 
 @Service
 @RequiredArgsConstructor
@@ -40,7 +32,7 @@ public class PostSearchService {
     private final ModelMapper modelMapper;
     private final PostDtoPageableMapper dtoPageableMapper;
     private final PostTagRepository tagRepository;
-    private final JWTUtil jwtUtil;
+
     private PostSearchDto dto;
 
     public Page<PostDto> getPostResponse(PostSearchDtoPageable postSearchDtoPageable) {

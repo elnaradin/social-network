@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.itgroup.intouch.dto.CommentDto;
 
+import ru.itgroup.intouch.mapper.MapperToCommentDto;
 import ru.itgroup.intouch.repository.CommentRepository;
 
 import ru.itgroup.intouch.service.enums.Item;
@@ -25,20 +26,20 @@ import java.util.stream.Collectors;
 public class CommentService {
 
     private final CommentRepository commentRepository;
-    private final ModelMapper modelMapper;
+    private final MapperToCommentDto mapperToCommentDto;
     private final PostService postService;
 
 
-    public CommentDto createNewComment(CommentDto commentDto, Long idPost, Long userId) {
+    public CommentDto createNewComment(CommentDto commentDto, Long idPost) {
 
 
         Comment comment = new Comment();
 
         comment.setDeleted(false);
         comment.setCommentType(commentDto.getCommentType());
-        comment.setTime(LocalDateTime.now());
-        comment.setTimeChanged(LocalDateTime.now());
-        comment.setAuthorId(userId);
+        comment.setTime(commentDto.getTime().toLocalDateTime());
+        comment.setTimeChanged(commentDto.getTimeChanged().toLocalDateTime());
+        comment.setAuthorId(commentDto.getAuthorId());
         comment.setParentId(commentDto.getParentId());
         comment.setCommentText(commentDto.getCommentText());
         comment.setPostId(idPost);
@@ -51,7 +52,7 @@ public class CommentService {
         /* увеличить количество комментов в посте*/
         postService.changeCommentCountOrLikeAmount(idPost, Operator.PLUS, Item.COUNT_COMMENTS);
 
-        return modelMapper.map(newComment, CommentDto.class);
+        return mapperToCommentDto.getCommentDto(newComment);
     }
 
     public List<CommentDto> getCommentsByIdPost(Long idPost, Pageable pageable) {
@@ -61,8 +62,7 @@ public class CommentService {
         if (listComments.isEmpty()) {
             return new ArrayList<>();
         }
-
-        return listComments.stream().map(item -> modelMapper.map(item, CommentDto.class)).collect(Collectors.toList());
+        return listComments.stream().map(mapperToCommentDto::getCommentDto).toList();
 
     }
 

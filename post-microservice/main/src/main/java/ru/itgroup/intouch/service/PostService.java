@@ -26,31 +26,28 @@ public class PostService {
     private final TagService tagService;
     private final PostRepository postsRepository;
     private final MapperToPostDto mapperToPostDto;
-    private final JWTUtil jwtUtil;
+
 
     public PostDto getPostById(Long id) {
         Optional<Post> postEntity = postsRepository.findById(id);
         return postEntity.map(mapperToPostDto::getPostDto).orElse(null);
     }
 
-    public PostDto createNewPost(PostDto postDto, Long userId) {
-
+    public PostDto createNewPost(PostDto postDto) {
 
         Post post = new Post();
-
 
         post.setTitle(postDto.getTitle());
         post.setDeleted(false);
         post.setPostText(postDto.getPostText());
-        post.setCreatedDate(LocalDateTime.now());
-        post.setPublishDate(LocalDateTime.now());
-        post.setTimeChanged(LocalDateTime.now());
-        post.setPostType(PostType.POSTED);
+        post.setCreatedDate(postDto.getTime().toLocalDateTime());
+        post.setPublishDate(postDto.getPublishDate().toLocalDateTime());
+        post.setTimeChanged(postDto.getTimeChanged().toLocalDateTime());
+        post.setPostType(PostType.valueOf(postDto.getPostType()));
         post.setPostTags(tagService.getTags(postDto.getPostTags()));
-        post.setAuthorId(userId);
+        post.setAuthorId(postDto.getAuthorId());
         post.setImagePath(postDto.getImagePath());
-        post.setDeleted(false);
-        post.setMyLike(false);
+        post.setMyLike(postDto.isMyLike());
         post.setLikeAmount(postDto.getLikeAmount());
         post.setCommentsCount(postDto.getCommentsCount());
         Post newPost = postsRepository.save(post);
@@ -93,7 +90,6 @@ public class PostService {
 
         return 0;
     }
-
 
 
 }

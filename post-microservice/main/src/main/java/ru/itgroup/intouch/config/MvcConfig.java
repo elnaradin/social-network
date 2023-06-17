@@ -30,8 +30,11 @@ public class MvcConfig implements WebMvcConfigurer {
     public PostDtoPageableMapper postDtoPageableMapper() {
         return new PostDtoPageableMapper();
     }
+
     @Bean
-    public JWTUtil jwtUtil() {return new JWTUtil();}
+    public JWTUtil jwtUtil() {
+        return new JWTUtil();
+    }
 
 
 }

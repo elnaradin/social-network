@@ -27,15 +27,16 @@ public class PostController {
         return (postDto != null) ? ResponseEntity.ok(postDto) : ResponseEntity.notFound().build();
 
     }
-    @PostMapping("")
-    public ResponseEntity<?> createPost(@RequestBody PostDto postDto, Long userId) {
-   //     String auths = auth;
 
-        PostDto post = postService.createNewPost(postDto, userId);
+    @PostMapping("")
+    public ResponseEntity<?> createPost(@RequestBody PostDto postDto) {
+
+        PostDto post = postService.createNewPost(postDto);
 
         return (post != null) ? ResponseEntity.ok(post) : ResponseEntity.notFound().build();
 
     }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deletePost(@PathVariable Long id) {
 

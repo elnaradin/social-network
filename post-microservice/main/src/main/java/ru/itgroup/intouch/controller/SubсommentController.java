@@ -26,7 +26,7 @@ public class SubсommentController {
         return (subcommentDto != null) ? ResponseEntity.ok(subComment) : ResponseEntity.notFound().build();
 
     }
-
+git
     @GetMapping("/{id}/comment/{commentId}/subcomment")
     public ResponseEntity<?> getSubcommentsToComment(@PathVariable(value = "commentId") Long commentId, @SpringQueryMap Pageable pageable) {
 

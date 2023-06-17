@@ -7,10 +7,10 @@ import io.jsonwebtoken.Jwts;
 
 public class JWTUtil {
 
-    public Long getIdUser (String auth) {
+    public Long getIdUser(String auth) {
 
         int i = auth.lastIndexOf('.');
-        String withoutSignature = auth.substring(0, i+1);
+        String withoutSignature = auth.substring(0, i + 1);
         Jwt<Header, Claims> untrusted = Jwts.parser().parseClaimsJwt(withoutSignature);
         Object id = untrusted.getBody().get("userId");
 

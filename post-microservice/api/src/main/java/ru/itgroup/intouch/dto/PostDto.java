@@ -1,6 +1,8 @@
 package ru.itgroup.intouch.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import model.enums.PostType;
 
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
@@ -16,6 +18,7 @@ public class PostDto {
     private ZonedDateTime timeChanged;
     private Long authorId;
     private String title;
+    @JsonProperty(value = "type")
     private String postType;
     private String postText;
     private boolean isBlocked;

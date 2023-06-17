@@ -78,12 +78,12 @@ public class LikeService {
         return true;
     }
 
-    private Long getIdUser () {
+    private Long getIdUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Principal principal = (Principal) auth.getPrincipal();
         User user = userRepository.findByEmail(principal.getName()).orElseThrow(() -> new RuntimeException("пользователь не найден: " + principal.getName()));
         return user.getId();
     }
-    }
+}
 
 
