@@ -1,6 +1,5 @@
 package ru.itgroup.intouch.aggregator.controller;
 
-import dto.PostSearchDto;
 import dto.PostSearchDtoPageable;
 import feign.Param;
 import io.jsonwebtoken.Claims;
@@ -9,22 +8,14 @@ import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.Jwts;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import ru.itgroup.intouch.aggregator.config.security.jwt.JWTUtil;
-import ru.itgroup.intouch.aggregator.utils.CookieUtil;
 import ru.itgroup.intouch.client.PostServiceClient;
 import ru.itgroup.intouch.dto.CommentDto;
 import ru.itgroup.intouch.dto.PostDto;
 import ru.itgroup.intouch.dto.SubCommentDto;
-
-import java.security.Principal;
-
 
 @RestController
 @RequiredArgsConstructor
@@ -38,10 +29,9 @@ public class PostController {
     }
 
     @PostMapping("")
-    public ResponseEntity<?> createPost(@RequestBody PostDto postDto,
-                                        @Param("request") HttpServletRequest request) {
-        Long userId = getAccountId(request);
-        return client.createPost(postDto, userId);
+    public ResponseEntity<?> createPost(@RequestBody PostDto postDto) {
+
+        return client.createPost(postDto);
     }
 
     @DeleteMapping("/{id}")
@@ -51,22 +41,22 @@ public class PostController {
     }
 
     @GetMapping("")
-    public ResponseEntity<?> search(PostSearchDtoPageable dtoPageable) {
+    public ResponseEntity<?> search(PostSearchDtoPageable postSearchDtoPageable) {
 
-        return client.search(dtoPageable);
+        return client.search(postSearchDtoPageable);
     }
 
     @PostMapping("/{id}/comment")
     public ResponseEntity<?> createCommentToPost(@PathVariable(value = "id") Long idPost,
                                                  @RequestBody CommentDto dto,
                                                  @Param("request") HttpServletRequest request) {
-        Long userId = getAccountId(request);
-        return client.createCommentToPost(idPost, dto, userId);
+
+        return client.createCommentToPost(idPost, dto);
     }
 
     @GetMapping("/{id}/comment")
     public ResponseEntity<?> getCommentsToPost(@PathVariable(value = "id") Long idPost,
-                                               @RequestBody Pageable pageable) {
+                                               Pageable pageable) {
         return client.getCommentsToPost(idPost, pageable);
     }
 
@@ -85,7 +75,7 @@ public class PostController {
 
     @GetMapping("/{id}/comment/{commentId}/subcomment")
     public ResponseEntity<?> getSubcommentsToComment(@PathVariable(value = "commentId") Long commentId,
-                                                     @RequestBody Pageable pageable) {
+                                                     Pageable pageable) {
         return client.getSubcommentsToComment(commentId, pageable);
     }
 
