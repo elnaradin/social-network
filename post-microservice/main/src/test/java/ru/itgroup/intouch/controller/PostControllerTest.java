@@ -12,6 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import ru.itgroup.intouch.dto.PostDto;
 import ru.itgroup.intouch.service.PostService;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import static org.hamcrest.Matchers.*;
@@ -65,7 +66,7 @@ class PostControllerTest {
     void createPost() throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         PostDto postDto = postDtoToWrite();
-        given(postService.createNewPost(postDto)).willReturn(postDto);
+        given(postService.createNewPost(postDto, 9L)).willReturn(postDto);
         mvc.
                 perform(post("/api/v1/post")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -77,10 +78,10 @@ class PostControllerTest {
     private PostDto postDtoToRead() {
         PostDto postDto = new PostDto();
         postDto.setId(1);
-        postDto.setPublishDate(LocalDateTime.parse("2023-03-16T00:00:00"));
-        postDto.setTime(LocalDateTime.parse("2023-03-20T00:00:00"));
-        postDto.setTimeChanged(LocalDateTime.parse("2023-03-20T00:00:00"));
-        postDto.setAuthorId(6);
+        postDto.setPublishDate(ZonedDateTime.from(LocalDateTime.parse("2023-03-16T00:00:00")));
+        postDto.setTime(ZonedDateTime.from(LocalDateTime.parse("2023-03-20T00:00:00")));
+        postDto.setTimeChanged(ZonedDateTime.from(LocalDateTime.parse("2023-03-20T00:00:00")));
+        postDto.setAuthorId(6L);
         postDto.setTitle("odio curabitur convallis duis consequat dui nec");
         postDto.setPostType("POSTED");
         postDto.setPostText("mauris viverra diam vitae quam suspendisse potenti " +
@@ -111,7 +112,7 @@ class PostControllerTest {
     private PostDto postDtoToWrite() {
         PostDto postDto = new PostDto();
         postDto.setDeleted(false);
-        postDto.setAuthorId(12);
+        postDto.setAuthorId(12L);
         postDto.setTitle("Продуктовая разработка");
         postDto.setPostText("Продуктовая разработка — это создание и вывод на рынок продукта. Это может " +
                 "быть приложение, сайт, программа или новая функция. Продуктовые разработчики на первое место ставят пользу и " +

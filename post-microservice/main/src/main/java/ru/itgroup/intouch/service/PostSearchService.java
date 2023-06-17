@@ -14,6 +14,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestHeader;
+import ru.itgroup.intouch.config.JWTUtil;
 import ru.itgroup.intouch.dto.PostDto;
 import ru.itgroup.intouch.repository.PostRepository;
 import ru.itgroup.intouch.repository.PostTagRepository;
@@ -38,20 +40,26 @@ public class PostSearchService {
     private final ModelMapper modelMapper;
     private final PostDtoPageableMapper dtoPageableMapper;
     private final PostTagRepository tagRepository;
+    private final JWTUtil jwtUtil;
     private PostSearchDto dto;
 
-    public Page<PostDto> getAccountResponse(PostSearchDtoPageable postSearchDtoPageable) {
+    public Page<PostDto> getPostResponse(PostSearchDtoPageable postSearchDtoPageable) {
+
 
         dto = dtoPageableMapper.mapToPostSearchDto(postSearchDtoPageable);
         Pageable pageable = dtoPageableMapper.mapToPageable(postSearchDtoPageable);
+       // Long idUser = jwtUtil.getIdUser(auth);
 
-        List<Long> authorIds = (!dto.getAuthor().isEmpty()) ? getUserIdsFromAuthor(dto.getAuthor()) : new ArrayList<>();
+        List<Long> authorIds = (dto.getAuthor() != null  ) ? getUserIdsFromAuthor(dto.getAuthor()) : new ArrayList<>();
 
-        List<Long> postIds = (!dto.getTags().isEmpty()) ? getPostIdFromTags(dto.getTags()) : new ArrayList<>();
+        List<Long> postIds = (dto.getTags() != null  ) ? getPostIdFromTags(dto.getTags()) : new ArrayList<>();
 
         List<Filter> filter = filterBuilder.createFilter(dto, authorIds, postIds);
 
         if (filter.isEmpty()) {
+
+ //           Page<Post> defaultPosts = postRepository.findAllByAuthorId((long)userId, pageable);
+
             return null;
         }
 
@@ -71,11 +79,11 @@ public class PostSearchService {
 
     private List<Long> getUserIdsFromAuthor(String author) {
 
-        String[] authorNames = dto.getAuthor().split(" ");
+        if (author.isEmpty()) {return new ArrayList<>();}
 
-        List<Long> authors = userRepository.findAllByNames(authorNames);
+        String[] authorNames = author.split(" ");
 
-        return new ArrayList<>(authors);
+        return userRepository.findAllIdByNames(authorNames);
 
 
     }

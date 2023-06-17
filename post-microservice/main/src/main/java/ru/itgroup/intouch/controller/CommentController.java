@@ -1,6 +1,7 @@
 package ru.itgroup.intouch.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,15 +18,15 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping("/{id}/comment")
-    public ResponseEntity<?> createCommentToPost(@PathVariable(value = "id") Long idPost, @RequestBody CommentDto dto) {
-        CommentDto comment = commentService.createNewComment(dto, idPost);
+    public ResponseEntity<?> createCommentToPost(@PathVariable(value = "id") Long idPost, @RequestBody CommentDto dto, Long userId) {
+        CommentDto comment = commentService.createNewComment(dto, idPost, userId);
 
         return (comment.getPostId() != null) ? ResponseEntity.ok(comment) : ResponseEntity.notFound().build();
     }
 
 
     @GetMapping("/{id}/comment")
-    public ResponseEntity<?> getCommentsToPost(@PathVariable(value = "id") Long idPost, @RequestBody Pageable pageable) {
+    public ResponseEntity<?> getCommentsToPost(@PathVariable(value = "id") Long idPost, @SpringQueryMap Pageable pageable) {
         List<CommentDto> commentDtoList = commentService.getCommentsByIdPost(idPost, pageable);
 
         return (!commentDtoList.isEmpty()) ? ResponseEntity.ok(commentDtoList) : ResponseEntity.notFound().build();

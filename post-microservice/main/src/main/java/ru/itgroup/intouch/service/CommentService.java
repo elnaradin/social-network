@@ -29,7 +29,7 @@ public class CommentService {
     private final PostService postService;
 
 
-    public CommentDto createNewComment(CommentDto commentDto, Long idPost) {
+    public CommentDto createNewComment(CommentDto commentDto, Long idPost, Long userId) {
 
 
         Comment comment = new Comment();
@@ -38,7 +38,7 @@ public class CommentService {
         comment.setCommentType(commentDto.getCommentType());
         comment.setTime(LocalDateTime.now());
         comment.setTimeChanged(LocalDateTime.now());
-        comment.setAuthorId(commentDto.getAuthorId());
+        comment.setAuthorId(userId);
         comment.setParentId(commentDto.getParentId());
         comment.setCommentText(commentDto.getCommentText());
         comment.setPostId(idPost);
@@ -47,11 +47,11 @@ public class CommentService {
         comment.setMyLike(commentDto.isMyLike());
         comment.setCommentsCount(commentDto.getCommentsCount());
         comment.setImagePath(commentDto.getImagePath());
-        commentRepository.save(comment);
+        Comment newComment = commentRepository.save(comment);
         /* увеличить количество комментов в посте*/
         postService.changeCommentCountOrLikeAmount(idPost, Operator.PLUS, Item.COUNT_COMMENTS);
 
-        return modelMapper.map(comment, CommentDto.class);
+        return modelMapper.map(newComment, CommentDto.class);
     }
 
     public List<CommentDto> getCommentsByIdPost(Long idPost, Pageable pageable) {

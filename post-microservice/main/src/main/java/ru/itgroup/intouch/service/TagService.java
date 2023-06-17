@@ -19,6 +19,7 @@ public class TagService {
 
     public Set<Tag> getTags(List<String> tags) {
         Set<Tag> tagEntities = new HashSet<>();
+        if (tags == null) {return tagEntities;}
         tags.forEach(tag -> {
             tagEntities.add(getTag(tag));
         });

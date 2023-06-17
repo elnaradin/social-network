@@ -29,7 +29,7 @@ public class SubсommentService {
     private final CommentService commentService;
 
 
-    public CommentDto createSubсommentToComment(Long commentId, SubCommentDto subCommentDto) {
+    public CommentDto createSubсommentToComment(Long commentId, SubCommentDto subCommentDto, Long userId) {
 
         Optional<Comment> commentEntity = commentRepository.findById(commentId);
         if (commentEntity.isEmpty()) {
@@ -46,7 +46,7 @@ public class SubсommentService {
         subcomment.setCommentType(CommentType.COMMENT);
         subcomment.setTime(LocalDateTime.now());
         subcomment.setTimeChanged(LocalDateTime.now());
-        subcomment.setAuthorId(7L);
+        subcomment.setAuthorId(userId);
         subcomment.setParentId(comment.getId());
         subcomment.setCommentText(subCommentDto.getSubComment());
         subcomment.setPostId(comment.getPostId());

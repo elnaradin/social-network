@@ -1,16 +1,23 @@
 package ru.itgroup.intouch.service;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Header;
+import io.jsonwebtoken.Jwt;
+import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import model.Post;
 import model.enums.PostType;
 import org.springframework.stereotype.Service;
+import ru.itgroup.intouch.config.JWTUtil;
 import ru.itgroup.intouch.mapper.MapperToPostDto;
 import ru.itgroup.intouch.repository.PostRepository;
 import ru.itgroup.intouch.dto.PostDto;
+import ru.itgroup.intouch.repository.UserRepository;
 import ru.itgroup.intouch.service.enums.Item;
 import ru.itgroup.intouch.service.enums.Operator;
 
 import java.time.LocalDateTime;
+import java.util.Base64;
 import java.util.Optional;
 
 @Service
@@ -19,18 +26,19 @@ public class PostService {
     private final TagService tagService;
     private final PostRepository postsRepository;
     private final MapperToPostDto mapperToPostDto;
+    private final JWTUtil jwtUtil;
 
     public PostDto getPostById(Long id) {
         Optional<Post> postEntity = postsRepository.findById(id);
         return postEntity.map(mapperToPostDto::getPostDto).orElse(null);
     }
 
-    public PostDto createNewPost(PostDto postDto) {
+    public PostDto createNewPost(PostDto postDto, Long userId) {
+
+
         Post post = new Post();
 
-        if (tagService.getTags(postDto.getPostTags()).isEmpty()) {
-            return null;
-        }
+
         post.setTitle(postDto.getTitle());
         post.setDeleted(false);
         post.setPostText(postDto.getPostText());
@@ -39,14 +47,14 @@ public class PostService {
         post.setTimeChanged(LocalDateTime.now());
         post.setPostType(PostType.POSTED);
         post.setPostTags(tagService.getTags(postDto.getPostTags()));
-        post.setAuthorId(postDto.getAuthorId());
+        post.setAuthorId(userId);
         post.setImagePath(postDto.getImagePath());
         post.setDeleted(false);
         post.setMyLike(false);
         post.setLikeAmount(postDto.getLikeAmount());
         post.setCommentsCount(postDto.getCommentsCount());
-        postsRepository.save(post);
-        return mapperToPostDto.getPostDto(post);
+        Post newPost = postsRepository.save(post);
+        return mapperToPostDto.getPostDto(newPost);
     }
 
     public boolean deletePostById(Long id) {
@@ -85,4 +93,7 @@ public class PostService {
 
         return 0;
     }
+
+
+
 }

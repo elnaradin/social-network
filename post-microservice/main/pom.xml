@@ -87,7 +87,26 @@
             <version>0.1.6</version>
             <scope>compile</scope>
         </dependency>
-
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>0.9.1</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>ru.itgroup.intouch</groupId>
+            <artifactId>ru.itgroup.intouch.search-engine</artifactId>
+            <version>0.1.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
 
     </dependencies>
 

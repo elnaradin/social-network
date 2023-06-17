@@ -1,0 +1,25 @@
+FROM khipu/openjdk17-alpine AS builder
+
+WORKDIR /app
+
+RUN apk add --no-cache maven
+
+COPY./search-engine /app/search-engine
+COPY ./public-data /app/public-data
+COPY ./post-service /app/post-service
+
+WORKDIR /app/public-data
+RUN mvn clean install
+WORKDIR /app/search-engine
+RUN mvn clean install
+
+WORKDIR /app/post-service
+RUN mvn clean package -Dmaven.test.skip
+
+FROM openjdk:17-jdk-alpine
+
+WORKDIR /app
+
+COPY --from=builder /app/post-service/main/target/post-service.jar .
+
+CMD ["java", "-jar", "/app/post-service.jar"]
