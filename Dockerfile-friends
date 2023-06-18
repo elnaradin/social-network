@@ -1,0 +1,22 @@
+FROM khipu/openjdk17-alpine AS builder
+
+WORKDIR /app
+
+RUN apk add --no-cache maven
+
+COPY ./public-data /app/public-data
+COPY ./friends-service /app/friends-service
+
+WORKDIR /app/public-data
+RUN mvn clean install
+
+WORKDIR /app/friends-service
+RUN mvn clean package -Dmaven.test.skip
+
+FROM openjdk:17-jdk-alpine
+
+WORKDIR /app
+
+COPY --from=builder /app/friends-service/main/target/friends.jar .
+
+CMD ["java", "-jar", "/app/friends.jar"]
