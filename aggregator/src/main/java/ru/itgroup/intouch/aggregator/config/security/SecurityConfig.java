@@ -59,10 +59,9 @@ public class SecurityConfig {
                 // stops returning status forbidden
                 .authenticationEntryPoint((request, response, authException) ->
                 {
-                    log.error(authException.getLocalizedMessage());
-                    response.sendRedirect("/login");
-                })
-                .and()
+                    response.setStatus(HttpStatus.NO_CONTENT.value());
+                    log.error(authException.getMessage());
+                }).and()
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers("/api/v1/auth/password/recovery/").permitAll()
                         .requestMatchers("/api/v1/auth/password/recovery/{linkId}").permitAll()
@@ -70,7 +69,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/auth/register").permitAll()
                         .requestMatchers("/api/v1/auth/captcha").permitAll()
                         .requestMatchers("/api/v1/streaming/ws").permitAll()
-                        .anyRequest().authenticated())
+                        .anyRequest().hasAuthority("ROLE_USER"))
                 .logout().logoutUrl("/api/v1/auth/logout")
                 .logoutSuccessHandler((request, response, authentication) ->
                         response.setStatus(HttpStatus.OK.value()))
