@@ -19,13 +19,15 @@ public interface PostServiceClient {
     ResponseEntity<?> getPost(@PathVariable Long id);
 
     @PostMapping("")
-    ResponseEntity<?> createPost(@RequestBody PostDto postDto);
+    ResponseEntity<?> createPost(@RequestBody PostDto postDto,
+                                 @RequestParam Long userId);
 
     @DeleteMapping("/{id}")
     ResponseEntity<?> deletePost(@PathVariable Long id);
 
     @GetMapping("")
-    ResponseEntity<?> search(@SpringQueryMap PostSearchDtoPageable dtoPageable);
+    ResponseEntity<?> search(@SpringQueryMap PostSearchDtoPageable dtoPageable,
+                             @RequestParam Long userId);
 
     @PostMapping("/{id}/comment")
     ResponseEntity<?> createCommentToPost(@PathVariable(value = "id") Long idPost,

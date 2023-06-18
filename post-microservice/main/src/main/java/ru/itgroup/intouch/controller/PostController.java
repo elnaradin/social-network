@@ -29,9 +29,10 @@ public class PostController {
     }
 
     @PostMapping("")
-    public ResponseEntity<?> createPost(@RequestBody PostDto postDto) {
+    public ResponseEntity<?> createPost(@RequestBody PostDto postDto,
+                                        @RequestParam Long userId) {
 
-        PostDto post = postService.createNewPost(postDto);
+        PostDto post = postService.createNewPost(postDto, userId);
 
         return (post != null) ? ResponseEntity.ok(post) : ResponseEntity.notFound().build();
 
@@ -50,9 +51,9 @@ public class PostController {
     }
 
     @GetMapping("")
-    public ResponseEntity<?> search(@SpringQueryMap PostSearchDtoPageable dto) {
+    public ResponseEntity<?> search(@SpringQueryMap PostSearchDtoPageable dto, @RequestParam Long userId) {
 
-        Page<PostDto> postList = postSearchService.getPostResponse(dto);
+        Page<PostDto> postList = postSearchService.getPostResponse(dto, userId);
 
         return (postList != null) ? ResponseEntity.ok(postList) : ResponseEntity.notFound().build();
     }

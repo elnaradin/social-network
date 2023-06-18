@@ -29,9 +29,10 @@ public class PostController {
     }
 
     @PostMapping("")
-    public ResponseEntity<?> createPost(@RequestBody PostDto postDto) {
-
-        return client.createPost(postDto);
+    public ResponseEntity<?> createPost(@RequestBody PostDto postDto,
+                                        @Param("request") HttpServletRequest request) {
+        Long userId = getAccountId(request);
+        return client.createPost(postDto, userId);
     }
 
     @DeleteMapping("/{id}")
@@ -41,15 +42,15 @@ public class PostController {
     }
 
     @GetMapping("")
-    public ResponseEntity<?> search(PostSearchDtoPageable postSearchDtoPageable) {
-
-        return client.search(postSearchDtoPageable);
+    public ResponseEntity<?> search(PostSearchDtoPageable postSearchDtoPageable,
+                                    @Param("request") HttpServletRequest request ) {
+        Long userId = getAccountId(request);
+        return client.search(postSearchDtoPageable, userId);
     }
 
     @PostMapping("/{id}/comment")
     public ResponseEntity<?> createCommentToPost(@PathVariable(value = "id") Long idPost,
-                                                 @RequestBody CommentDto dto,
-                                                 @Param("request") HttpServletRequest request) {
+                                                 @RequestBody CommentDto dto) {
 
         return client.createCommentToPost(idPost, dto);
     }

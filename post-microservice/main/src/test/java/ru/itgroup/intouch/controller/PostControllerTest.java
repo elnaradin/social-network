@@ -66,7 +66,7 @@ class PostControllerTest {
     void createPost() throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         PostDto postDto = postDtoToWrite();
-        given(postService.createNewPost(postDto)).willReturn(postDto);
+        given(postService.createNewPost(postDto, 9L)).willReturn(postDto);
         mvc.
                 perform(post("/api/v1/post")
                         .contentType(MediaType.APPLICATION_JSON)

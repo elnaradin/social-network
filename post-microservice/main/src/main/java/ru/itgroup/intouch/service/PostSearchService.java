@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import ru.itgroup.intouch.dto.PostDto;
+import ru.itgroup.intouch.mapper.MapperToPostDto;
 import ru.itgroup.intouch.repository.PostRepository;
 import ru.itgroup.intouch.repository.PostTagRepository;
 import ru.itgroup.intouch.repository.UserRepository;
@@ -29,18 +30,18 @@ public class PostSearchService {
     private final filters.PostFilterBuilder filterBuilder;
     private final SpecificationBuilder specificationBuilder;
     private final UserRepository userRepository;
-    private final ModelMapper modelMapper;
+    private final MapperToPostDto mapperToPostDto;
     private final PostDtoPageableMapper dtoPageableMapper;
     private final PostTagRepository tagRepository;
 
     private PostSearchDto dto;
 
-    public Page<PostDto> getPostResponse(PostSearchDtoPageable postSearchDtoPageable) {
+    public Page<PostDto> getPostResponse(PostSearchDtoPageable postSearchDtoPageable, Long userId) {
 
 
         dto = dtoPageableMapper.mapToPostSearchDto(postSearchDtoPageable);
         Pageable pageable = dtoPageableMapper.mapToPageable(postSearchDtoPageable);
-       // Long idUser = jwtUtil.getIdUser(auth);
+
 
         List<Long> authorIds = (dto.getAuthor() != null  ) ? getUserIdsFromAuthor(dto.getAuthor()) : new ArrayList<>();
 
@@ -50,9 +51,9 @@ public class PostSearchService {
 
         if (filter.isEmpty()) {
 
- //           Page<Post> defaultPosts = postRepository.findAllByAuthorId((long)userId, pageable);
+            Page<Post> defaultPosts = postRepository.findAllByAuthorId(userId, pageable);
 
-            return null;
+            return defaultPosts.map(mapperToPostDto::getPostDto);
         }
 
         Specification<model.Post> specification = (Specification<model.Post>) specificationBuilder.getSpecificationFromFilters(filter);
@@ -61,7 +62,7 @@ public class PostSearchService {
 
         if (pageResult.hasContent()) {
 
-            return pageResult.map(Post -> modelMapper.map(Post, PostDto.class));
+            return pageResult.map(mapperToPostDto::getPostDto);
 
         } else {
             return null;

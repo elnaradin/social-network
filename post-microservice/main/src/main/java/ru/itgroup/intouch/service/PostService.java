@@ -1,23 +1,20 @@
 package ru.itgroup.intouch.service;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Header;
-import io.jsonwebtoken.Jwt;
-import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import model.Post;
 import model.enums.PostType;
 import org.springframework.stereotype.Service;
-import ru.itgroup.intouch.config.JWTUtil;
+
 import ru.itgroup.intouch.mapper.MapperToPostDto;
 import ru.itgroup.intouch.repository.PostRepository;
 import ru.itgroup.intouch.dto.PostDto;
-import ru.itgroup.intouch.repository.UserRepository;
+
 import ru.itgroup.intouch.service.enums.Item;
 import ru.itgroup.intouch.service.enums.Operator;
 
 import java.time.LocalDateTime;
-import java.util.Base64;
+import java.time.ZonedDateTime;
+
 import java.util.Optional;
 
 @Service
@@ -33,19 +30,19 @@ public class PostService {
         return postEntity.map(mapperToPostDto::getPostDto).orElse(null);
     }
 
-    public PostDto createNewPost(PostDto postDto) {
+    public PostDto createNewPost(PostDto postDto, Long userId) {
 
         Post post = new Post();
 
         post.setTitle(postDto.getTitle());
         post.setDeleted(false);
         post.setPostText(postDto.getPostText());
-        post.setCreatedDate(postDto.getTime().toLocalDateTime());
-        post.setPublishDate(postDto.getPublishDate().toLocalDateTime());
-        post.setTimeChanged(postDto.getTimeChanged().toLocalDateTime());
-        post.setPostType(PostType.valueOf(postDto.getPostType()));
+        post.setCreatedDate(getDateTime(postDto.getTime()));
+        post.setPublishDate(getDateTime(postDto.getPublishDate()));
+        post.setTimeChanged(getDateTime(postDto.getTimeChanged()));
+        post.setPostType(getPostType(postDto.getPostType()));
         post.setPostTags(tagService.getTags(postDto.getPostTags()));
-        post.setAuthorId(postDto.getAuthorId());
+        post.setAuthorId(getAuthorId(postDto.getAuthorId(), userId));
         post.setImagePath(postDto.getImagePath());
         post.setMyLike(postDto.isMyLike());
         post.setLikeAmount(postDto.getLikeAmount());
@@ -90,6 +87,17 @@ public class PostService {
 
         return 0;
     }
+    private LocalDateTime getDateTime (ZonedDateTime time) {
 
+        return (time == null) ? LocalDateTime.now() : time.toLocalDateTime();
+    }
 
+    private PostType getPostType (String postType) {
+
+        return (postType == null) ? PostType.POSTED : PostType.valueOf(postType);
+    }
+    private Long getAuthorId (Long authorId, Long userId) {
+
+        return (authorId == null) ? userId : authorId;
+    }
 }
