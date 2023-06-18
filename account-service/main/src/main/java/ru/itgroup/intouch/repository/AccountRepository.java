@@ -10,7 +10,6 @@ import java.util.Optional;
 
 @Repository
 public interface AccountRepository extends JpaRepository<Account, Long>, JpaSpecificationExecutor<Account> {
-    Optional<Account> findFirstByEmail(String email);
-
+    Optional<Account> findFirstByEmailEqualsAndIsDeletedEquals(String email, boolean isDeleted);
     List<Account> findByIdIn(List<Long> userIds);
 }

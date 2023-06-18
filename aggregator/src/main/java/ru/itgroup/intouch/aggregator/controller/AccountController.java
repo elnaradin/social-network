@@ -1,9 +1,9 @@
 package ru.itgroup.intouch.aggregator.controller;
 
 import dto.AccountSearchDtoPageable;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import model.account.Account;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
@@ -17,8 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.itgroup.intouch.client.AccountServiceClient;
 import ru.itgroup.intouch.dto.AccountDto;
 
-import java.util.List;
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/account")
@@ -29,14 +27,12 @@ public class AccountController {
     @GetMapping("/me")
     @ResponseStatus(HttpStatus.OK)
     public AccountDto myAccount(Authentication authentication) {
-              return client.myAccount(
-                authentication.getName()
-        );
+        return client.myAccount(authentication.getName());
     }
 
     @PutMapping("/me")
     @ResponseStatus(HttpStatus.OK)
-    public AccountDto changeProfile(@RequestBody AccountDto accountDto, Authentication authentication) {
+    public AccountDto changeProfile(@Valid @RequestBody AccountDto accountDto, Authentication authentication) {
         accountDto.setEmail(authentication.getName());
         return client.changeProfile(accountDto);
     }
