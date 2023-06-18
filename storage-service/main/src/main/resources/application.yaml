@@ -9,7 +9,7 @@ spring:
     show-sql: true
 
   datasource:
-    url: jdbc:postgresql://${SN_DB_HOST}:${SN_DB_PORT}/${SN_DB_NAME}
+    url: jdbc:postgresql://${SN_DB_HOST}:${SN_DB_PORT}/${SN_DB_NAME}?createDatabaseIfNotExist=true
     username: ${SN_DB_USERNAME}
     password: ${SN_DB_PASSWORD}
     driver-class-name: org.postgresql.Driver

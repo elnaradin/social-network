@@ -31,11 +31,11 @@ public class UploadService {
         this.imageRepository = imageRepository;
     }
 
-    public Image uploadPhoto(MultipartFile multipartFile, Transformation transformation) {
+    public Image uploadPhoto(byte[] photo, Transformation transformation) {
         try {
             String name = UUID.randomUUID().toString();
             String URL = cloudinary.uploader()
-                    .upload(multipartFile.getBytes(), ObjectUtils.asMap(
+                    .upload(photo, ObjectUtils.asMap(
                             "public_id", name,
                             "transformation", transformation
                     ))
@@ -55,9 +55,9 @@ public class UploadService {
     public Image uploadPhoto(UploadPhotoDto uploadPhotoDto) {
         logger.info("Received DTO: {}", uploadPhotoDto);
         if(uploadPhotoDto.getTransformation() == null) {
-            return uploadPhoto(uploadPhotoDto.getMultipartFile(), new Transformation().width(720).height(480));
+            return uploadPhoto(uploadPhotoDto.getPhoto(), new Transformation().width(720).height(480));
         }
-        return uploadPhoto(uploadPhotoDto.getMultipartFile(), uploadPhotoDto.getTransformation());
+        return uploadPhoto(uploadPhotoDto.getPhoto(), new Transformation<>().rawTransformation(uploadPhotoDto.getTransformation()));
     }
 
     public String getTransformedPhoto(TransformedPhotoDto transformedPhotoDto) {
