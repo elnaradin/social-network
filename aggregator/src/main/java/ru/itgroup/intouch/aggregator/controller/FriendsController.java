@@ -127,17 +127,27 @@ public class FriendsController {
     }
 
     @GetMapping("/friends/friendId")
-    public ResponseEntity<ApiResponse<List<Long>>> getFriendIdHandle() {
-        return client.feignGetFriendIdHandle();
+    public ResponseEntity<List<Long>> getFriendIdHandle() {
+        return modifyResponse(client.feignGetFriendIdHandle());
     }
 
     @GetMapping("/friends/count")
-    public ResponseEntity<ApiResponse<Integer>> getCountRequestHandle() {
-        return client.feignGetCountRequestHandle();
+    public ResponseEntity<Integer> getCountRequestHandle() {
+        return modifyResponse(client.feignGetCountRequestHandle());
     }
 
     @GetMapping("/friends/blockFriendId")
-    public ResponseEntity<ApiResponse<List<Long>>> getBlockFriendIdHandle() {
-        return client.feignGetBlockFriendIdHandle();
+    public ResponseEntity<List<Long>> getBlockFriendIdHandle() {
+        return modifyResponse(client.feignGetBlockFriendIdHandle());
+    }
+
+    private <T> ResponseEntity<T> modifyResponse(ResponseEntity<ApiResponse<T>> response){
+        ResponseEntity<T> resultResponse;
+        if (response.getBody() == null) {
+            resultResponse = new ResponseEntity<>(response.getStatusCode());
+        } else {
+            resultResponse = new ResponseEntity<>(response.getBody().getData(), response.getStatusCode());
+        }
+        return resultResponse;
     }
 }
