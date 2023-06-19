@@ -1,7 +1,12 @@
 spring:
   kafka:
     notification-serv: ${SN_NOTIFICATION_SERV}
+    message-serv: ${SN_MESSAGE_SERV}
+    message-event: ${SN_MESSAGE_EVENT}
     bootstrap-servers: ${SN_KAFKA_HOST}:${SN_KAFKA_PORT}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.LongSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
     consumer:
       group-id: aggregator_serv
       auto-offset-reset: earliest

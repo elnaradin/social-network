@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -12,8 +14,8 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 import ru.itgroup.intouch.aggregator.config.security.jwt.JWTUtil;
 import ru.itgroup.intouch.aggregator.utils.CookieUtil;
-import ru.itgroup.intouch.client.MessageServiceClient;
 import ru.itgroup.intouch.dto.message.SendMessageDto;
+import ru.itgroup.intouch.dto.notifications.WebSocketMessageDto;
 
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
@@ -23,8 +25,10 @@ import java.util.concurrent.ConcurrentHashMap;
 public class NotificationHandler extends TextWebSocketHandler {
     private final CookieUtil cookieUtil;
     private final ObjectMapper objectMapper;
-    private final MessageServiceClient messageServiceClient;
     private final JWTUtil jwtUtil;
+    @Value("${spring.kafka.message-serv}")
+    private final String messageTopic;
+    private final KafkaTemplate<Long, SendMessageDto> kafkaTemplate;
 
     private final ConcurrentHashMap<Long, WebSocketSession> sessions = new ConcurrentHashMap<>();
 
@@ -63,24 +67,25 @@ public class NotificationHandler extends TextWebSocketHandler {
         }
     }
 
+    public void sendDialogMessage(WebSocketMessageDto message) throws IOException {
+        if (message == null) {
+            return;
+        }
+
+        long recipientId = message.getRecipientId();
+
+        if (sessions.containsKey(recipientId)) {
+            TextMessage textMessage = new TextMessage(objectMapper.writeValueAsString(message));
+            sessions.get(recipientId).sendMessage(textMessage);
+        }
+    }
+
     @Override
-    protected void handleTextMessage(@NotNull WebSocketSession session, @NotNull TextMessage message) {
-        try {
+    protected void handleTextMessage(WebSocketSession session, TextMessage message) throws IOException {
             JsonNode jsonNode = objectMapper.readTree(message.getPayload()).get("data");
             SendMessageDto messageDto = objectMapper.treeToValue(jsonNode, SendMessageDto.class);
 
-            messageServiceClient.saveMessage(messageDto);
-            WebSocketSession sendSession = sessions.get(messageDto.getRecipientId());
-            if (sendSession != null) {
-                sendSession.sendMessage(message);
-                Thread.sleep(5000);
-                sendSession.sendMessage(new TextMessage(jsonNode.binaryValue()));
-                Thread.sleep(5000);
-                sendSession.sendMessage(new TextMessage(jsonNode.get("messageText").binaryValue()));
-            }
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-        }
+            kafkaTemplate.send(messageTopic, messageDto);
     }
 
     private @Nullable Long getUserId(@NotNull WebSocketSession session) {
