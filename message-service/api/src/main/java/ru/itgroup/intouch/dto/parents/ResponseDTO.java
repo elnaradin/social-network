@@ -8,7 +8,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public abstract class ResponseDTO {
 
-    private String error;
-    private String errorDescription;
     private Long timestamp = System.currentTimeMillis();
 }

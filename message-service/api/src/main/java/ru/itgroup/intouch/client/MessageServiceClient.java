@@ -34,7 +34,4 @@ public interface MessageServiceClient {
     @PutMapping("/messages/read")
     public MessageStatusUpdateResponseDto feignSetStatusMessageRead(@RequestParam String companionId,
                                                                     @RequestParam Integer userId);
-
-    @PostMapping("/messages")
-    public ResponseEntity<?> saveMessage(SendMessageDto message);
 }
