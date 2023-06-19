@@ -79,7 +79,7 @@ class NotificationControllerTest {
                                                                         .data(CountDto.builder().count(10L).build())
                                                                         .build();
 
-        given(notificationService.countNewNotifications()).willReturn(notificationCountDto);
+        given(notificationService.countNewNotifications(1L)).willReturn(notificationCountDto);
         mockMvc.perform(MockMvcRequestBuilders.get(apiPrefix + "/notifications/count"))
                .andDo(print())
                .andExpect(status().isOk())
@@ -96,7 +96,7 @@ class NotificationControllerTest {
         List<NotificationDto> notificationDtoList = getNotificationDtoList();
         NotificationListDto notificationListDto = NotificationListDto.builder().data(notificationDtoList).build();
 
-        given(notificationService.getNotifications()).willReturn(notificationListDto);
+        given(notificationService.getNotifications(1L)).willReturn(notificationListDto);
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(apiPrefix + "/notifications"))
                                   .andDo(print())
                                   .andExpect(status().isOk())
@@ -125,7 +125,7 @@ class NotificationControllerTest {
             assertThat(element.get("timestamp").asText(), matchesPattern(DATE_REGEX));
         }
 
-        verify(notificationService, times(1)).getNotifications();
+        verify(notificationService, times(1)).getNotifications(1L);
         verifyNoMoreInteractions(notificationService);
     }
 
