@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.itgroup.intouch.dto.UserDto;
@@ -22,18 +23,21 @@ public class JWTUtil {
     @Value("${jwt.secret}")
     private String secret;
 
+    public Long getUserIdFromHeader(@NotNull String authorizationHeader) {
+        return extractUserId(authorizationHeader.replace("Bearer ", "")).longValue();
+    }
 
     public String generateAccessToken(UserDto userDto) {
         final LocalDateTime now = LocalDateTime.now();
         final Instant accessExpirationInstant = now.plusDays(1)
-                .atZone(ZoneId.systemDefault()).toInstant();
+                                                   .atZone(ZoneId.systemDefault()).toInstant();
         final Date accessExpiration = Date.from(accessExpirationInstant);
 
         String userId = Jwts.builder().setSubject(userDto.getEmail())
-                .claim("userId", userDto.getId())
-                .setExpiration(accessExpiration)
-                .signWith(SignatureAlgorithm.HS256, secret)
-                .compact();
+                            .claim("userId", userDto.getId())
+                            .setExpiration(accessExpiration)
+                            .signWith(SignatureAlgorithm.HS256, secret)
+                            .compact();
         log.info("token created: " + userId);
         return userId;
     }
@@ -45,13 +49,13 @@ public class JWTUtil {
     public String generateRefreshToken(UserDto userDto) {
         final LocalDateTime now = LocalDateTime.now();
         final Instant refreshExpirationInstant = now.plusDays(30)
-                .atZone(ZoneId.systemDefault()).toInstant();
+                                                    .atZone(ZoneId.systemDefault()).toInstant();
         final Date refreshExpiration = Date.from(refreshExpirationInstant);
         return Jwts.builder()
-                .setSubject(userDto.getEmail())
-                .setExpiration(refreshExpiration)
-                .signWith(SignatureAlgorithm.HS256, secret)
-                .compact();
+                   .setSubject(userDto.getEmail())
+                   .setExpiration(refreshExpiration)
+                   .signWith(SignatureAlgorithm.HS256, secret)
+                   .compact();
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {

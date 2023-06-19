@@ -23,11 +23,12 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 @RequiredArgsConstructor
 public class NotificationHandler extends TextWebSocketHandler {
+    @Value("${spring.kafka.message-serv}")
+    private String messageTopic;
+
     private final CookieUtil cookieUtil;
     private final ObjectMapper objectMapper;
     private final JWTUtil jwtUtil;
-    @Value("${spring.kafka.message-serv}")
-    private final String messageTopic;
     private final KafkaTemplate<Long, SendMessageDto> kafkaTemplate;
 
     private final ConcurrentHashMap<Long, WebSocketSession> sessions = new ConcurrentHashMap<>();
@@ -81,11 +82,12 @@ public class NotificationHandler extends TextWebSocketHandler {
     }
 
     @Override
-    protected void handleTextMessage(WebSocketSession session, TextMessage message) throws IOException {
-            JsonNode jsonNode = objectMapper.readTree(message.getPayload()).get("data");
-            SendMessageDto messageDto = objectMapper.treeToValue(jsonNode, SendMessageDto.class);
+    protected void handleTextMessage(@NotNull WebSocketSession session, @NotNull TextMessage message)
+            throws IOException {
+        JsonNode jsonNode = objectMapper.readTree(message.getPayload()).get("data");
+        SendMessageDto messageDto = objectMapper.treeToValue(jsonNode, SendMessageDto.class);
 
-            kafkaTemplate.send(messageTopic, messageDto);
+        kafkaTemplate.send(messageTopic, messageDto);
     }
 
     private @Nullable Long getUserId(@NotNull WebSocketSession session) {
