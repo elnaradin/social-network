@@ -10,7 +10,6 @@ import ru.itgroup.intouch.annotation.Loggable;
 import ru.itgroup.intouch.dto.request.NotificationSettingsDto;
 import ru.itgroup.intouch.dto.response.settings.SettingsItemDto;
 import ru.itgroup.intouch.mapper.NotificationSettingsMapper;
-import ru.itgroup.intouch.repository.AccountRepository;
 import ru.itgroup.intouch.repository.NotificationSettingsRepository;
 
 import java.lang.reflect.InvocationTargetException;
@@ -20,19 +19,19 @@ import java.util.List;
 @RequiredArgsConstructor
 public class NotificationSettingsService {
     private final NotificationSettingsRepository notificationSettingsRepository;
-    private final AccountRepository accountRepository;
     private final NotificationSettingsMapper notificationSettingsMapper;
+    private final UserService userService;
 
     @Loggable
-    public List<SettingsItemDto> getSettings()
+    public List<SettingsItemDto> getSettings(Long userId)
             throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        NotificationSettings notificationSettings = getNotificationSettingsModel();
+        NotificationSettings notificationSettings = getNotificationSettingsModel(userId);
         return notificationSettingsMapper.getDestination(notificationSettings);
     }
 
     @Loggable
-    public void updateSettings(@NotNull NotificationSettingsDto notificationSettingsDto) {
-        NotificationSettings notificationSettings = getNotificationSettingsModel();
+    public void updateSettings(@NotNull NotificationSettingsDto notificationSettingsDto, Long userId) {
+        NotificationSettings notificationSettings = getNotificationSettingsModel(userId);
         NotificationType notificationType = NotificationType.valueOf(notificationSettingsDto.getNotificationType());
         switch (notificationType) {
             case POST -> notificationSettings.setPost(notificationSettingsDto.isEnable());
@@ -47,8 +46,8 @@ public class NotificationSettingsService {
         notificationSettingsRepository.save(notificationSettings);
     }
 
-    private @NotNull NotificationSettings getNotificationSettingsModel() {
-        Account account = accountRepository.findById(1);
+    private @NotNull NotificationSettings getNotificationSettingsModel(Long userId) {
+        Account account = userService.getUser(userId);
         NotificationSettings notificationSettings = notificationSettingsRepository.findByUser(account);
         if (notificationSettings == null) {
             notificationSettings = new NotificationSettings();

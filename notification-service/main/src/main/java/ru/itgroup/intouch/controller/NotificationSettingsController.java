@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.itgroup.intouch.annotation.Loggable;
 import ru.itgroup.intouch.dto.request.NotificationSettingsDto;
@@ -23,15 +24,17 @@ public class NotificationSettingsController {
 
     @Loggable
     @GetMapping("")
-    public List<SettingsItemDto> getSettings()
+    public List<SettingsItemDto> getSettings(@RequestParam Long userId)
             throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
-        return notificationSettingsService.getSettings();
+        return notificationSettingsService.getSettings(userId);
     }
 
     @Loggable
     @PutMapping("")
-    public ResponseEntity<?> updateSettings(@RequestBody NotificationSettingsDto notificationSettingsDto) {
-        notificationSettingsService.updateSettings(notificationSettingsDto);
+    public ResponseEntity<?> updateSettings(@RequestBody NotificationSettingsDto notificationSettingsDto,
+                                            @RequestParam Long userId) {
+        System.out.println(userId);
+        notificationSettingsService.updateSettings(notificationSettingsDto, userId);
         return ResponseEntity.ok("");
     }
 }
