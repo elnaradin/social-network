@@ -6,6 +6,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import ru.itgroup.intouch.aggregator.config.security.jwt.JWTUtil;
+import ru.itgroup.intouch.aggregator.utils.CookieUtil;
 import ru.itgroup.intouch.client.AccountServiceClient;
 import ru.itgroup.intouch.client.MessageServiceClient;
 import ru.itgroup.intouch.dto.EmailDto;
@@ -19,6 +20,7 @@ import ru.itgroup.intouch.dto.message.UnreadMessageResponseDTO;
 @RequestMapping("/api/v1/dialogs")
 public class DialogController {
     private final MessageServiceClient client;
+    private final CookieUtil cookieUtil;
     private final JWTUtil jwtUtil;
 
     @GetMapping
@@ -52,8 +54,6 @@ public class DialogController {
     }
 
     private Integer getAccountId(HttpServletRequest request){
-        final String header = request.getHeader(HttpHeaders.AUTHORIZATION);
-        final String token = header.split(" ")[1].trim();
-        return jwtUtil.extractUserId(token);
+        return jwtUtil.extractUserId(cookieUtil.getJwt(request));
     }
 }
