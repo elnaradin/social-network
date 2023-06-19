@@ -1,0 +1,34 @@
+FROM khipu/openjdk17-alpine AS builder
+
+WORKDIR /app
+
+RUN apk add --no-cache maven
+
+COPY ./public-data /app/public-data
+COPY ./search-engine /app/search-engine
+COPY ./storage-service /app/storage-service
+COPY ./account-service /app/account-service
+COPY ./message-service /app/message-service
+
+WORKDIR /app/public-data
+RUN mvn clean install
+
+WORKDIR /app/search-engine
+RUN mvn clean install
+
+WORKDIR /app/storage-service
+RUN mvn clean install
+
+WORKDIR /app/account-service
+RUN mvn clean install
+
+WORKDIR /app/message-service
+RUN mvn clean package -Dmaven.test.skip
+
+FROM openjdk:17-jdk-alpine
+
+WORKDIR /app
+
+COPY --from=builder /app/message-service/main/target/message.jar .
+
+CMD ["java", "-jar", "/app/message.jar"]
