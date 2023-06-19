@@ -2,16 +2,21 @@ package ru.itgroup.intouch.service;
 
 import lombok.RequiredArgsConstructor;
 import model.Likes;
+import model.account.User;
 import model.enums.LikeType;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import ru.itgroup.intouch.dto.LikeDto;
 
 import ru.itgroup.intouch.repository.LikeRepository;
 
+import ru.itgroup.intouch.repository.UserRepository;
 import ru.itgroup.intouch.service.enums.Item;
 import ru.itgroup.intouch.service.enums.Operator;
 
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -25,12 +30,13 @@ public class LikeService {
     private final PostService postService;
     private final ModelMapper modelMapper;
     private final CommentService commentService;
+    private final UserRepository userRepository;
 
-    public LikeDto createLike(Long id, LikeType likeType) {
+    public LikeDto createLike(Long id, LikeType likeType, Long userId) {
 
         Likes like = new Likes();
         like.setDeleted(false);
-        like.setAuthorId(7L);
+        like.setAuthorId(userId);
         like.setTime(LocalDateTime.now());
         like.setItemId(id);
         like.setType(likeType);
@@ -72,5 +78,12 @@ public class LikeService {
         return true;
     }
 
-
+    private Long getIdUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Principal principal = (Principal) auth.getPrincipal();
+        User user = userRepository.findByEmail(principal.getName()).orElseThrow(() -> new RuntimeException("пользователь не найден: " + principal.getName()));
+        return user.getId();
+    }
 }
+
+

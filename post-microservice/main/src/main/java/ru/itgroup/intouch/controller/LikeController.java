@@ -14,9 +14,9 @@ public class LikeController {
     private final LikeService likeService;
 
     @PostMapping("/{id}/like")
-    public ResponseEntity<?> createLikeToPost(@PathVariable(value = "id") Long idPost) {
+    public ResponseEntity<?> createLikeToPost(@PathVariable(value = "id") Long idPost, Long userId) {
 
-        LikeDto likeDto = likeService.createLike(idPost, LikeType.POST);
+        LikeDto likeDto = likeService.createLike(idPost, LikeType.POST, userId);
 
         return (likeDto != null) ? ResponseEntity.ok(likeDto) : ResponseEntity.notFound().build();
 
@@ -30,9 +30,9 @@ public class LikeController {
     }
 
     @PostMapping("/{id}/comment/{commentId}/like")
-    public ResponseEntity<?> createLikeToComment(@PathVariable(value = "commentId") Long idComment) {
+    public ResponseEntity<?> createLikeToComment(@PathVariable(value = "commentId") Long idComment, Long userId) {
 
-        LikeDto likeDto = likeService.createLike(idComment, LikeType.COMMENT);
+        LikeDto likeDto = likeService.createLike(idComment, LikeType.COMMENT, userId);
 
         return (likeDto != null) ? ResponseEntity.ok(likeDto) : ResponseEntity.notFound().build();
 
