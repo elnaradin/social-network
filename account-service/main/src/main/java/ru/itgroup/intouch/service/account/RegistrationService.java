@@ -1,13 +1,11 @@
 package ru.itgroup.intouch.service.account;
 
+import com.cloudinary.Transformation;
 import com.github.cage.GCage;
-import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import model.account.Account;
 import model.account.User;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 import ru.itgroup.intouch.client.StorageServiceClient;
 import ru.itgroup.intouch.dto.CaptchaDto;
 import ru.itgroup.intouch.dto.ImageDTO;
@@ -52,13 +50,12 @@ public class RegistrationService {
         GCage gCage = new GCage();
         String token = gCage.getTokenGenerator().next();
         byte[] image = gCage.draw(token);
-        MultipartFile multipartImage = new MockMultipartFile(token, image);
-        UploadPhotoDto uploadPhotoDto = new UploadPhotoDto();
+        String transformation = new Transformation().width(150).height(50).generate();
+        UploadPhotoDto uploadPhotoDto = new UploadPhotoDto(image, transformation);
         ImageDTO imageDTO;
-        uploadPhotoDto.setMultipartFile(multipartImage);
         try {
             imageDTO = storageServiceClient.feignUploadPhoto(uploadPhotoDto);
-        } catch (FeignException e){
+        } catch (Exception e){
             throw new ServiceUnavailableException("Не удалось получить капчу");
         }
 
