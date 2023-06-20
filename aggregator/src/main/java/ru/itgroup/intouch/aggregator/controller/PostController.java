@@ -8,6 +8,7 @@ import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.Jwts;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -42,9 +43,10 @@ public class PostController {
     }
 
     @GetMapping("")
-    public ResponseEntity<?> search(PostSearchDtoPageable postSearchDtoPageable,
-                                    @Param("request") HttpServletRequest request ) {
+    public Page<PostDto> search(PostSearchDtoPageable postSearchDtoPageable,
+                                @Param("request") HttpServletRequest request ) {
         Long userId = getAccountId(request);
+
         return client.search(postSearchDtoPageable, userId);
     }
 
