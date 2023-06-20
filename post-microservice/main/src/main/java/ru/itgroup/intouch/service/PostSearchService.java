@@ -5,16 +5,13 @@ import dto.PostSearchDto;
 import lombok.RequiredArgsConstructor;
 import mappers.PostDtoPageableMapper;
 import model.Post;
-import model.account.User;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import ru.itgroup.intouch.dto.PostDto;
+import ru.itgroup.intouch.mapper.MapperToPostDto;
 import ru.itgroup.intouch.repository.PostRepository;
 import ru.itgroup.intouch.repository.PostTagRepository;
 import ru.itgroup.intouch.repository.UserRepository;
@@ -22,10 +19,8 @@ import searchUtils.Filter;
 import searchUtils.SpecificationBuilder;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+
 
 @Service
 @RequiredArgsConstructor
@@ -35,24 +30,30 @@ public class PostSearchService {
     private final filters.PostFilterBuilder filterBuilder;
     private final SpecificationBuilder specificationBuilder;
     private final UserRepository userRepository;
-    private final ModelMapper modelMapper;
+    private final MapperToPostDto mapperToPostDto;
     private final PostDtoPageableMapper dtoPageableMapper;
     private final PostTagRepository tagRepository;
+
     private PostSearchDto dto;
 
-    public Page<PostDto> getAccountResponse(PostSearchDtoPageable postSearchDtoPageable) {
+    public Page<PostDto> getPostResponse(PostSearchDtoPageable postSearchDtoPageable, Long userId) {
+
 
         dto = dtoPageableMapper.mapToPostSearchDto(postSearchDtoPageable);
         Pageable pageable = dtoPageableMapper.mapToPageable(postSearchDtoPageable);
 
-        List<Long> authorIds = (!dto.getAuthor().isEmpty()) ? getUserIdsFromAuthor(dto.getAuthor()) : new ArrayList<>();
 
-        List<Long> postIds = (!dto.getTags().isEmpty()) ? getPostIdFromTags(dto.getTags()) : new ArrayList<>();
+        List<Long> authorIds = (dto.getAuthor() != null  ) ? getUserIdsFromAuthor(dto.getAuthor()) : new ArrayList<>();
+
+        List<Long> postIds = (dto.getTags() != null  ) ? getPostIdFromTags(dto.getTags()) : new ArrayList<>();
 
         List<Filter> filter = filterBuilder.createFilter(dto, authorIds, postIds);
 
         if (filter.isEmpty()) {
-            return null;
+
+            Page<Post> defaultPosts = postRepository.findAllByAuthorId(userId, pageable);
+
+            return defaultPosts.map(mapperToPostDto::getPostDto);
         }
 
         Specification<model.Post> specification = (Specification<model.Post>) specificationBuilder.getSpecificationFromFilters(filter);
@@ -61,7 +62,7 @@ public class PostSearchService {
 
         if (pageResult.hasContent()) {
 
-            return pageResult.map(Post -> modelMapper.map(Post, PostDto.class));
+            return pageResult.map(mapperToPostDto::getPostDto);
 
         } else {
             return null;
@@ -71,11 +72,11 @@ public class PostSearchService {
 
     private List<Long> getUserIdsFromAuthor(String author) {
 
-        String[] authorNames = dto.getAuthor().split(" ");
+        if (author.isEmpty()) {return new ArrayList<>();}
 
-        List<Long> authors = userRepository.findAllByNames(authorNames);
+        String[] authorNames = author.split(" ");
 
-        return new ArrayList<>(authors);
+        return userRepository.findAllIdByNames(authorNames);
 
 
     }

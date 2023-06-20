@@ -1,5 +1,6 @@
 package ru.itgroup.intouch.aggregator.utils;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpHeaders;
@@ -29,5 +30,10 @@ public class CookieUtil {
         }
 
         return null;
+    }
+
+    public String getJwt(@NotNull HttpServletRequest request) {
+        final String header = request.getHeader(HttpHeaders.AUTHORIZATION);
+        return header.split(" ")[1].trim();
     }
 }

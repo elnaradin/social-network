@@ -3,4 +3,22 @@ merge_message:
   rules:
     - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "master" && $CI_COMMIT_MESSAGE =~ /^Merge branch \'message/
   script:
-    - echo "Message pipeline"
+    - cd /root/social-network/back
+    - git pull
+    - docker stop builder || true
+    - docker rm builder || true
+    - docker rmi builder || true
+
+    - docker buildx build --platform linux/amd64 -f Dockerfile-messages --tag intouchgroup/messages-new:latest . --load 2>&1 | tee build-messages.log
+
+    - docker stop builder || true
+    - docker rm builder || true
+    - docker rmi builder || true
+
+    - cd /root/social-network
+    - docker stop social-network-message-1 || true
+    - docker rm social-network-message-1 || true
+    - docker rmi intouchgroup/message-serv || true
+    - docker tag intouchgroup/messages-new:latest intouchgroup/message-serv:latest
+    - docker rmi intouchgroup/messages-new:latest
+    - docker compose up -d --build

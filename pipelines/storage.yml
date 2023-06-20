@@ -3,4 +3,23 @@ merge_storage:
   rules:
     - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "master" && $CI_COMMIT_MESSAGE =~ /^Merge branch \'storage/
   script:
-    - echo "Storage pipeline"
+    - cd /root/social-network/back
+    - git pull
+    - docker stop builder || true
+    - docker rm builder || true
+    - docker rmi builder || true
+
+    - docker buildx build --platform linux/amd64 -f Dockerfile-storage --tag intouchgroup/storage-new:latest . --load 2>&1 | tee build-storage.log
+
+    - docker stop builder || true
+    - docker rm builder || true
+    - docker rmi builder || true
+
+    - cd /root/social-network
+    - docker stop social-network-storage-1 || true
+    - docker rm social-network-storage-1 || true
+    - docker rmi intouchgroup/storage-serv || true
+    - docker tag intouchgroup/storage-new:latest intouchgroup/storage-serv:latest
+    - docker rmi intouchgroup/storage-new:latest
+    - docker compose up -d --build
+

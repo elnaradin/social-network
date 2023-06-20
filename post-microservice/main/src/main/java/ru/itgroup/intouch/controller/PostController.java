@@ -3,6 +3,7 @@ package ru.itgroup.intouch.controller;
 
 import dto.PostSearchDtoPageable;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MissingPathVariableException;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.itgroup.intouch.dto.PostDto;
 import ru.itgroup.intouch.service.PostSearchService;
 import ru.itgroup.intouch.service.PostService;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -27,8 +29,10 @@ public class PostController {
     }
 
     @PostMapping("")
-    public ResponseEntity<?> createPost(@RequestBody PostDto postDto) {
-        PostDto post = postService.createNewPost(postDto);
+    public ResponseEntity<?> createPost(@RequestBody PostDto postDto,
+                                        @RequestParam Long userId) {
+
+        PostDto post = postService.createNewPost(postDto, userId);
 
         return (post != null) ? ResponseEntity.ok(post) : ResponseEntity.notFound().build();
 
@@ -47,12 +51,11 @@ public class PostController {
     }
 
     @GetMapping("")
-    public ResponseEntity<?> search(PostSearchDtoPageable dto) {
-        Page<PostDto> postList = postSearchService.getAccountResponse(dto);
+    public ResponseEntity<?> search(@SpringQueryMap PostSearchDtoPageable dto, @RequestParam Long userId) {
+
+        Page<PostDto> postList = postSearchService.getPostResponse(dto, userId);
 
         return (postList != null) ? ResponseEntity.ok(postList) : ResponseEntity.notFound().build();
-
     }
-
 
 }

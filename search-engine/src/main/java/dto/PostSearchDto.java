@@ -11,6 +11,7 @@ import model.Tag;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,9 +40,9 @@ public class PostSearchDto implements Serializable {
 
     private List<String> tags;
 
-    private LocalDateTime dateFrom;
+    private ZonedDateTime dateFrom;
 
-    private LocalDateTime dateTo;
+    private ZonedDateTime dateTo;
 
 
 }

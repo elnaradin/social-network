@@ -13,6 +13,7 @@ import ru.itgroup.intouch.client.AccountServiceClient;
 import ru.itgroup.intouch.dto.AccountDto;
 import ru.itgroup.intouch.dto.dialog.DialogDTO;
 import ru.itgroup.intouch.dto.dialog.ResponseDialogDTO;
+import ru.itgroup.intouch.dto.errors.IllegalRequestParameterException;
 import ru.itgroup.intouch.dto.message.SendMessageDto;
 import ru.itgroup.intouch.mapper.DialogDTOMapper;
 import ru.itgroup.intouch.mapper.SendMessageDtoMapper;
@@ -37,7 +38,7 @@ public class DialogServiceImpl implements DialogService {
     private final AccountServiceClient accountClient;
 
     @Transactional
-    public void saveDialogInfoBySendMessage(SendMessageDto sendMessage){
+    public Dialog saveDialogInfoBySendMessage(SendMessageDto sendMessage){
         Optional<AccountDialog> accountDialog = accountDialogRepository
                 .findByAccountIdAndRecipientId(sendMessage.getAuthorId(), sendMessage.getRecipientId());
 
@@ -47,7 +48,7 @@ public class DialogServiceImpl implements DialogService {
         message.setDialog(dialog);
         dialog.setLastMessage(message);
 
-        dialogRepository.save(dialog);
+        return dialogRepository.save(dialog);
     }
 
     private Dialog createNewDialog(Long firstAccountId, Long secondAccountId){
@@ -70,8 +71,11 @@ public class DialogServiceImpl implements DialogService {
 
     @Override
     public Long getDialogId(Integer firstUserId, Long secondUserId) {
-        //todo get optional OrElseThrow
-        return accountDialogRepository.findByAccountIdAndRecipientId(Long.valueOf(firstUserId), secondUserId).get().getDialogId();
+        return accountDialogRepository.findByAccountIdAndRecipientId(Long.valueOf(firstUserId), secondUserId)
+                .orElseThrow(() -> new IllegalRequestParameterException(
+                        "the requested dialog between the given users does not exist"))
+                .getDialogId();
+
     }
 
     @Transactional

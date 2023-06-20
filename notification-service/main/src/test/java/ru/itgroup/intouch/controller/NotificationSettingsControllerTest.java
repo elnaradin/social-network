@@ -51,12 +51,12 @@ class NotificationSettingsControllerTest {
             addSettingItemDto(NotificationType, settings);
         }
 
-        given(notificationSettingsService.getSettings()).willReturn(settings);
+        given(notificationSettingsService.getSettings(1L)).willReturn(settings);
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(apiPrefix + "/notifications/settings"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json"))
-                .andReturn();
+                                  .andDo(print())
+                                  .andExpect(status().isOk())
+                                  .andExpect(content().contentType("application/json"))
+                                  .andReturn();
 
         JsonNode arrayNode = objectMapper.readTree(result.getResponse().getContentAsString());
         for (JsonNode element : arrayNode) {
@@ -76,10 +76,10 @@ class NotificationSettingsControllerTest {
         notificationSettingsDto.setEnable(false);
 
         mockMvc.perform(MockMvcRequestBuilders.put(apiPrefix + "/notifications/settings")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsString(notificationSettingsDto)))
-                .andDo(print())
-                .andExpect(status().isOk());
+                                              .contentType(MediaType.APPLICATION_JSON)
+                                              .content(objectMapper.writeValueAsString(notificationSettingsDto)))
+               .andDo(print())
+               .andExpect(status().isOk());
     }
 
     private void addSettingItemDto(@NotNull NotificationType typeEnum, @NotNull List<SettingsItemDto> settings) {

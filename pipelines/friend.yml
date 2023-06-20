@@ -3,4 +3,22 @@ merge_friend:
   rules:
     - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "master" && $CI_COMMIT_MESSAGE =~ /^Merge branch \'friend/
   script:
-    - echo "Friend pipeline"
+    - cd /root/social-network/back
+    - git pull
+    - docker stop builder || true
+    - docker rm builder || true
+    - docker rmi builder || true
+
+    - docker buildx build --platform linux/amd64 -f Dockerfile-friends --tag intouchgroup/friend-new:latest . --load 2>&1 | tee build-friend.log
+
+    - docker stop builder || true
+    - docker rm builder || true
+    - docker rmi builder || true
+
+    - cd /root/social-network
+    - docker stop social-network-friends-1 || true
+    - docker rm social-network-friends-1 || true
+    - docker rmi intouchgroup/friends-serv || true
+    - docker tag intouchgroup/friend-new:latest intouchgroup/friends-serv:latest
+    - docker rmi intouchgroup/friend-new:latest
+    - docker compose up -d --build

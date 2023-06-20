@@ -5,6 +5,7 @@ import model.message.Message;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.itgroup.intouch.dto.message.DialogMessageDTO;
@@ -32,7 +33,7 @@ public class MessageServiceImpl implements MessageService{
     public ResponseDialogMessageDTO findAllByDialogId(Long dialogId, Integer offset, Integer itemPerPage){
 
         ResponseDialogMessageDTO responseDTO = new ResponseDialogMessageDTO();
-        Pageable pageable = PageRequest.of(offset, itemPerPage);
+        Pageable pageable = PageRequest.of(offset, itemPerPage, Sort.by("time").descending());
 
         Page<Message> messages = messageRepository.findAllByDialogId(dialogId, pageable);
         List<DialogMessageDTO> messageDTOS = dialogMessageDTOMapper.toDialogMessageDTO(messages.getContent());

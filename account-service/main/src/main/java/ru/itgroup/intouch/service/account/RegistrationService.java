@@ -1,18 +1,18 @@
 package ru.itgroup.intouch.service.account;
 
+import com.cloudinary.Transformation;
 import com.github.cage.GCage;
 import lombok.RequiredArgsConstructor;
 import model.account.Account;
 import model.account.User;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 import ru.itgroup.intouch.client.StorageServiceClient;
 import ru.itgroup.intouch.dto.CaptchaDto;
 import ru.itgroup.intouch.dto.ImageDTO;
 import ru.itgroup.intouch.dto.RegistrationDto;
 import ru.itgroup.intouch.dto.UploadPhotoDto;
 import ru.itgroup.intouch.exceptions.CaptchaNotValidException;
+import ru.itgroup.intouch.exceptions.ServiceUnavailableException;
 import ru.itgroup.intouch.exceptions.UserAlreadyRegisteredException;
 import ru.itgroup.intouch.mapper.UserMapper;
 import ru.itgroup.intouch.repository.UserRepository;
@@ -30,7 +30,7 @@ public class RegistrationService {
 
     public void registerNewUser(RegistrationDto registrationDto) {
         if (!Objects.equals(registrationDto.getCaptchaCode(), registrationDto.getCaptchaSecret())) {
-            throw new CaptchaNotValidException("Каптча введена неверно.");
+            throw new CaptchaNotValidException("Капча введена неверно.");
         }
         Optional<User> firstByEmail = userRepository
                 .findFirstByEmailEqualsAndIsDeletedEquals(registrationDto.getEmail(), false);
@@ -50,10 +50,14 @@ public class RegistrationService {
         GCage gCage = new GCage();
         String token = gCage.getTokenGenerator().next();
         byte[] image = gCage.draw(token);
-        MultipartFile multipartImage = new MockMultipartFile(token, image);
-        UploadPhotoDto uploadPhotoDto = new UploadPhotoDto();
-        uploadPhotoDto.setMultipartFile(multipartImage);
-        ImageDTO imageDTO = storageServiceClient.feignUploadPhoto(uploadPhotoDto);
+        String transformation = new Transformation().width(150).height(50).generate();
+        UploadPhotoDto uploadPhotoDto = new UploadPhotoDto(image, transformation);
+        ImageDTO imageDTO;
+        try {
+            imageDTO = storageServiceClient.feignUploadPhoto(uploadPhotoDto);
+        } catch (Exception e){
+            throw new ServiceUnavailableException("Не удалось получить капчу");
+        }
 
         return new CaptchaDto(token, imageDTO.getPhotoPath());
     }

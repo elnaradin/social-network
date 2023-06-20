@@ -60,10 +60,4 @@ public class DialogController {
 
         return responseDto;
     }
-
-    @PostMapping("/messages")
-    public ResponseEntity<?> saveMessage(@SpringQueryMap SendMessageDto messageDto){
-        dialogService.saveDialogInfoBySendMessage(messageDto);
-        return ResponseEntity.ok("");
-    }
 }
