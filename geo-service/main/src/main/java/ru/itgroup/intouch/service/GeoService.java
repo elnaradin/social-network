@@ -3,6 +3,8 @@ package ru.itgroup.intouch.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import model.City;
 import model.Country;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,7 @@ import java.util.Optional;
 
 @Service
 public class GeoService {
+    private final Logger logger = LoggerFactory.getLogger(GeoService.class);
 
     private static final String GEO_SOURCE = "https://api.hh.ru/areas/113";
     @Autowired
@@ -26,12 +29,11 @@ public class GeoService {
     @Autowired
     CountryRepository countryRepository;
 
-    private List<Long> loadedCityID = new ArrayList<>();
-
-    @Scheduled(cron = "${loadGeoPeriod-in-cron}")
+    @Scheduled(cron = "@weekly")
     public ResponseEntity loadGeo() {
         try {
-            System.out.println("loading started");
+            List<Long> loadedCityID = cityRepository.findAll().stream().map(City::getId).toList();
+            logger.info("loading started");
             AreaUnit areaUnit = getAreaUnits();
             Country country = createCountry(areaUnit);
             countryRepository.saveAndFlush(country);
@@ -40,14 +42,15 @@ public class GeoService {
             citiesUnits.forEach(cu -> {
                 long cityID = Long.parseLong(cu.getId());
                 if(!loadedCityID.contains(cityID)) {
-                    loadedCityID.add(cityID);
                     City city = createCity(cu, country);
                     cities.add(city);
                 }
             });
             cityRepository.saveAll(cities);
+            logger.info("loaded {} cities", cities.size());
             return ResponseEntity.ok().build();
         } catch (Exception e) {
+            logger.warn("Failed to load areas. {}", e.getMessage());
             return ResponseEntity.badRequest().build();
         }
     }
