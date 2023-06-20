@@ -3,6 +3,7 @@ package ru.itgroup.intouch.controller;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.itgroup.intouch.dto.ImageDTO;
 import ru.itgroup.intouch.dto.TransformedPhotoDto;
@@ -18,8 +19,8 @@ public class UploadController {
     private final Logger logger = LoggerFactory.getLogger(UploadController.class);
     private final UploadService uploadService;
 
-    @PostMapping("")
-    public ImageDTO uploadPhoto(UploadPhotoDto uploadPhotoDto)
+    @PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ImageDTO uploadPhoto(@RequestBody UploadPhotoDto uploadPhotoDto)
     {
         Image image = uploadService.uploadPhoto(uploadPhotoDto);
         return new ImageDTO(image.getPhotoName(), image.getPhotoPath());

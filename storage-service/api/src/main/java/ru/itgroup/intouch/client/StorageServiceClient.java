@@ -12,11 +12,11 @@ import ru.itgroup.intouch.dto.TransformedPhotoDto;
 import ru.itgroup.intouch.dto.UploadPhotoDto;
 
 @FeignClient(name = "storage-service", url = "${SN_STORAGE_HOST}:${SN_STORAGE_PORT}",
-        path = "/api/v1/storage")
+        path = "/api/v1/storage", configuration = FeignConfig.class)
 public interface StorageServiceClient {
 
-    @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    ImageDTO feignUploadPhoto(UploadPhotoDto uploadPhotoDto);
+    @PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    ImageDTO feignUploadPhoto(@RequestBody UploadPhotoDto uploadPhotoDto);
 
     @GetMapping(value = "")
     String feignGetTransformedPhoto(TransformedPhotoDto transformedPhotoDto);
