@@ -19,11 +19,6 @@ public class FeignConfig {
 
     @Autowired
     private ObjectFactory<HttpMessageConverters> messageConverters;
-//
-//    @Bean
-//    public Encoder feignFormEncoder() {
-//        return new SpringFormEncoder(new SpringEncoder(messageConverters));
-//    }
 
     @Bean
     Logger.Level feignLoggerLevel() {

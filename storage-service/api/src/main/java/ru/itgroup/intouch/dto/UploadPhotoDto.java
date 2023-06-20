@@ -8,11 +8,11 @@ import org.springframework.web.multipart.MultipartFile;
 @Data
 @RequiredArgsConstructor
 public class UploadPhotoDto {
-    private MultipartFile multipartFile;
-    private Transformation transformation;
+    private byte[] photo;
+    private String transformation;
 
-    public UploadPhotoDto(MultipartFile multipartFile, Transformation transformation) {
-        this.multipartFile = multipartFile;
+    public UploadPhotoDto(byte[] photo, String transformation) {
+        this.photo = photo;
         this.transformation = transformation;
     }
 }
