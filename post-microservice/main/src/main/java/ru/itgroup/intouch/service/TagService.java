@@ -1,6 +1,7 @@
 package ru.itgroup.intouch.service;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import model.Tag;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,7 @@ import java.util.Set;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class TagService {
 
     private final PostTagRepository postTagRepository;
@@ -36,4 +38,5 @@ public class TagService {
         postTagRepository.save(tagEntity);
         return tagEntity;
     }
+
 }

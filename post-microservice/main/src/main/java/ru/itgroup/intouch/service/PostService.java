@@ -1,6 +1,7 @@
 package ru.itgroup.intouch.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import model.Post;
 import model.enums.PostType;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PostService {
     private final TagService tagService;
     private final PostRepository postsRepository;
