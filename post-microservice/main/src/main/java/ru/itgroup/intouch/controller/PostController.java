@@ -51,11 +51,16 @@ public class PostController {
     }
 
     @GetMapping("")
-    public ResponseEntity<?> search(@SpringQueryMap PostSearchDtoPageable dto, @RequestParam Long userId) {
+    public Page<PostDto> search(@SpringQueryMap PostSearchDtoPageable dto, @RequestParam Long userId) {
 
-        Page<PostDto> postList = postSearchService.getPostResponse(dto, userId);
-
-        return (postList != null) ? ResponseEntity.ok(postList) : ResponseEntity.notFound().build();
+                return postSearchService.getPostResponse(dto, userId);
     }
 
+
+
 }
+
+
+
+
+
