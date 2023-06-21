@@ -1,8 +1,13 @@
 package ru.itgroup.intouch.aggregator.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import ru.itgroup.intouch.client.GeoServiceClient;
 
 @RestController
@@ -13,17 +18,17 @@ public class GeoController {
     private final GeoServiceClient client;
 
     @PutMapping("/load")
-    public ResponseEntity loadGeo(){
+    public ResponseEntity loadGeo() {
         return client.feignLoadGeo();
     }
 
-    @GetMapping("/country")
-    public ResponseEntity getCountries(){
+    @GetMapping(value = "/country", produces = MediaType.APPLICATION_JSON_VALUE)
+    public String getCountries() {
         return client.feignGetCountries();
     }
 
     @GetMapping("/country/{countryId}/cities")
-    public ResponseEntity getCities(@PathVariable Long countryId){
+    public ResponseEntity getCities(@PathVariable Long countryId) {
         return client.feignGetCities(countryId);
     }
 }

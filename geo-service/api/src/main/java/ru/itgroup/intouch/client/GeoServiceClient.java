@@ -17,8 +17,8 @@ public interface GeoServiceClient {
     ResponseEntity feignLoadGeo();
 
     @GetMapping("/country")
-    public ResponseEntity feignGetCountries();
+    String feignGetCountries();
 
     @GetMapping("/country/{countryId}/cities")
-    public ResponseEntity feignGetCities(@PathVariable Long countryId);
+    ResponseEntity feignGetCities(@PathVariable Long countryId);
 }
