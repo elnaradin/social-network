@@ -3,6 +3,7 @@ package ru.itgroup.intouch.client;
 import dto.PostSearchDtoPageable;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.cloud.openfeign.SpringQueryMap;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,8 +27,8 @@ public interface PostServiceClient {
     ResponseEntity<?> deletePost(@PathVariable Long id);
 
     @GetMapping("")
-    ResponseEntity<?> search(@SpringQueryMap PostSearchDtoPageable dtoPageable,
-                             @RequestParam Long userId);
+    Page<PostDto> search(@SpringQueryMap PostSearchDtoPageable dtoPageable,
+                         @RequestParam Long userId);
 
     @PostMapping("/{id}/comment")
     ResponseEntity<?> createCommentToPost(@PathVariable(value = "id") Long idPost,

@@ -1,6 +1,7 @@
 package ru.itgroup.intouch.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import model.Likes;
 import model.account.User;
 import model.enums.LikeType;
@@ -23,6 +24,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class LikeService {
 
 

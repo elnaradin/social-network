@@ -3,6 +3,7 @@ package ru.itgroup.intouch.service;
 import dto.PostSearchDtoPageable;
 import dto.PostSearchDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import mappers.PostDtoPageableMapper;
 import model.Post;
 import org.modelmapper.ModelMapper;
@@ -24,6 +25,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PostSearchService {
 
     private final PostRepository postRepository;
