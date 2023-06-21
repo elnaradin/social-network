@@ -59,7 +59,7 @@
     </dependencies>
 
     <build>
-        <finalName>friends</finalName>
+        <finalName>friends-service</finalName>
         <pluginManagement>
             <plugins>
                 <plugin>
