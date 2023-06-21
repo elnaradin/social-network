@@ -1,7 +1,8 @@
 package model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonGetter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -12,18 +13,19 @@ public class City {
     @Id
     private long id;
 
+    @JsonProperty("isDeleted")
     private boolean isDeleted;
 
     private String title;
 
-    @ManyToOne ()
+    @ManyToOne()
     @JoinColumn(name = "country_id", nullable = false)
-    @JsonIgnore
+    @JsonBackReference
     private Country country;
 
     @JsonGetter("countryId")
     @Transient
-    public Long getCountryId(){
+    public Long getCountryId() {
         return country.getId();
     }
 }
