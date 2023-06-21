@@ -59,6 +59,7 @@
     </dependencies>
 
     <build>
+        <finalName>friends</finalName>
         <pluginManagement>
             <plugins>
                 <plugin>
