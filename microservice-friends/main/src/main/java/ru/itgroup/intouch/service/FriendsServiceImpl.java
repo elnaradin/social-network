@@ -39,13 +39,15 @@ public class FriendsServiceImpl implements FriendsService {
     private final FriendRepository friendRepository;
     private final AccountRepository accountRepository;
     private final FriendMapper friendMapper;
+    private final NotificationsSender notificationsSender;
 
     @Autowired
     public FriendsServiceImpl(FriendRepository friendRepository, AccountRepository accountRepository,
-                              FriendMapper friendMapper) {
+                              FriendMapper friendMapper, NotificationsSender notificationsSender) {
         this.friendRepository = friendRepository;
         this.accountRepository = accountRepository;
         this.friendMapper = friendMapper;
+        this.notificationsSender = notificationsSender;
     }
 
     /**
@@ -134,6 +136,7 @@ public class FriendsServiceImpl implements FriendsService {
             friendTo.setEnumStatusCode(Status.REQUEST_TO);
             saveFriendship(friendFrom, friendTo);
         }
+        notificationsSender.send(accountFrom.getId(), accountTo.getId());
         return friendMapper.toFriendDto(friendTo, accountTo, previousStatusCode.getStatus());
     }
 
@@ -165,16 +168,13 @@ public class FriendsServiceImpl implements FriendsService {
      * Метод получения друзей по различным запросам.
      * !!! временно реализовано получение всех записей по Status с ограничением по Pagination.size !!!
      *
-     * @param friendSearchPageableDto        - параметры запроса
+     * @param friendSearchPageableDto - параметры запроса
      * @return Page<FriendDto> - возвращается Page FriendDto
      */
     @ValidateParams
     @CheckAndGetAuthUser
     public Page<FriendDto> getFriendsByRequest(FriendSearchPageableDto friendSearchPageableDto,
                                                Account accountFrom) {
-
-        //TODO: добавить обработку всех полей запроса
-
         List<Friend> friends = friendRepository.getAllByUserIdFrom(accountFrom);
         return new PageImpl<>(friends.stream()
                 .filter(friend -> friend.getStatusCode().equals(friendSearchPageableDto.getStatusCode()))
