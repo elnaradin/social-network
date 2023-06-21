@@ -25,8 +25,7 @@ public class GeoController {
 
     @GetMapping(value = "/country", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Country>> getCountries(){
-        List<Country> countries = geoService.getCountries();
-        return ResponseEntity.ok(countries);
+        return ResponseEntity.ok(geoService.getCountries());
     }
 
     @GetMapping(value = "/country/{countryId}/cities", produces = MediaType.APPLICATION_JSON_VALUE)
