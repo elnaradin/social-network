@@ -19,24 +19,24 @@ spring:
     enabled: true
     change-log: classpath:/dbchangelog-master.xml
 
-#  kafka:
-#    message-serv: ${SN_MESSAGE_SERV}
-#    message-event: ${SN_MESSAGE_EVENT}
-#    notification-event: ${SN_NOTIFICATION_EVENT}
-#    bootstrap-servers: ${SN_KAFKA_HOST}:${SN_KAFKA_PORT}
-#    producer:
-#      key-serializer: org.apache.kafka.common.serialization.LongSerializer
-#      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-#    consumer:
-#      group-id: message_serv
-#      auto-offset-reset: earliest
-#      key-deserializer: org.apache.kafka.common.serialization.LongDeserializer
-#      value-deserializer: ru.itgroup.intouch.serialization.CustomDeserializer
-#      properties:
-#        spring:
-#          json:
-#            trusted:
-#              packages: "*"
+  kafka:
+    message-serv: ${SN_MESSAGE_SERV}
+    message-event: ${SN_MESSAGE_EVENT}
+    notification-event: ${SN_NOTIFICATION_EVENT}
+    bootstrap-servers: ${SN_KAFKA_HOST}:${SN_KAFKA_PORT}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.LongSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    consumer:
+      group-id: message_serv
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.LongDeserializer
+      value-deserializer: ru.itgroup.intouch.serialization.CustomDeserializer
+      properties:
+        spring:
+          json:
+            trusted:
+              packages: "*"
 
 
 
