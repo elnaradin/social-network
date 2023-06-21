@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 import ru.itgroup.intouch.config.CloudinaryConfig;
 import ru.itgroup.intouch.dto.TransformedPhotoDto;
 import ru.itgroup.intouch.dto.UploadPhotoDto;
@@ -53,7 +52,7 @@ public class UploadService {
     }
 
     public Image uploadPhoto(UploadPhotoDto uploadPhotoDto) {
-        logger.info("Received DTO: {}", uploadPhotoDto);
+        logger.info("Received DTO: file is null:{}, transformation is null:{}", uploadPhotoDto.getPhoto() == null, uploadPhotoDto.getTransformation() == null);
         if(uploadPhotoDto.getTransformation() == null) {
             return uploadPhoto(uploadPhotoDto.getPhoto(), new Transformation().width(720).height(480));
         }
