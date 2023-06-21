@@ -1,3 +1,6 @@
+server:
+  port: ${SN_MESSAGE_PORT}
+
 spring:
   datasource:
     url: jdbc:postgresql://${SN_DB_HOST}:${SN_DB_PORT}/${SN_DB_NAME}
