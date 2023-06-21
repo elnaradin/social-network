@@ -5,7 +5,7 @@ WORKDIR /app
 RUN apk add --no-cache maven
 
 COPY ./public-data /app/public-data
-COPY ./friends-service /app/friends-service
+COPY ./microservice-friends /app/friends-service
 
 WORKDIR /app/public-data
 RUN mvn clean install
