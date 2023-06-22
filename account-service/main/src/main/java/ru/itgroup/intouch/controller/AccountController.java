@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,6 +27,11 @@ public class AccountController {
 
     private final AccountService accountService;
     private final ru.itgroup.intouch.service.search.AccountSearchService accountSearchService;
+
+    @GetMapping("/{id}")
+    public AccountDto getAccountById(@PathVariable("id") String id){
+        return accountService.getAccountInfoById(Long.valueOf(id));
+    }
 
     @PostMapping("/accounts")
     public List<AccountDto> accounts(@RequestBody List<Long> userIds) {
