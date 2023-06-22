@@ -127,13 +127,13 @@ public class FriendsServiceImpl implements FriendsService {
     @Transactional
     public FriendDto requestOnFriendById(Long id, Account accountFrom) throws UserNotFoundException {
         Account accountTo = getAccountByUserId(id);
-        Friend friendFrom = getOrCreateFriendByAccount(accountFrom, accountTo, Status.REQUEST_FROM);
-        Friend friendTo = getOrCreateFriendByAccount(accountTo, accountFrom, Status.REQUEST_TO);
+        Friend friendFrom = getOrCreateFriendByAccount(accountFrom, accountTo, Status.REQUEST_TO);
+        Friend friendTo = getOrCreateFriendByAccount(accountTo, accountFrom, Status.REQUEST_FROM);
         Status previousStatusCode = friendTo.getEnumStatusCode() ==
                 Status.REQUEST_TO ? Status.NONE : friendTo.getEnumStatusCode();
         if (isNotFriendship(friendFrom, friendTo)) {
-            friendFrom.setEnumStatusCode(Status.REQUEST_FROM);
-            friendTo.setEnumStatusCode(Status.REQUEST_TO);
+            friendFrom.setEnumStatusCode(Status.REQUEST_TO);
+            friendTo.setEnumStatusCode(Status.REQUEST_FROM);
             saveFriendship(friendFrom, friendTo);
         }
         notificationsSender.send(accountFrom.getId(), accountTo.getId());
