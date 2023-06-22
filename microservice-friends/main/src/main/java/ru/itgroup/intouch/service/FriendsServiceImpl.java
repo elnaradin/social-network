@@ -98,18 +98,18 @@ public class FriendsServiceImpl implements FriendsService {
         if (isNotFriendship(friendFrom, friendTo)) {
             throw new FriendServiceException(EX_MSG_BAD_REQUEST);
         }
-        switch (friendTo.getEnumStatusCode()) {
+        switch (friendFrom.getEnumStatusCode()) {
             case FRIEND:
-                friendTo.setEnumStatusCode(Status.BLOCKED);
+                friendFrom.setEnumStatusCode(Status.BLOCKED);
                 break;
             case BLOCKED:
-                friendTo.setEnumStatusCode(Status.FRIEND);
+                friendFrom.setEnumStatusCode(Status.FRIEND);
                 break;
             default:
                 throw new FriendServiceException(EX_MSG_INVALID_STATUS_CODE);
         }
-        friendRepository.save(friendTo);
-        return friendMapper.toFriendDto(friendTo, accountTo, previousStatusCode.getStatus());
+        friendRepository.save(friendFrom);
+        return friendMapper.toFriendDto(friendTo, accountFrom, previousStatusCode.getStatus());
     }
 
     /**
