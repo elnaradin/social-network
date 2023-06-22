@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +24,12 @@ import ru.itgroup.intouch.dto.AccountDto;
 @Slf4j
 public class AccountController {
     private final AccountServiceClient client;
+
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public AccountDto getAccountById(@PathVariable("id") String id){
+        return client.getAccountById(id);
+    }
 
     @GetMapping("/me")
     @ResponseStatus(HttpStatus.OK)
