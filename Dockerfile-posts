@@ -4,9 +4,9 @@ WORKDIR /app
 
 RUN apk add --no-cache maven
 
-COPY./search-engine /app/search-engine
+COPY ./search-engine /app/search-engine
 COPY ./public-data /app/public-data
-COPY ./post-service /app/post-service
+COPY ./post-microservice /app/post-service
 
 WORKDIR /app/public-data
 RUN mvn clean install
