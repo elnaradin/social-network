@@ -266,14 +266,14 @@ public class FriendsServiceImpl implements FriendsService {
     }
 
     /**
-     * Метод получения количества входящих заявок в друзья (количество записей со статусом REQUEST_TO)
+     * Метод получения количества входящих заявок в друзья (количество записей со статусом REQUEST_FROM)
      *
      * @return Integer - количество заявок в друзья
      */
     @CheckAndGetAuthUser
     public Integer getCountRequest(Account accountFrom) {
         List<Friend> friends = friendRepository
-                .getAllByUserIdFromAndStatusCode(accountFrom, Status.REQUEST_TO.getStatus());
+                .getAllByUserIdFromAndStatusCode(accountFrom, Status.REQUEST_FROM.getStatus());
         return friends == null ? 0 : friends.size();
     }
 
