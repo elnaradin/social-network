@@ -77,4 +77,12 @@ public class AccountService {
     }
 
 
+    public AccountDto getAccountInfoById(Long id) {
+        Optional<Account> account = accountRepository.findById(id);
+
+        if(account.isEmpty()){
+            throw new NoUserRegisteredException("Account not found");
+        }
+        return userMapper.accountEntityToAccountDto(account.get());
+    }
 }
