@@ -19,7 +19,7 @@ public class NotificationsSender {
 
     public void send(Long authorID, Long receiverId) {
         NotificationMessageDto notificationMessageDto = new NotificationMessageDto();
-        notificationMessageDto.setNotificationType(NotificationType.FRIEND_REQUEST.getLabel());
+        notificationMessageDto.setNotificationType(NotificationType.FRIEND_REQUEST.name());
         notificationMessageDto.setAuthorId(authorID);
         notificationMessageDto.setReceiverId(receiverId);
         kafkaTemplate.send(notificationTopic, notificationMessageDto);
