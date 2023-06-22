@@ -43,7 +43,7 @@ public class DialogController {
             @RequestParam String companionId, @RequestParam(defaultValue = "0") Integer offset,
             @RequestParam(defaultValue = "20") Integer itemPerPage, @RequestParam Integer userId
     ) {
-        Long dialogId = dialogService.getDialogId(userId, Long.valueOf(companionId));
+        Long dialogId = dialogService.getDialogIdOrCreateNew(userId, Long.valueOf(companionId));
         ResponseDTO responseDTO = messageService.findAllByDialogId(dialogId,
                 offset, itemPerPage);
         return (ResponseDialogMessageDTO) responseDTO;
