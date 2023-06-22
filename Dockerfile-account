@@ -4,8 +4,6 @@ WORKDIR /app
 
 RUN apk add --no-cache maven
 
-RUN apk add --no-cache freetype
-
 COPY ./public-data /app/public-data
 COPY ./search-engine /app/search-engine
 COPY ./storage-service /app/storage-service
@@ -25,7 +23,7 @@ RUN mvn clean package -Dmaven.test.skip
 
 FROM openjdk:17-jdk-alpine
 
-RUN apk add --no-cache freetype
+RUN apk add --no-cache freetype fontconfig
 
 WORKDIR /app
 
