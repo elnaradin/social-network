@@ -25,6 +25,8 @@ RUN mvn clean package -Dmaven.test.skip
 
 FROM openjdk:17-jdk-alpine
 
+RUN apk add --no-cache freetype
+
 WORKDIR /app
 
 COPY --from=builder /app/account-service/main/target/account.jar .
