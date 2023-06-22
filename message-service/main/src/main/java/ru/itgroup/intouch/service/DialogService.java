@@ -10,5 +10,7 @@ public interface DialogService {
 
     Dialog saveDialogInfoBySendMessage(SendMessageDto sendMessageDto);
 
-    Long getDialogId(Integer userId, Long valueOf);
+    Long getDialogId(Integer firstUserId, Long secondUserId);
+
+    Long getDialogIdOrCreateNew(Integer firstUserId, Long secondUserId);
 }

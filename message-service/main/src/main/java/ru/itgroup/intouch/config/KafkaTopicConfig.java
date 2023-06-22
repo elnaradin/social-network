@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Bean;
 public class KafkaTopicConfig {
     @Value("${spring.kafka.notification-event}")
     private String notificationTopic;
-    @Value("${spring.kafka.notification-event}")
+    @Value("${spring.kafka.message-event}")
     private String messageTopic;
 
     @Bean
