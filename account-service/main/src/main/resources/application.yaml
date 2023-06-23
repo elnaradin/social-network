@@ -24,13 +24,13 @@ spring:
 
 email:
   passwordRecovery:
-    subject: восстановление пароля
+    subject: Восстановление пароля
     url: "http://${SN_HOST}/change-password/"
   passwordChange:
-    subject: изменение пароля
+    subject: Изменение пароля
     url: "http://${SN_HOST}/shift-password"
   emailChange:
-    subject: изменение почтового адреса
+    subject: Изменение почтового адреса
     url: "http://${SN_HOST}/shift-email"
 
 

@@ -20,7 +20,7 @@ import ru.itgroup.intouch.repository.UserRepository;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
-import java.util.Locale;
+import java.time.ZoneId;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -40,7 +40,8 @@ public class CredentialsRenewalService {
     public void setNewPassword(String linkId, String password) {
         Optional<User> firstByEmail = userRepository.findFirstByHash(linkId);
         if (firstByEmail.isEmpty()) {
-            throw new NoUserRegisteredException("Не удалось изменить пароль. Запрос на изменение пароля не найден");
+            throw new NoUserRegisteredException("Не удалось изменить пароль. " +
+                    "Запрос на изменение пароля не найден");
         }
         firstByEmail.get().setPassword(password);
         userRepository.save(firstByEmail.get());
@@ -61,15 +62,9 @@ public class CredentialsRenewalService {
         User user = optUser.get();
         helper.setFrom(from);
         helper.setTo(to);
-        helper.setSubject(contents.getSubject().toUpperCase(Locale.ROOT));
+        helper.setSubject(contents.getSubject());
 
-        String userHash = "";
-        if (addLinkId) {
-            userHash = UUID.randomUUID().toString();
-            user.setHash(userHash);
-            user.setHashExpiryTime(LocalDateTime.now().plusMinutes(expiryMinutes));
-            userRepository.save(user);
-        }
+        String userHash = getUserHash(user, addLinkId);
 
         context.setVariables(Map.of(
                 "subject", contents.getSubject(),
@@ -79,6 +74,17 @@ public class CredentialsRenewalService {
         String html = templateEngine.process("letter.html", context);
         helper.setText(html, true);
         mailSender.send(message);
+    }
+    private String getUserHash(User user, boolean addLinkId){
+        String userHash = "";
+        if (addLinkId) {
+            userHash = UUID.randomUUID().toString();
+            user.setHash(userHash);
+            user.setHashExpiryTime(LocalDateTime.now(ZoneId.of("Europe/Moscow"))
+                    .plusMinutes(expiryMinutes));
+            userRepository.save(user);
+        }
+        return userHash;
     }
 
     @Scheduled(fixedDelayString = "${delete-hash.delay-ms}")

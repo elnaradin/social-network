@@ -51,7 +51,6 @@ public class AccountService {
     public void updateAccountData(AccountDto accountDto) {
         Optional<Account> account = accountRepository
                 .findFirstByEmailEqualsAndIsDeletedEquals(accountDto.getEmail(), false);
-        log.info("change account with email \"" + accountDto.getEmail() + "\"");
         if (account.isEmpty()) {
             throw new NoUserRegisteredException("Невозможно изменить данные аккаунта. E-mail \"" +
                     accountDto.getEmail() + "\" не найден");
@@ -63,15 +62,16 @@ public class AccountService {
     }
 
     public void setAccountDeleted(String email) {
-        Optional<User> firstByEmail = userRepository
+        Optional<Account> account = accountRepository
                 .findFirstByEmailEqualsAndIsDeletedEquals(email, false);
-        if (firstByEmail.isEmpty()) {
+        if (account.isEmpty()) {
             throw new NoUserRegisteredException("Невозможно удалить аккаунт. " +
                     "E-mail \"" + email + "\" не найден.");
         }
-        User user = firstByEmail.get();
-        user.setDeleted(true);
-        userRepository.save(firstByEmail.get());
+        Account accountEntity = account.get();
+        accountEntity.setDeleted(true);
+        accountEntity.setOnline(false);
+        accountRepository.save(accountEntity);
     }
 
     public List<AccountDto> getListOfUsers(List<Long> userIds) {

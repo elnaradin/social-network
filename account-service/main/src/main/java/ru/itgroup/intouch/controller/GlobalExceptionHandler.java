@@ -18,6 +18,7 @@ import ru.itgroup.intouch.exceptions.UserAlreadyRegisteredException;
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+    private HttpStatus status;
 
     @ExceptionHandler({CaptchaNotValidException.class,
             UserAlreadyRegisteredException.class,
@@ -27,20 +28,22 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             NoUserRegisteredException.class})
     public ResponseEntity<ErrorResponse> handleBadRequest(Exception exception,
                                                           WebRequest request) {
-        log.error(exception.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(
-                HttpStatus.BAD_REQUEST.value(),
-                HttpStatus.BAD_REQUEST.name(),
+        status = HttpStatus.BAD_REQUEST;
+        log.warn(exception.getMessage());
+        return ResponseEntity.status(status).body(new ErrorResponse(
+                status.value(),
+                status.name(),
                 "<br/>" + exception.getMessage(),
                 request.getDescription(false)));
     }
     @ExceptionHandler(ServiceUnavailableException.class)
     public ResponseEntity<ErrorResponse> handleConnectException(ServiceUnavailableException e,
                                                                 WebRequest request){
+        status = HttpStatus.INTERNAL_SERVER_ERROR;
         log.error(e.getLocalizedMessage());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponse(
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                HttpStatus.INTERNAL_SERVER_ERROR.name(),
+        return ResponseEntity.status(status).body(new ErrorResponse(
+                status.value(),
+                status.name(),
                 e.getLocalizedMessage(),
                 request.getDescription(false)));
     }
