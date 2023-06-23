@@ -1,8 +1,11 @@
+server:
+  port: ${SN_MESSAGE_PORT}
+
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/social_network
-    username: postgres
-    password: root
+    url: jdbc:postgresql://${SN_DB_HOST}:${SN_DB_PORT}/${SN_DB_NAME}
+    username: ${SN_DB_USER}
+    password: ${SN_DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
   sql:
     init:
@@ -11,7 +14,6 @@ spring:
     hibernate.ddl-auto: none
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: false
-
 
   liquibase:
     enabled: true

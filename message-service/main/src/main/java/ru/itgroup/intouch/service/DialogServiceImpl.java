@@ -78,6 +78,17 @@ public class DialogServiceImpl implements DialogService {
 
     }
 
+    @Override
+    public Long getDialogIdOrCreateNew(Integer firstUserId, Long secondUserId) {
+        Optional<AccountDialog> accountDialog = accountDialogRepository
+                .findByAccountIdAndRecipientId(Long.valueOf(firstUserId), secondUserId);
+        if(accountDialog.isPresent()){
+            return accountDialog.get().getDialogId();
+        }
+        Dialog newDialog = dialogRepository.save(createNewDialog(Long.valueOf(firstUserId), secondUserId));
+        return newDialog.getId();
+    }
+
     @Transactional
     public ResponseDialogDTO getDialogsPage(Integer accountId, Integer offset, Integer itemPerPage){
         Pageable pageable = PageRequest.of(offset, itemPerPage);

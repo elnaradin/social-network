@@ -15,7 +15,7 @@ public class AccountDto extends AbstractUser{
     private boolean isDeleted;
     @JsonIgnore
     private String password;
-    @Pattern(regexp = "(7[0-9]{10}|^$)",
+    @Pattern(regexp = "(7?[0-9]{10}|^$)",
             message = "Некорректный номер телефона: должен состоять из 11 цифр")
     private String phone;
     private String photo;

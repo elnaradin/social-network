@@ -17,7 +17,11 @@ public class CheckInputParametersAspect {
 
     private static final String LOG_MSG_PARAM_IS_NULL = "Parameter value is null";
     private static final String LOG_MSG_BAD_LONG_VALUE = "Parameter of type Long is null or less than 0";
-    private static final String LOG_MSG_BAD_PAGEABLE = "Invalid value of one or more parameters of the FriendSearchPageableDto object";
+    private static final String LOG_MSG_BAD_PAGEABLE = "Invalid value of one or more parameters of the " +
+            "FriendSearchPageableDto object";
+
+    private static final String LOG_MSG_BAD_FRIEND_SEARCH = "Invalid value of one or more parameters of the " +
+            "FriendSearchDto object";
     private static final String EX_MSG_WRONG_PARAM = "Invalid parameter value";
 
     @Pointcut(value = "@annotation(ru.itgroup.intouch.aspect.ValidateParams)")
@@ -35,24 +39,27 @@ public class CheckInputParametersAspect {
                 log.warn(LOG_MSG_BAD_LONG_VALUE);
                 throw new WrongParameterException(EX_MSG_WRONG_PARAM);
             }
-            if (o instanceof FriendSearchPageableDto){
+            if (o instanceof FriendSearchPageableDto) {
                 checkPageableDto((FriendSearchPageableDto) o);
             }
-            if (o instanceof FriendSearchDto){
+            if (o instanceof FriendSearchDto) {
                 checkFriendSearchDto((FriendSearchDto) o);
             }
         }
     }
 
     private void checkPageableDto(FriendSearchPageableDto friendSearchPageableDto) throws WrongParameterException {
-        if(friendSearchPageableDto.getPage() == null || friendSearchPageableDto.getPage() < 0 ||
-        friendSearchPageableDto.getSize() == null || friendSearchPageableDto.getSize() < 1){
+        if (friendSearchPageableDto.getPage() == null || friendSearchPageableDto.getPage() < 0 ||
+                friendSearchPageableDto.getSize() == null || friendSearchPageableDto.getSize() < 1) {
             log.warn(LOG_MSG_BAD_PAGEABLE);
             throw new WrongParameterException(EX_MSG_WRONG_PARAM);
         }
     }
 
-    private void checkFriendSearchDto(FriendSearchDto friendSearchDto){
-        //TODO: реализовать проверку
+    private void checkFriendSearchDto(FriendSearchDto friendSearchDto) {
+        if (friendSearchDto == null) {
+            log.warn(LOG_MSG_BAD_FRIEND_SEARCH);
+            throw new WrongParameterException(EX_MSG_WRONG_PARAM);
+        }
     }
 }

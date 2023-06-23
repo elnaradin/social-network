@@ -21,7 +21,7 @@ RUN mvn clean install
 WORKDIR /app/account-service
 RUN mvn clean package -Dmaven.test.skip
 
-FROM openjdk:17-jdk-alpine
+FROM khipu/openjdk17-alpine
 
 WORKDIR /app
 

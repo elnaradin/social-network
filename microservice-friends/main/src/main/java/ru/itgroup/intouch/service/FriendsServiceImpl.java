@@ -39,13 +39,15 @@ public class FriendsServiceImpl implements FriendsService {
     private final FriendRepository friendRepository;
     private final AccountRepository accountRepository;
     private final FriendMapper friendMapper;
+    private final NotificationsSender notificationsSender;
 
     @Autowired
     public FriendsServiceImpl(FriendRepository friendRepository, AccountRepository accountRepository,
-                              FriendMapper friendMapper) {
+                              FriendMapper friendMapper, NotificationsSender notificationsSender) {
         this.friendRepository = friendRepository;
         this.accountRepository = accountRepository;
         this.friendMapper = friendMapper;
+        this.notificationsSender = notificationsSender;
     }
 
     /**
@@ -96,18 +98,18 @@ public class FriendsServiceImpl implements FriendsService {
         if (isNotFriendship(friendFrom, friendTo)) {
             throw new FriendServiceException(EX_MSG_BAD_REQUEST);
         }
-        switch (friendTo.getEnumStatusCode()) {
+        switch (friendFrom.getEnumStatusCode()) {
             case FRIEND:
-                friendTo.setEnumStatusCode(Status.BLOCKED);
+                friendFrom.setEnumStatusCode(Status.BLOCKED);
                 break;
             case BLOCKED:
-                friendTo.setEnumStatusCode(Status.FRIEND);
+                friendFrom.setEnumStatusCode(Status.FRIEND);
                 break;
             default:
                 throw new FriendServiceException(EX_MSG_INVALID_STATUS_CODE);
         }
-        friendRepository.save(friendTo);
-        return friendMapper.toFriendDto(friendTo, accountTo, previousStatusCode.getStatus());
+        friendRepository.save(friendFrom);
+        return friendMapper.toFriendDto(friendTo, accountFrom, previousStatusCode.getStatus());
     }
 
     /**
@@ -125,15 +127,16 @@ public class FriendsServiceImpl implements FriendsService {
     @Transactional
     public FriendDto requestOnFriendById(Long id, Account accountFrom) throws UserNotFoundException {
         Account accountTo = getAccountByUserId(id);
-        Friend friendFrom = getOrCreateFriendByAccount(accountFrom, accountTo, Status.REQUEST_FROM);
-        Friend friendTo = getOrCreateFriendByAccount(accountTo, accountFrom, Status.REQUEST_TO);
+        Friend friendFrom = getOrCreateFriendByAccount(accountFrom, accountTo, Status.REQUEST_TO);
+        Friend friendTo = getOrCreateFriendByAccount(accountTo, accountFrom, Status.REQUEST_FROM);
         Status previousStatusCode = friendTo.getEnumStatusCode() ==
                 Status.REQUEST_TO ? Status.NONE : friendTo.getEnumStatusCode();
         if (isNotFriendship(friendFrom, friendTo)) {
-            friendFrom.setEnumStatusCode(Status.REQUEST_FROM);
-            friendTo.setEnumStatusCode(Status.REQUEST_TO);
+            friendFrom.setEnumStatusCode(Status.REQUEST_TO);
+            friendTo.setEnumStatusCode(Status.REQUEST_FROM);
             saveFriendship(friendFrom, friendTo);
         }
+        notificationsSender.send(accountFrom.getId(), accountTo.getId());
         return friendMapper.toFriendDto(friendTo, accountTo, previousStatusCode.getStatus());
     }
 
@@ -165,16 +168,13 @@ public class FriendsServiceImpl implements FriendsService {
      * Метод получения друзей по различным запросам.
      * !!! временно реализовано получение всех записей по Status с ограничением по Pagination.size !!!
      *
-     * @param friendSearchPageableDto        - параметры запроса
+     * @param friendSearchPageableDto - параметры запроса
      * @return Page<FriendDto> - возвращается Page FriendDto
      */
     @ValidateParams
     @CheckAndGetAuthUser
     public Page<FriendDto> getFriendsByRequest(FriendSearchPageableDto friendSearchPageableDto,
                                                Account accountFrom) {
-
-        //TODO: добавить обработку всех полей запроса
-
         List<Friend> friends = friendRepository.getAllByUserIdFrom(accountFrom);
         return new PageImpl<>(friends.stream()
                 .filter(friend -> friend.getStatusCode().equals(friendSearchPageableDto.getStatusCode()))
@@ -266,14 +266,14 @@ public class FriendsServiceImpl implements FriendsService {
     }
 
     /**
-     * Метод получения количества входящих заявок в друзья (количество записей со статусом REQUEST_TO)
+     * Метод получения количества входящих заявок в друзья (количество записей со статусом REQUEST_FROM)
      *
      * @return Integer - количество заявок в друзья
      */
     @CheckAndGetAuthUser
     public Integer getCountRequest(Account accountFrom) {
         List<Friend> friends = friendRepository
-                .getAllByUserIdFromAndStatusCode(accountFrom, Status.REQUEST_TO.getStatus());
+                .getAllByUserIdFromAndStatusCode(accountFrom, Status.REQUEST_FROM.getStatus());
         return friends == null ? 0 : friends.size();
     }
 
