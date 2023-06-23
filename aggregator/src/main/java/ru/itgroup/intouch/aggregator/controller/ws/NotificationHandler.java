@@ -75,7 +75,7 @@ public class NotificationHandler extends TextWebSocketHandler {
         long recipientId = objectMapper.readTree(message).get("recipientId").asLong();
 
         if (sessions.containsKey(recipientId)) {
-            TextMessage textMessage = new TextMessage(objectMapper.writeValueAsString(message));
+            TextMessage textMessage = new TextMessage(message);
             sessions.get(recipientId).sendMessage(textMessage);
         }
     }
