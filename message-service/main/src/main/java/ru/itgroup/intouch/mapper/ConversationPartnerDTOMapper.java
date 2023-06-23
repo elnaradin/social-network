@@ -22,6 +22,6 @@ public interface ConversationPartnerDTOMapper {
 
     @Named("localDateTimeToSecond")
     static Long toSeconds(LocalDateTime time) {
-        return time.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        return time.atZone(ZoneId.of("Europe/Moscow")).toInstant().toEpochMilli();
     }
 }

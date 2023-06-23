@@ -7,6 +7,7 @@ import org.mapstruct.Named;
 import ru.itgroup.intouch.dto.message.SendMessageDto;
 
 import java.time.Instant;
+import java.time.ZoneId;
 
 @Mapper(componentModel = "spring")
 public interface SendMessageDtoMapper {
@@ -18,6 +19,6 @@ public interface SendMessageDtoMapper {
 
     @Named("secondsToInstant")
     static Instant toInstant(Long time) {
-        return Instant.ofEpochMilli(time);
+        return Instant.from(Instant.ofEpochMilli(time).atZone(ZoneId.of("Europe/Moscow")));
     }
 }
