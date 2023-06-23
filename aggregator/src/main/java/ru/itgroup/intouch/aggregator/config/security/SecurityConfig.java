@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -25,6 +24,7 @@ import ru.itgroup.intouch.aggregator.service.UserDetailsServiceImpl;
 @Slf4j
 public class SecurityConfig {
 
+    private final CustomAuthenticationEntryPoint authenticationEntryPoint;
 
     private final JWTRequestFilter jwtRequestFilter;
 
@@ -57,11 +57,8 @@ public class SecurityConfig {
                 .and()
                 .exceptionHandling()
                 // stops returning status forbidden
-                .authenticationEntryPoint((request, response, authException) ->
-                {
-                    response.setStatus(HttpStatus.NO_CONTENT.value());
-                    log.error(authException.getMessage());
-                }).and()
+                .authenticationEntryPoint(authenticationEntryPoint)
+                .and()
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers("/api/v1/auth/password/recovery/").permitAll()
                         .requestMatchers("/api/v1/auth/password/recovery/{linkId}").permitAll()
@@ -69,12 +66,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/auth/register").permitAll()
                         .requestMatchers("/api/v1/auth/captcha").permitAll()
                         .requestMatchers("/api/v1/streaming/ws").permitAll()
-                        .anyRequest().hasAuthority("ROLE_USER"))
-                .logout().logoutUrl("/api/v1/auth/logout")
-                .logoutSuccessHandler((request, response, authentication) ->
-                        response.setStatus(HttpStatus.OK.value()))
-                .deleteCookies("jwt")
-                .clearAuthentication(true);
+                        .anyRequest().hasAuthority("ROLE_USER"));
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
