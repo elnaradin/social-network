@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 import ru.itgroup.intouch.aggregator.controller.ws.NotificationHandler;
-import ru.itgroup.intouch.dto.notifications.WebSocketMessageDto;
 
 import java.io.IOException;
 
@@ -19,7 +18,7 @@ public class NotificationKafkaListener {
     }
 
     @KafkaListener(topics = "${spring.kafka.message-event}")
-    public void onDialogMessage(WebSocketMessageDto message) throws IOException {
+    public void onDialogMessage(String message) throws IOException {
         notificationHandler.sendDialogMessage(message);
     }
 }
