@@ -15,6 +15,7 @@ import ru.itgroup.intouch.dto.AuthenticateDto;
 import ru.itgroup.intouch.dto.AuthenticateResponseDto;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @Service
 @RequiredArgsConstructor
@@ -57,7 +58,7 @@ public class AuthService {
 
         AccountDto accountDto = accountServiceClient.myAccount(email);
         accountDto.setOnline(isOnline);
-        accountDto.setLastOnlineTime(LocalDateTime.now().toString());
+        accountDto.setLastOnlineTime(LocalDateTime.now(ZoneId.of("Europe/Moscow")).toString());
         accountServiceClient.changeProfile(accountDto);
     }
 }
