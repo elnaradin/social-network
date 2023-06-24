@@ -46,7 +46,7 @@ public class LikeService {
 
         /* увеличить количество лайков в посте или комменте */
         if (likeType == LikeType.POST)
-            postService.changeCommentCountOrLikeAmount(id, Operator.PLUS, Item.LIKE_AMOUNT);
+            postService.changeCommentCountOrLikeAmount(id, Operator.PLUS, Item.LIKE_AMOUNT, userId);
         if (likeType == LikeType.COMMENT)
             commentService.changeCommentCountOrLikeAmount(id, Operator.PLUS, Item.LIKE_AMOUNT);
 
@@ -71,7 +71,7 @@ public class LikeService {
 
         /* уменьшить количество лайков в посте или комменте*/
         if (likeType == LikeType.POST)
-            postService.changeCommentCountOrLikeAmount(like.getItemId(), Operator.MINUS, Item.LIKE_AMOUNT);
+            postService.changeCommentCountOrLikeAmount(like.getItemId(), Operator.MINUS, Item.LIKE_AMOUNT, 0L);
 
         if (likeType == LikeType.COMMENT)
             commentService.changeCommentCountOrLikeAmount(like.getItemId(), Operator.MINUS, Item.LIKE_AMOUNT);

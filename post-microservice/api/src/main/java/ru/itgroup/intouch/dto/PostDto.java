@@ -2,9 +2,7 @@ package ru.itgroup.intouch.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
-import model.enums.PostType;
 
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.List;
 
@@ -22,8 +20,10 @@ public class PostDto {
     private String postType;
     private String postText;
     private boolean isBlocked;
+    @JsonProperty(defaultValue = "0")
     private Integer commentsCount;
     private List<String> PostTags;
+    @JsonProperty(defaultValue = "0")
     private Integer likeAmount;
     private boolean myLike;
     private String imagePath;
