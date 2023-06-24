@@ -20,13 +20,11 @@ public class GeoController {
 
     @GetMapping(value = "/country", produces = MediaType.APPLICATION_JSON_VALUE)
     public String getCountries(){
-        String s = client.feignGetCountries();
-        System.out.println(" ");
-        return s;
+        return client.feignGetCountries();
     }
 
-    @GetMapping(value = "/country/{countryId}/cities", produces = MediaType.APPLICATION_JSON_VALUE)
-    public String getCities(@PathVariable Long countryId){
+    @GetMapping(value = "/country/{countryId}/city", produces = MediaType.APPLICATION_JSON_VALUE)
+    public String getCities(@PathVariable Long countryId) {
         return client.feignGetCities(countryId);
     }
 }
