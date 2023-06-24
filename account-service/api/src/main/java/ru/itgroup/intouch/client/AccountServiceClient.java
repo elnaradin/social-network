@@ -37,7 +37,7 @@ public interface AccountServiceClient {
     @DeleteMapping("/me")
     void deleteAccount(@RequestParam("email") String email);
 
-    @PostMapping("/search")
+    @GetMapping("/search")
     Page<AccountDto> search(@SpringQueryMap AccountSearchDtoPageable dto);
 
     @PostMapping("/accounts")

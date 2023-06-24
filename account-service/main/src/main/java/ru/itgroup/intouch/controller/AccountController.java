@@ -60,7 +60,7 @@ public class AccountController {
         accountService.setAccountDeleted(email);
     }
 
-    @PostMapping("/search")
+    @GetMapping("/search")
     public Page<AccountDto> search(@SpringQueryMap AccountSearchDtoPageable dto) {
         return accountSearchService.getAccountResponse(dto);
 
