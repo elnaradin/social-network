@@ -1,6 +1,7 @@
 package ru.itgroup.intouch.client;
 
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,9 +17,9 @@ public interface GeoServiceClient {
     @PutMapping("/load")
     ResponseEntity feignLoadGeo();
 
-    @GetMapping("/country")
-    public ResponseEntity feignGetCountries();
+    @GetMapping(value = "/country")
+    public String feignGetCountries();
 
-    @GetMapping("/country/{countryId}/cities")
-    public ResponseEntity feignGetCities(@PathVariable Long countryId);
+    @GetMapping(value = "/country/{countryId}/cities")
+    public String feignGetCities(@PathVariable Long countryId);
 }
