@@ -7,6 +7,7 @@ import org.mapstruct.Named;
 import ru.itgroup.intouch.dto.message.LastMessageDTO;
 
 import java.time.Instant;
+import java.time.ZoneId;
 import java.util.Collection;
 import java.util.List;
 
@@ -21,6 +22,6 @@ public interface LastMessageDTOMapper {
 
     @Named("instantToSeconds")
     static Long toInstant(Instant time) {
-        return time.getEpochSecond();
+        return time.atZone(ZoneId.of("Europe/Moscow")).toEpochSecond();
     }
 }

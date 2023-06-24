@@ -11,19 +11,22 @@ import ru.itgroup.intouch.client.exceptionHandling.exceptions.AccountServiceUnav
 import ru.itgroup.intouch.client.exceptionHandling.exceptions.BadRequestException;
 
 import java.net.ConnectException;
+import java.nio.file.AccessDeniedException;
 
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
+    private HttpStatus status;
     @ExceptionHandler({AccountServiceUnavailableException.class, ConnectException.class})
     private ResponseEntity<ErrorResponse> handleConnectException(Exception e,
                                                                  WebRequest request) {
+        status = HttpStatus.INTERNAL_SERVER_ERROR;
         log.warn(e.getLocalizedMessage());
         return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .status(status)
                 .body(
-                        new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                                HttpStatus.INTERNAL_SERVER_ERROR.name(),
+                        new ErrorResponse(status.value(),
+                                status.name(),
                                 e.getLocalizedMessage(),
                                 request.getDescription(false)
                         )
@@ -33,12 +36,28 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({BadRequestException.class})
     public ResponseEntity<?> handleBadRequest(RuntimeException e,
                                               WebRequest request) {
+        status = HttpStatus.BAD_REQUEST;
         log.warn(e.getMessage());
         return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
+                .status(status)
                 .body(
-                        new ErrorResponse(HttpStatus.BAD_REQUEST.value(),
-                                HttpStatus.BAD_REQUEST.name(),
+                        new ErrorResponse(status.value(),
+                                status.name(),
+                                e.getMessage(),
+                                request.getDescription(false)
+                        )
+                );
+    }
+    @ExceptionHandler({AccessDeniedException.class})
+    public ResponseEntity<?> handleAccessDenied(AccessDeniedException e,
+                                              WebRequest request) {
+        status = HttpStatus.UNAUTHORIZED;
+        log.warn(e.getMessage());
+        return ResponseEntity
+                .status(status)
+                .body(
+                        new ErrorResponse(status.value(),
+                                status.name(),
                                 e.getMessage(),
                                 request.getDescription(false)
                         )

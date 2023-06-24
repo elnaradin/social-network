@@ -13,7 +13,8 @@ import java.time.ZoneId;
 public interface ConversationPartnerDTOMapper {
 
     @Mapping(target = "regDate", source = "regDate", qualifiedByName = "localDateTimeToSecond")
-    @Mapping(target = "birthDate", source = "birthDate", qualifiedByName = "localDateTimeToSecond")
+    @Mapping(target = "birthDate", source = "birthDate", qualifiedByName = "localDateTimeToSecond",
+            dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     @Mapping(target = "lastOnlineTime", source = "lastOnlineTime", qualifiedByName = "localDateTimeToSecond")
     @Mapping(target = "createdOn", source = "createdOn", qualifiedByName = "localDateTimeToSecond")
     @Mapping(target = "updatedOn", source = "updateOn", qualifiedByName = "localDateTimeToSecond")
@@ -22,6 +23,6 @@ public interface ConversationPartnerDTOMapper {
 
     @Named("localDateTimeToSecond")
     static Long toSeconds(LocalDateTime time) {
-        return time.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        return time.atZone(ZoneId.of("Europe/Moscow")).toInstant().toEpochMilli();
     }
 }

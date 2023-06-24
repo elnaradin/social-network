@@ -15,7 +15,6 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 import ru.itgroup.intouch.aggregator.config.security.jwt.JWTUtil;
 import ru.itgroup.intouch.aggregator.utils.CookieUtil;
 import ru.itgroup.intouch.dto.message.SendMessageDto;
-import ru.itgroup.intouch.dto.notifications.WebSocketMessageDto;
 
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
@@ -68,15 +67,15 @@ public class NotificationHandler extends TextWebSocketHandler {
         }
     }
 
-    public void sendDialogMessage(WebSocketMessageDto message) throws IOException {
-        if (message == null) {
+    public void sendDialogMessage(String message) throws IOException {
+        if (message.isEmpty()) {
             return;
         }
 
-        long recipientId = message.getRecipientId();
+        long recipientId = objectMapper.readTree(message).get("recipientId").asLong();
 
         if (sessions.containsKey(recipientId)) {
-            TextMessage textMessage = new TextMessage(objectMapper.writeValueAsString(message));
+            TextMessage textMessage = new TextMessage(message);
             sessions.get(recipientId).sendMessage(textMessage);
         }
     }

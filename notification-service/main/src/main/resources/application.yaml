@@ -35,7 +35,7 @@ spring:
     bootstrap-servers: ${SN_KAFKA_HOST}:${SN_KAFKA_PORT}
     producer:
       key-serializer: org.apache.kafka.common.serialization.LongSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      value-serializer: ru.itgroup.intouch.serialization.CustomSerializer
     consumer:
       group-id: notification_serv
       auto-offset-reset: earliest
