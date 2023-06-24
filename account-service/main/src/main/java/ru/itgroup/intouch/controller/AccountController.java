@@ -3,6 +3,7 @@ package ru.itgroup.intouch.controller;
 import dto.AccountSearchDtoPageable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -59,8 +60,9 @@ public class AccountController {
         accountService.setAccountDeleted(email);
     }
 
-    @PostMapping("/search")
-    public Page<AccountDto> search(@RequestBody AccountSearchDtoPageable dto) {
+    @GetMapping("/search")
+    public Page<AccountDto> search(@SpringQueryMap AccountSearchDtoPageable dto) {
+
         return accountSearchService.getAccountResponse(dto);
 
     }
