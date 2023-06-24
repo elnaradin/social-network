@@ -52,7 +52,7 @@ public class CommentService {
         comment.setImagePath(commentDto.getImagePath());
         Comment newComment = commentRepository.save(comment);
         /* увеличить количество комментов в посте*/
-        postService.changeCommentCountOrLikeAmount(idPost, Operator.PLUS, Item.COUNT_COMMENTS);
+        postService.changeCommentCountOrLikeAmount(idPost, Operator.PLUS, Item.COUNT_COMMENTS, comment.getAuthorId());
 
         return mapperToCommentDto.getCommentDto(newComment);
     }
@@ -83,7 +83,7 @@ public class CommentService {
         commentRepository.save(comment);
 
         /* уменьшить количество комментов в самом посте */
-        postService.changeCommentCountOrLikeAmount(comment.getPostId(), Operator.MINUS, Item.COUNT_COMMENTS);
+        postService.changeCommentCountOrLikeAmount(comment.getPostId(), Operator.MINUS, Item.COUNT_COMMENTS, comment.getAuthorId());
 
 
         return true;

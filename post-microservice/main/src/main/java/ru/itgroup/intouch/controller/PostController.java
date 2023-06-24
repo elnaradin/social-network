@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+
 import org.springframework.web.bind.MissingPathVariableException;
 import org.springframework.web.bind.annotation.*;
 import ru.itgroup.intouch.dto.PostDto;
@@ -29,7 +30,7 @@ public class PostController {
     }
 
     @PostMapping("")
-    public ResponseEntity<?> createPost(@RequestBody PostDto postDto,
+    public ResponseEntity<?> createPost( @RequestBody PostDto postDto,
                                         @RequestParam Long userId) {
 
         PostDto post = postService.createNewPost(postDto, userId);

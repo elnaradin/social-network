@@ -1,13 +1,20 @@
 package mappers;
 
+import dto.AccountSearchDto;
+import dto.AccountSearchDtoPageable;
 import dto.PostSearchDto;
 import dto.PostSearchDtoPageable;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeMap;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
+
+import java.util.Locale;
+import java.util.regex.Pattern;
 
 
 @Component
@@ -27,14 +34,17 @@ public class PostDtoPageableMapper {
         String pageFromDto = (dto.getPage() == null || dto.getPage().equals("-1")) ? "0" : dto.getPage();
         String sizeFromDto = (dto.getSize() == null) ? "5" : dto.getSize();
 
-        String[] sort = dto.getSort().split(",");
-
-        String sortBy = (sort[0].equals("time")) ? "timeChanged" : sort[0];
         Sort sortWay;
-        if (sort.length > 1) {
-            sortWay = (sort[1].equals("desc")) ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
-        } else {
+        if (dto.getSort().contains("DESC") || dto.getSort().contains("desc")) {
+           String sortBy = (dto.getSort().contains("time")) ? "publishDate" : dto.getSort().substring(0, (dto.getSort().length() - 6));
+            sortWay = Sort.by(sortBy).descending();
+        }
+        else if (dto.getSort().contains("ASC") || dto.getSort().contains("asc")) {
+            String sortBy = (dto.getSort().contains("time")) ? "publishDate" : dto.getSort().substring(0, (dto.getSort().length() - 5));
             sortWay = Sort.by(sortBy).ascending();
+
+        } else {
+            sortWay = Sort.by("createdDate").descending();
         }
 
         return PageRequest.of(Integer.parseInt(pageFromDto), Integer.parseInt(sizeFromDto), sortWay);
