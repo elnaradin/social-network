@@ -19,3 +19,5 @@ spring:
   liquibase:
     enabled: true
     change-log: classpath:/dbchangelog-master.xml
+#notification:
+#    uri: http://${SN_NOTIFICATIONS_HOST}:${SN_NOTIFICATIONS_PORT}/api/v1/notifications/add
