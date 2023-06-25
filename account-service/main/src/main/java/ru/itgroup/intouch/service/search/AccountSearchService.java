@@ -10,6 +10,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import ru.itgroup.intouch.dto.AccountDto;
@@ -39,12 +40,13 @@ public class AccountSearchService {
         accountSearchDto = dtoPageableMapper.mapToAccountSearchDto(dto);
         Pageable pageable;
         if(dto.getSize() == null || dto.getPage() == null){
-            pageable = PageRequest.of(0, 5);
+            pageable = PageRequest.of(0, 5, Sort.by("lastName"));
         }else {
             pageable = dtoPageableMapper.mapToPageable(dto);
         }
 
-        List<Long> authorIds = (!dto.getAuthor().isEmpty()) ? getUserIdsFromAuthor(dto.getAuthor()) : new ArrayList<>();
+
+        List<Long> authorIds = (dto.getAuthor() != null) ? getUserIdsFromAuthor(dto.getAuthor()) : new ArrayList<>();
 
         List<Filter> filter = filterBuilder.createFilter(accountSearchDto, authorIds);
 
@@ -65,9 +67,11 @@ public class AccountSearchService {
 
     private List<Long> getUserIdsFromAuthor(String author) {
 
-        String[] authorNames = accountSearchDto.getAuthor().split(" ");
+        if (author.isEmpty()) { return new ArrayList<>(); }
 
-        List<Long> authors = userRepository.findAllByNames(authorNames);
+        String[] authorNames = author.split(" ");
+
+       List<Long> authors = userRepository.findAllByNames(authorNames);
 
         return new ArrayList<>(authors);
 
