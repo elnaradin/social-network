@@ -9,7 +9,7 @@ merge_post:
     - docker rm builder || true
     - docker rmi builder || true
 
-    - docker buildx build --platform linux/amd64 -f Dockerfile-post --tag intouchgroup/post-new:latest . --load 2>&1 | tee build-post.log
+    - docker buildx build --platform linux/amd64 -f Dockerfile-posts --tag intouchgroup/post-new:latest . --load 2>&1 | tee build-post.log
 
     - docker stop builder || true
     - docker rm builder || true
