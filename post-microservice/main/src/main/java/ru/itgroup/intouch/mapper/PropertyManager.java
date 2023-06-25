@@ -16,6 +16,7 @@ public class PropertyManager {
     public PropertyManager(ModelMapper modelMapper) {
         this.modelMapper = modelMapper;
         this.modelMapper.createTypeMap(Post.class, PostDto.class);
+        this.modelMapper.createTypeMap(Comment.class, CommentDto.class);
     }
 
     public TypeMap<Post, PostDto> getPostPropertyMapper() {

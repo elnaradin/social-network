@@ -38,7 +38,7 @@ public class CommentService {
         Comment comment = new Comment();
 
         comment.setDeleted(false);
-        comment.setCommentType(commentDto.getCommentType());
+        comment.setCommentType(CommentType.valueOf(commentDto.getCommentType()));
         comment.setTime(commentDto.getTime().toLocalDateTime());
         comment.setTimeChanged(commentDto.getTimeChanged().toLocalDateTime());
         comment.setAuthorId(commentDto.getAuthorId());
@@ -46,9 +46,9 @@ public class CommentService {
         comment.setCommentText(commentDto.getCommentText());
         comment.setPostId(idPost);
         comment.setBlocked(false);
-        comment.setLikeAmount(commentDto.getLikeAmount());
+        comment.setLikeAmount(getLikesAmount(commentDto.getLikeAmount()));
         comment.setMyLike(commentDto.isMyLike());
-        comment.setCommentsCount(commentDto.getCommentsCount());
+        comment.setCommentsCount(getCommentsCount(commentDto.getCommentsCount()));
         comment.setImagePath(commentDto.getImagePath());
         Comment newComment = commentRepository.save(comment);
         /* увеличить количество комментов в посте*/
@@ -67,6 +67,7 @@ public class CommentService {
         return listComments.stream().map(mapperToCommentDto::getCommentDto).toList();
 
     }
+
 
     public boolean deleteComment(Long commentId) {
 
@@ -112,6 +113,21 @@ public class CommentService {
 
             commentRepository.save(comment);
         }
+    }
+    private Integer getLikesAmount(Integer likeAmount) {
+
+        if (likeAmount == null) {
+            likeAmount = 0;
+        }
+        return likeAmount;
+    }
+
+    private Integer getCommentsCount(Integer commentCount) {
+
+        if (commentCount == null) {
+            commentCount = 0;
+        }
+        return commentCount;
     }
 
 

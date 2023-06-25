@@ -11,7 +11,7 @@ import java.time.ZonedDateTime;
 public class CommentDto {
     private Long id;
     private boolean isDeleted;
-    private CommentType commentType;
+    private String commentType;
     private ZonedDateTime time;
     private ZonedDateTime timeChanged;
     private Long authorId;
