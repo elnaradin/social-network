@@ -19,5 +19,10 @@ spring:
   liquibase:
     enabled: true
     change-log: classpath:/dbchangelog-master.xml
-#notification:
-#    uri: http://${SN_NOTIFICATIONS_HOST}:${SN_NOTIFICATIONS_PORT}/api/v1/notifications/add
+
+  kafka:
+    notification-event: ${SN_NOTIFICATION_EVENT}
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.LongSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
