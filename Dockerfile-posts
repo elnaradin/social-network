@@ -10,6 +10,7 @@ COPY ./post-microservice /app/post-service
 
 WORKDIR /app/public-data
 RUN mvn clean install
+
 WORKDIR /app/search-engine
 RUN mvn clean install
 
