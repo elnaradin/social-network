@@ -3,4 +3,22 @@ merge_post:
   rules:
     - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "master" && $CI_COMMIT_MESSAGE =~ /^Merge branch \'post/
   script:
-    - echo "Post pipeline"
+    - cd /root/social-network/back
+    - git pull
+    - docker stop builder || true
+    - docker rm builder || true
+    - docker rmi builder || true
+
+    - docker buildx build --platform linux/amd64 -f Dockerfile-post --tag intouchgroup/post-new:latest . --load 2>&1 | tee build-post.log
+
+    - docker stop builder || true
+    - docker rm builder || true
+    - docker rmi builder || true
+
+    - cd /root/social-network
+    - docker stop social-network-post-1 || true
+    - docker rm social-network-post-1 || true
+    - docker rmi intouchgroup/post-service || true
+    - docker tag intouchgroup/post-new:latest intouchgroup/post-service:latest
+    - docker rmi intouchgroup/post-new:latest
+    - docker compose up -d --build
