@@ -29,10 +29,14 @@ public class AccountDtoPageableMapper {
         Sort sortWay;
         if (dto.getSort().contains("DESC") || dto.getSort().contains("desc")) {
             String sortBy = dto.getSort().substring(0, (dto.getSort().length() - 6));
-            sortWay = Sort.by(sortBy).descending();
+            if (!sortBy.equals("lastName") || !sortBy.equals("regDate") || !sortBy.equals("birthDate") || !sortBy.equals("country") ||  !sortBy.equals("city")) {
+                sortBy = "lastName"; }
+            sortWay = Sort.by(sortBy);
         }
         else if (dto.getSort().contains("ASC") || dto.getSort().contains("asc")) {
             String sortBy = dto.getSort().substring(0, (dto.getSort().length() - 5));
+            if (!sortBy.equals("lastName") || !sortBy.equals("regDate") || !sortBy.equals("birthDate") || !sortBy.equals("country") ||  !sortBy.equals("city")) {
+                sortBy = "lastName"; }
             sortWay = Sort.by(sortBy).ascending();
 
         } else {
