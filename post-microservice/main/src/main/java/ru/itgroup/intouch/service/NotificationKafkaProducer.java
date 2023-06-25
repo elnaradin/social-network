@@ -2,7 +2,6 @@ package ru.itgroup.intouch.service;
 
 import lombok.RequiredArgsConstructor;
 import model.enums.NotificationType;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
@@ -16,7 +15,7 @@ public class NotificationKafkaProducer {
 
     private final KafkaTemplate<Long, NotificationDto> kafkaTemplate;
 
-    public void produce(Long authorId, Long entityId, @NotNull NotificationType type) {
+    public void produce(Long authorId, Long entityId, NotificationType type) {
         NotificationDto dto = NotificationDto
                 .builder()
                 .authorId(authorId)
