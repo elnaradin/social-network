@@ -1,12 +1,11 @@
 package ru.itgroup.intouch.service;
 
-import dto.PostSearchDtoPageable;
 import dto.PostSearchDto;
+import dto.PostSearchDtoPageable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mappers.PostDtoPageableMapper;
 import model.Post;
-import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -36,18 +35,16 @@ public class PostSearchService {
     private final PostDtoPageableMapper dtoPageableMapper;
     private final PostTagRepository tagRepository;
 
-    private PostSearchDto dto;
-
     public Page<PostDto> getPostResponse(PostSearchDtoPageable postSearchDtoPageable, Long userId) {
 
 
-        dto = dtoPageableMapper.mapToPostSearchDto(postSearchDtoPageable);
+        PostSearchDto dto = dtoPageableMapper.mapToPostSearchDto(postSearchDtoPageable);
         Pageable pageable = dtoPageableMapper.mapToPageable(postSearchDtoPageable);
 
 
-        List<Long> authorIds = (dto.getAuthor() != null  ) ? getUserIdsFromAuthor(dto.getAuthor()) : new ArrayList<>();
+        List<Long> authorIds = (dto.getAuthor() != null) ? getUserIdsFromAuthor(dto.getAuthor()) : new ArrayList<>();
 
-        List<Long> postIds = (dto.getTags() != null  ) ? getPostIdFromTags(dto.getTags()) : new ArrayList<>();
+        List<Long> postIds = (dto.getTags() != null) ? getPostIdFromTags(dto.getTags()) : new ArrayList<>();
 
         List<Filter> filter = filterBuilder.createFilter(dto, authorIds, postIds);
 
@@ -58,23 +55,19 @@ public class PostSearchService {
             return defaultPosts.map(mapperToPostDto::getPostDto);
         }
 
-        Specification<model.Post> specification = (Specification<model.Post>) specificationBuilder.getSpecificationFromFilters(filter);
+        Specification<model.Post> specification =
+                (Specification<model.Post>) specificationBuilder.getSpecificationFromFilters(filter);
 
         Page<Post> pageResult = postRepository.findAll(specification, pageable);
 
-        if (pageResult.hasContent()) {
-
-            return pageResult.map(mapperToPostDto::getPostDto);
-
-        } else {
-            return null;
-        }
-
+        return pageResult.map(mapperToPostDto::getPostDto);
     }
 
     private List<Long> getUserIdsFromAuthor(String author) {
 
-        if (author.isEmpty()) {return new ArrayList<>();}
+        if (author.isEmpty()) {
+            return new ArrayList<>();
+        }
 
         String[] authorNames = author.split(" ");
 
