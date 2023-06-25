@@ -61,7 +61,7 @@ public class SubсommentService {
         commentRepository.save(subcomment);
 
         /* увеличить количество субкомментов в комменте */
-        commentService.changeCommentCountOrLikeAmount(commentId, Operator.PLUS, Item.COUNT_COMMENTS);
+        //      commentService.changeCommentCountOrLikeAmount(commentId, Operator.PLUS, Item.COUNT_COMMENTS);
 
         return modelMapper.map(subcomment, CommentDto.class);
 

@@ -23,7 +23,7 @@ public class SubсommentController {
 
         CommentDto subcommentDto = subCommentService.createSubсommentToComment(commentId, subComment, userId);
 
-        return (subcommentDto != null) ? ResponseEntity.ok(subComment) : ResponseEntity.notFound().build();
+        return (subcommentDto != null) ? ResponseEntity.ok(subcommentDto) : ResponseEntity.notFound().build();
 
     }
 

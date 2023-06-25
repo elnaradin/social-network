@@ -4,8 +4,19 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import model.Post;
 import model.enums.PostType;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
+import ru.itgroup.intouch.config.NotificationProperties;
 import ru.itgroup.intouch.mapper.MapperToPostDto;
 import ru.itgroup.intouch.repository.PostRepository;
 import ru.itgroup.intouch.dto.PostDto;
@@ -13,6 +24,7 @@ import ru.itgroup.intouch.dto.PostDto;
 import ru.itgroup.intouch.service.enums.Item;
 import ru.itgroup.intouch.service.enums.Operator;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 
@@ -22,6 +34,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+
 public class PostService {
     private final TagService tagService;
     private final PostRepository postsRepository;
@@ -124,4 +137,5 @@ public class PostService {
         }
         return commentCount;
     }
+
 }
