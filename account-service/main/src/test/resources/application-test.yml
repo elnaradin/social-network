@@ -1,0 +1,10 @@
+jwt:
+  secret: test-secret
+
+SN_ACCOUNT_HOST: localhost
+SN_ACCOUNT_PORT: 8080
+SN_STORAGE_HOST: localhost
+SN_STORAGE_PORT: 8081
+EMAIL_USERNAME: test@email.com
+EMAIL_FROM: test@email.com
+EMAIL_PASSWORD: test-pass
