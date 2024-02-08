@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EmailDto {
-    @Email(message = "Некорректный Email")
+    @Email(message = "{user.invalid-email}")
     private String email;
 }

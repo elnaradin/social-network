@@ -20,6 +20,8 @@
         <spring-boot-starter-mail.version>3.0.4</spring-boot-starter-mail.version>
         <ru.itgroup.intouch.storage-service.api.version>1.0.0-SNAPSHOT</ru.itgroup.intouch.storage-service.api.version>
         <ru.itgroup.intouch.account-service.api.version>1.0.0-SNAPSHOT</ru.itgroup.intouch.account-service.api.version>
+        <cage.version>1.0</cage.version>
+        <modelmapper.version>3.1.1</modelmapper.version>
     </properties>
 
     <dependencies>
@@ -69,7 +71,7 @@
         <dependency>
             <groupId>com.github.cage</groupId>
             <artifactId>cage</artifactId>
-            <version>1.0</version>
+            <version>${cage.version}</version>
         </dependency>
 
         <dependency>
@@ -85,13 +87,30 @@
         <dependency>
             <groupId>org.modelmapper</groupId>
             <artifactId>modelmapper</artifactId>
-            <version>3.1.1</version>
+            <version>${modelmapper.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>1.19.3</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>1.19.3</version>
+            <scope>test</scope>
+        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.boot</groupId>-->
+<!--            <artifactId>spring-boot-testcontainers</artifactId>-->
+<!--            <version>3.1.2</version>-->
+<!--            <scope>test</scope>-->
+<!--        </dependency>-->
     </dependencies>
 
     <build>

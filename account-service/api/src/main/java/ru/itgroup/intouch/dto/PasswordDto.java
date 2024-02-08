@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PasswordDto {
     @Pattern(regexp = ".{8,}",
-            message = "Пароль должен состоять не менее чем из 8 символов")
+            message = "{user.invalid-password}")
     private String password;
 }

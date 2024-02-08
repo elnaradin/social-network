@@ -54,8 +54,6 @@ public class AuthController {
         return registrationService.generateCaptcha();
     }
 
-
-    // FIXME: 12.06.2023 current user is needed for these two
     @PostMapping("/change-password-link")
     public void changePassword(@RequestBody EmailDto emailDto) throws MessagingException {
         credentialsRenewalService.sendLetter(emailDto.getEmail(),
